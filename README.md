@@ -1,11 +1,11 @@
 ___
-# Ocean Eyes
+# OceanEyes
 ___
 
 
 ## Overview
 
-Ocean Eyes is an autonomous floating device designed to monitor, analyze, and report sea pollution and sea weather in marine ecosystems.
+OceanEyes is an autonomous floating device designed to monitor, analyze, and report sea pollution and sea weather in marine ecosystems.
 
 ## Team
 -  E/20/316, Wethmi Ranasinghe, [e20316@eng.pdn.ac.lk](mailto:e20316@eng.pdn.ac.lk)
