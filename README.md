@@ -5,7 +5,7 @@ ___
 
 ## Overview
 
-Sea weather and pollution monitoring buoy
+Sea pollution and weather monitoring buoy
 
 ## Team
 -  E/20/316, Wethmi Ranasinghe, [e20316@eng.pdn.ac.lk](mailto:e20316@eng.pdn.ac.lk)
