@@ -20,7 +20,7 @@ The world is facing a serious marine pollution problem, with large amounts of ga
 <img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Solution_Architecture.jpg" width="512" height="288"/>
 
 ## Data and Control Flow
-<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Solution_Architecture.jpg" width="512" height="288"/> <img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288" align="centre"/>
+<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288"/>
 
 ## Team
 -  E/20/316, Wethmi Ranasinghe, [e20316@eng.pdn.ac.lk](mailto:e20316@eng.pdn.ac.lk)
