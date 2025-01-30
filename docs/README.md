@@ -78,6 +78,13 @@ All items and costs
 | Item          | Quantity  | Unit Cost  | Total  |
 | ------------- |:---------:|:----------:|-------:|
 | ESP32 Development Board   | 2         | 1950 LKR     | 3900 LKR |
+| ESP32 module with CAM    | 1         | 2160 LKR     | 2160 LKR |
+| GPS module   | 1         | 900 LKR     | 900 LKR |
+| Waterproof Ultrasound sensor   | 1         | 1760 LKR     | 1760 LKR |
+| Accelerometer   | 1         | 800 LKR     | 800 LKR |
+| Lora Transceiver   | 2         | 1500 LKR     | 3000 LKR |
+| Motor driver to control   | 1         | 490 LKR     | 490 LKR |
+| Wi-Fi Module    | 1         | 390 LKR     | 390 LKR |
 
 ## Conclusion
 
