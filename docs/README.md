@@ -77,11 +77,13 @@ All items and costs
 
 | Item          | Quantity  | Unit Cost  | Total  |
 | ------------- |:---------:|:----------:|-------:|
-| Sample item   | 5         | 10 LKR     | 50 LKR |
+| ESP32 Development Board   | 2         | 1950 LKR     | 3900 LKR |
 
 ## Conclusion
 
- In summary, "OceanEyes" is an automated system designed to address marine pollution, which provides insights into the distribution and characteristics of floating plastics using real-time data analysis. We believe "OceanEyes" has the potential to make a meaningful impact on preserving our oceans supporting efforts to address this critical environmental challenge. We look forward to collaborating with experts, and relevant authorities to refine this concept and bring it to life.
+ In summary, "OceanEyes" is an automated system designed to address marine pollution, which provides insights into the distribution and characteristics of floating plastics using real-time data analysis. 
+ 
+ We believe "OceanEyes" has the potential to make a meaningful impact on preserving our oceans supporting efforts to address this critical environmental challenge. We look forward to collaborating with experts, and relevant authorities to refine this concept and bring it to life.
 
 ## Links
 
