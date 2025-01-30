@@ -53,7 +53,7 @@ The world is facing a serious marine pollution problem, with large amounts of ga
 ## Solution Architecture
 <img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Solution_Architecture.jpg" width="512" height="288"/>
 
-<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288" align = "right"/>
+<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288" align = "centre"/>
 
  The proposed solution architecture in figure shows a system, where input is detected from sensors and transmitted to a station located in an internet accessible area. Then the data is sent to the cloud, for processing and made accessible to users through a web application.
  
