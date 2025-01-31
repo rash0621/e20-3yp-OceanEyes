@@ -73,7 +73,6 @@ Testing done on hardware and software, detailed + summarized results
 
 ## Detailed budget
 
-All items and costs
 
 | Item          | Quantity  | Unit Cost  | Total  |
 | ------------- |:---------:|:----------:|-------:|
