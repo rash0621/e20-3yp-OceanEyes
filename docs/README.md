@@ -100,6 +100,8 @@ Testing done on hardware and software, detailed + summarized results
 | Regulator | 4 | 15 | 60 |
 | Humidity Sensor | 1 | 1360 | 1360 |
 | Outer casing for the self guided device | 1 | 5000 | 5000 |
+| --------------------------------:|-------:|
+| Total | 28500 |
 
 ## Conclusion
 
