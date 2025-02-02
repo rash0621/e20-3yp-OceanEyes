@@ -9,7 +9,7 @@ title: OceanEyes
 
 [comment]: # "This is the standard layout for the project, but you can clean this and use your own template"
 
-# Ocean Eyes
+# OceanEyes - Autonomous Sea Pollution Detection & Sea State Monitoring System
 
 ---
 
