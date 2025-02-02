@@ -9,8 +9,8 @@ title: OceanEyes
 
 [comment]: # "This is the standard layout for the project, but you can clean this and use your own template"
 
-# OceanEyes - Autonomous Sea Pollution Detection & Sea State Monitoring System
-
+# OceanEyes 
+## Autonomous Sea Pollution Detection & Sea State Monitoring System
 ---
 
 <!-- Image (photo/drawing of the final hardware) should be here -->
