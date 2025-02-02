@@ -30,11 +30,12 @@ title: OceanEyes
 #### Table of Contents
 1. [Introduction](#introduction)
 2. [Solution Architecture](#solution-architecture )
-3. [Hardware & Software Designs](#hardware-and-software-designs)
-4. [Testing](#testing)
-5. [Detailed budget](#detailed-budget)
-6. [Conclusion](#conclusion)
-7. [Links](#links)
+3. [Data Flow](#data-flow)
+4. [Hardware & Software Designs](#hardware-and-software-designs)
+5. [Testing](#testing)
+6. [Detailed budget](#detailed-budget)
+7. [Conclusion](#conclusion)
+8. [Links](#links)
 
 ## Introduction
 
@@ -50,6 +51,9 @@ The world is facing a serious marine pollution problem, with large amounts of ga
   
 ## Solution Architecture
 
+<img width="1348" alt="solution architecture" src="https://github.com/user-attachments/assets/b7d4c3c1-f0a9-4d8b-bea9-85a6759bd601" />
+
+
  The proposed solution architecture in figure shows a system, where input is detected from sensors and transmitted to a station located in an internet accessible area. Then the data is sent to the cloud, for processing and made accessible to users through a web application.
  
  The GPS coordinates of the target area to be surveyed is provided by the user. Using them the device autonomously navigates to each location. As it moves between these locations, an ultrasonic sensor module is used for obstacle detection. The module continuously scans the surroundings to identify potential barriers, ensuring safe navigation.
@@ -58,7 +62,16 @@ The world is facing a serious marine pollution problem, with large amounts of ga
  
  From the data collection center, the information is forwarded to the cloud for processing. In the cloud, image processing techniques are applied to analyze the captured images. The primary goal of this analysis is to determine whether the detected obstacle is a plastic item. The processed data, including identified plastics and their locations, is then presented to users through a website as a map with the identified plastics and their corresponding locations. This platform allows users to make decisions about marine pollution management.
 
+## Data Flow
+
+<img width="773" alt="dataflow" src="https://github.com/user-attachments/assets/003992cd-82a9-49e0-8c09-bf660745b9cc" />
+
+<img width="623" alt="website content" src="https://github.com/user-attachments/assets/9e4d4333-ae27-45e7-8120-ea2b94d21194" />
+
+
 ## Hardware and Software Designs
+
+
 
 Detailed designs with many sub-sections
 
@@ -69,16 +82,24 @@ Testing done on hardware and software, detailed + summarized results
 ## Detailed budget
 
 
-| Item          | Quantity  | Unit Cost  | Total  |
+| Item          | Quantity  | Unit Cost (LKR)  | Total (LKR)  |
 | ------------- |:---------:|:----------:|-------:|
-| ESP32 Development Board   | 2         | 1950 LKR     | 3900 LKR |
-| ESP32 module with CAM    | 1         | 2160 LKR     | 2160 LKR |
-| GPS module   | 1         | 900 LKR     | 900 LKR |
-| Waterproof Ultrasound sensor   | 1         | 1760 LKR     | 1760 LKR |
-| Accelerometer   | 1         | 800 LKR     | 800 LKR |
-| Lora Transceiver   | 2         | 1500 LKR     | 3000 LKR |
-| Motor driver to control   | 1         | 490 LKR     | 490 LKR |
-| Wi-Fi Module    | 1         | 390 LKR     | 390 LKR |
+| ESP32 Development Board   | 2 | 1950 | 3900 |
+| ESP32 module with CAM    | 1 | 2160 | 2160 |
+| GPS module   | 1         | 900 | 900 |
+| Waterproof Ultrasound sensor   | 1 | 1760 | 1760 |
+| Accelerometer   | 1 | 800 | 800 |
+| Lora Transceiver   | 2 | 1500 | 3000 |
+| Motor driver to control   | 1 | 490 | 490 |
+| Wi-Fi Module    | 1 | 390 | 390 |
+| Propeller | 2 | 900 | 1800 |
+| Gear Motor | 2 | 1630 | 3260 |
+| Servo Motor | 2 | 350 | 700 |
+| Battery | 8 | 350 | 2800 |
+| Charging Module | 2 | 60 | 120 |
+| Regulator | 4 | 15 | 60 |
+| Humidity Sensor | 1 | 1360 | 1360 |
+| Outer casing for the self guided device | 1 | 5000 | 5000 |
 
 ## Conclusion
 
