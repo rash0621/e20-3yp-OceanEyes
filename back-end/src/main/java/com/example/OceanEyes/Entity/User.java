@@ -20,19 +20,19 @@ public class User {
     public User() {
     }
 
-    public String get_id() {
+    public String getId() {
         return id;
     }
 
-    public String getUsername() {
+    public String getUserName() {
         return username;
     }
 
-    public void set_id(String _id) {
+    public void setId(String _id) {
         this.id = id;
     }
 
-    public void setUsername(String username) {
+    public void setUserName(String username) {
         this.username = username;
     }
 

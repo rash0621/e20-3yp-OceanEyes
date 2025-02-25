@@ -17,7 +17,7 @@ public class UserController {
     private String saveUser(@RequestBody User users) {
 
         userService.saveorUpdate(users);
-        return users.get_id();
+        return users.getId();
     }
 
     @GetMapping(value = "/getAll")
@@ -29,7 +29,7 @@ public class UserController {
     @PutMapping(value = "/edit/{id}")
     private User updateUser(@RequestBody User user, @PathVariable(name = "id")String id) {
 
-        user.set_id(id);
+        user.setId(id);
         userService.saveorUpdate(user);
         return user;
     }
@@ -37,12 +37,12 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     private void deleteUser(@PathVariable(name = "id")String id) {
 
-        userService.deleteStudent(id);
+        userService.deleteUser(id);
     }
 
     @RequestMapping("/search/{id}")
-    private User getUser(@PathVariable(name = "id")String userid) {
-        return userService.getUserById(userid);
+    private User getUser(@PathVariable(name = "id")String userId) {
+        return userService.getUserById(userId);
     }
 
 }
