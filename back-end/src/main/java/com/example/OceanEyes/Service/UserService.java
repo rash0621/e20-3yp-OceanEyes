@@ -21,7 +21,7 @@ public class UserService {
         return this.repo.findAll();
     }
 
-    public void deleteStudent(String id) {
+    public void deleteUser(String id) {
         repo.deleteById(id);
     }
 
