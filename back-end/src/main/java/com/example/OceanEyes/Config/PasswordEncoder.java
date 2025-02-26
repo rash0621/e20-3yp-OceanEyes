@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.OceanEyes.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

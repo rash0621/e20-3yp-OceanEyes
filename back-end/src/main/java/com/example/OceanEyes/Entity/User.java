@@ -10,11 +10,11 @@ public class User {
 
     @Id
     private String id;
-    private String username;;
+    private String userEmail;;
 
-    public User(String id, String username) {
+    public User(String id, String userEmail) {
         this.id = id;
-        this.username = username;
+        this.userEmail = userEmail;
     }
 
     public User() {
@@ -24,23 +24,23 @@ public class User {
         return id;
     }
 
-    public String getUserName() {
-        return username;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public void setId(String _id) {
         this.id = id;
     }
 
-    public void setUserName(String username) {
-        this.username = username;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "_id='" + id + '\'' +
-                ", username='" + username + '\'' +
+                ", userEmail='" + userEmail + '\'' +
                 '}';
     }
 }
