@@ -13,40 +13,46 @@ public class DeviceService {
 
 
     @Autowired
-    private DeviceRepo repo;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private DeviceRepo deviceRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public void saveOrUpdate(Device devices) {
-        repo.save(devices);
+        deviceRepository.save(devices);
     }
 
-//    public Device getDeviceById(String deviceId) {
-//        return repo.findById(deviceId).orElse(null);
-//    }
-
-//    public Device getDeviceByName(String deviceName) {
-//        return repo.findByDeviceName(deviceName).orElse(null);
-//    }
-//
-//    public Iterable<Device> listAll() {
-//        return this.repo.findAll();
-//    }
 
     public void deleteDevice(String id) {
-        repo.deleteById(id);
+        deviceRepository.deleteById(id);
     }
 
-    public Device addNewDevice(Device device) {
-        boolean deviceExists = repo.findByDeviceName(device.getDeviceName()).isPresent();
+    public boolean addNewDevice(Device device) {
+        boolean deviceExists = deviceRepository.findByDeviceName(device.getDeviceName()).isPresent();
 
         if (deviceExists) {
             throw new IllegalStateException("Name already exists");
         }
-        String encodePassword = bCryptPasswordEncoder.encode(device.getDevicePassword());
-        device.setDevicePassword(encodePassword);
-        repo.save(device);
-        return device;
+        try {
+            String encodePassword = passwordEncoder.encode(device.getDevicePassword());
+            device.setDevicePassword(encodePassword);
+            deviceRepository.save(device);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
     }
 
+    public boolean loginNewDevice(Device device) {
 
+        Optional<Device> optionalDevice = deviceRepository.findByDeviceName(device.getDeviceName());
+        boolean deviceExists = optionalDevice.isPresent();
+
+        if (deviceExists) {
+            Device dbDevice = optionalDevice.get();
+            return passwordEncoder.matches(device.getDevicePassword(), dbDevice.getDevicePassword());
+        } else {
+            throw new RuntimeException("Device not found");
+
+        }
+    }
 }

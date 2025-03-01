@@ -11,13 +11,20 @@ public class User {
     @Id
     private String id;
     private String userEmail;;
+    private String userPassword;;
 
-    public User(String id, String userEmail) {
-        this.id = id;
-        this.userEmail = userEmail;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public User() {
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public User(String id, String userEmail, String userPassword) {
+        this.id = id;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
     }
 
     public String getId() {
