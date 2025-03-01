@@ -6,6 +6,7 @@ import Why from './components/Why/index';
 import Network from './components/Network/index';
 import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
+import GenerateInstances from './components/Instances/Instances';
 
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <Network />
       <Clientsay />
       <Newsletter />
+      <GenerateInstances/>
     </main>
   )
 }

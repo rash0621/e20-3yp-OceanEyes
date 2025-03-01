@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
+import {domainName} from "../DomainName"
 
 
 const Signin = () => {
@@ -19,7 +20,7 @@ const Signin = () => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8081/api/v1/user/login", {
+            const response = await fetch(`${domainName}user/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
