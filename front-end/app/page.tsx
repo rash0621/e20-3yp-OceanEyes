@@ -6,6 +6,7 @@ import Why from './components/Why/index';
 import Network from './components/Network/index';
 import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
+import Instances from './components/Instances/Instances'
 
 
 export default function Home() {
@@ -13,9 +14,10 @@ export default function Home() {
     <main>
       <Banner />
       <Companies />
+      <Why />
       <Buyers />
       <Provide />
-      <Why />
+      {/* <Instances/>  */}
       <Network />
       <Clientsay />
       <Newsletter />
