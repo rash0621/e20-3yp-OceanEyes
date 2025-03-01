@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*") // to connect with front-end
 @RequestMapping("api/v1/accessibleDevice")
 public class AccessibleDeviceController {
 

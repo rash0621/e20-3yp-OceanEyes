@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*") // to connect with front-end
 @RequestMapping("api/v1/device")
 public class DeviceController {
 

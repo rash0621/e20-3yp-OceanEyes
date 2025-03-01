@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*") // to connect with front-end
 @RequestMapping("api/v1/user")
 public class UserController {
 
@@ -31,7 +30,7 @@ public class UserController {
             else return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User creation failed", null));
 
         }catch (Exception e) {
-            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Name already exists", null));
+            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User already exists", null));
         }
     }
 
