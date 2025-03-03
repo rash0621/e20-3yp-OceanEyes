@@ -40,7 +40,7 @@ title: OceanEyes
 ## Introduction
 <div align="center">
     <video  height="500" width="1000" controls>
-    <source src="docs/videos/ocean.mp4" type="video/mp4"  >
+    <source src="videos/ocean.mp4" type="video/mp4"  >
     /video>
 </div>
 
