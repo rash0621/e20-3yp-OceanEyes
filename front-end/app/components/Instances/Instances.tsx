@@ -10,7 +10,11 @@ import {domainName} from "../DomainName"
 
 function GenerateInstances() {
 
+  const token = localStorage.getItem("jwtToken");
+
+  // return token ? <Outlet /> : <Navigate to="/login" />;
   let loggedInUser = {"isLoggedIn":true};
+
   const [instances, setInstances] = useState<InstanceType[]>([]);;    
 
   useEffect(()=>{
@@ -177,6 +181,7 @@ const onViewClick = (instance:InstanceType) => {
 
   return(
   <>
+  
     <div className="pageTitle">
           <h3>Instances</h3>
           <nav>
