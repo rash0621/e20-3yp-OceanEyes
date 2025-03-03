@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +24,12 @@ public class InstanceController {
             @RequestParam("deviceName") String deviceName,
             @RequestParam("startGpsLocation") String startGpsLocation,
             @RequestParam("distanceBetweenPoints") int distanceBetweenPoints,
-            @RequestParam("map") int map
+            @RequestParam("map") int map,
+            @RequestParam("description") String description,
+            @RequestParam("operator") String operator,
+            @RequestParam("locationDistrict") String locationDistrict
     ) throws IOException {
-        Instance savedInstance = instanceService.saveInstance(deviceName, startGpsLocation, distanceBetweenPoints, map);
+        Instance savedInstance = instanceService.saveInstance(deviceName, startGpsLocation, distanceBetweenPoints, map, description, operator, locationDistrict);
         return ResponseEntity.ok(savedInstance);
     }
 

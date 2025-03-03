@@ -28,10 +28,10 @@ public class CaptureController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<Capture> createCapture(
-            @RequestParam("image") MultipartFile file,
-            @RequestParam("direction") String direction,
-            @RequestParam("distance") int distance,
-            @RequestParam("gpsLocation") String gpsLocation
+            @RequestParam(value = "image", required = false) MultipartFile file,
+            @RequestParam(value = "direction", required = false) String direction,
+            @RequestParam(value = "distance", required = false) Integer distance,
+            @RequestParam(value = "gpsLocation", required = false) String gpsLocation
     ) throws IOException {
         Capture savedCapture = captureService.saveCapture(file, direction, distance, gpsLocation);
         return ResponseEntity.ok(savedCapture);
