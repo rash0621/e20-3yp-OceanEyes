@@ -30,7 +30,9 @@ const Signin = () => {
 
             const data = await response.json();
             if (response.ok) {
-                localStorage.setItem("user_token", data.data);
+                
+                localStorage.setItem("jwtToken", JSON.stringify(data.data));
+                window.dispatchEvent(new Event("storage"));
                 alert(data.message);
                 closeModal();
             } else {
