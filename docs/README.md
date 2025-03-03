@@ -38,11 +38,10 @@ title: OceanEyes
 8. [Links](#links)
 
 ## Introduction
-<div align="center">
-    <video  height="500" width="1000" controls>
-    <source src="videos/ocean.mp4" type="video/mp4"  >
-    /video>
-</div>
+<iframe width="1000" height="500" 
+    src="https://www.youtube.com/embed/sN_3vdVXVIc" 
+    frameborder="0" allowfullscreen>
+</iframe>
 
 The world is facing a serious marine pollution problem, with large amounts of garbage, especially plastic, polluting the seas. To address this issue, we came up with the idea of developing "OceanEyes", an innovative system designed to monitor and analyze sea pollution levels and sea state in real time. By combining various sensor inputs and data analytics, we aim to utilize specialized software to process and analyze the collected data. This approach enables the generation of actionable insights to protect marine ecosystems.
 
