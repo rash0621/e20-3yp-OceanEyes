@@ -17,7 +17,7 @@ public class CaptureService {
     @Autowired
     private FileService fileService;
 
-    public Capture saveCapture(MultipartFile file, String direction, int distance, String gpsLocation) throws IOException {
+    public Capture saveCapture(MultipartFile file, String direction, Float distance, String gpsLocation) throws IOException {
         String imageId = fileService.saveFile(file);
 
         Capture capture = new Capture();

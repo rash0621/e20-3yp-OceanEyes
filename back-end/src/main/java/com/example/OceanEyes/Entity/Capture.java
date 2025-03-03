@@ -19,7 +19,7 @@ public class Capture {
     @Nullable
     private String direction;
     @Nullable
-    private int distance;
+    private Float distance;
     @Nullable
     private String gpsLocation;
 
@@ -47,11 +47,11 @@ public class Capture {
         this.direction = direction;
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
