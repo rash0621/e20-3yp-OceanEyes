@@ -1,5 +1,6 @@
 package com.example.OceanEyes.Entity;
 
+import com.mongodb.lang.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,9 +13,14 @@ public class Capture {
     @DBRef
     private Instance instance;
 
+
+    @Nullable
     private String imageId;
+    @Nullable
     private String direction;
+    @Nullable
     private int distance;
+    @Nullable
     private String gpsLocation;
 
     public byte[] getImageId() {
