@@ -35,11 +35,11 @@ export default function Home() {
   return (
     <main>
       <Banner />
+      {isAuthenticated && <Instances/> }
       <Captures />
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />
-      {isAuthenticated && <Instances/> }
       {/* <Buyers /> */}
       {/* <Provide /> */}
       {/* <Network /> */}
