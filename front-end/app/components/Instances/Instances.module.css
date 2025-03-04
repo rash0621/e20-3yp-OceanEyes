@@ -10,7 +10,8 @@
               2px -2px 5px rgba(255, 255, 255, 0.7), 
               -2px 2px 5px rgba(63, 108, 148, 0.1);
   margin: 20px;
-  padding: 10px;    
+  padding: 10px;
+  background-color: #eff4f7;    
 }
 .tableContainer {
   margin: 0px;
@@ -26,6 +27,7 @@
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
+  background-color: #ffffff;
 }
 
 /*Table headers */
@@ -35,7 +37,7 @@
   z-index: 3;
 }
 .table thead th {
-  background-color: #ecf6fc;
+  background-color: #dfeef8;
   color: #333;
   text-align: center;
   padding: 10px;

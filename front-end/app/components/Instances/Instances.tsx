@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Dialog, DialogContent } from "@mui/material";
 import {domainName} from "../DomainName"
+import AddInstance from "./AddInstance";
 
 function GenerateInstances() {
 
@@ -36,11 +37,11 @@ function GenerateInstances() {
   //Initialize the object
   const [instance, setInstance] = useState({  
     instanceId: "",
+    localDateTime: new Date(),
     deviceName: "",
     startGpsLocation: "",
     distanceBetweenPoints: 0,
     map: 0,
-    localDateTime: new Date(),
     description: "",
     operator: "",
     locationDistrict: ""
@@ -48,11 +49,11 @@ function GenerateInstances() {
 
 interface InstanceType {
     instanceId: string;
+    localDateTime: Date;
     deviceName: string;
     startGpsLocation: string;
     distanceBetweenPoints: number;
     map: number;
-    localDateTime: Date;
     description: string;
     operator: string;
     locationDistrict: string;
@@ -73,11 +74,11 @@ const onInputChange=(e: React.ChangeEvent<HTMLFormElement>)=>{
     setViewRow(false); 
     setInstance({
         instanceId: "",
+        localDateTime: new Date(),
         deviceName: "",
         startGpsLocation: "",
         distanceBetweenPoints: 0,
         map: 0,
-        localDateTime: new Date(),
         description: "",
         operator: "",
         locationDistrict: ""
@@ -178,38 +179,20 @@ const onViewClick = (instance:InstanceType) => {
   return(
   <>
     <div className="pageTitle">
-          <h3>Instances</h3>
-          <nav>
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="http://localhost:5173/"> 
-                <span style={{ fontSize: 16}}>Home</span>
-              </a>
-            </li>
-            <li className="breadcrumb-item active">
-              <span style={{ fontSize: 16}}> Project Overview</span>
-            </li>
-            <li className="breadcrumb-item active">
-              <span style={{ fontSize: 16}}> Deliverables</span>
-            </li>
-          </ol>
-        </nav>
+      <h3 className="text-4xl sm:text-6xl font-semibold text-center my-10 lh-81">Current Instances</h3>
     </div>
     <div className={style["container"]}>
-      {!addRow && loggedInUser.isLoggedIn && <div>
-        {/* JSON.parse(localStorage.getItem('isEditMode')).isEditMode &&  */}
-        <button className="addNewButton" onClick={onAddNewClicked}>Add New</button>
-      </div>}
+      <AddInstance />
       <div className={style["tableContainer"]}>
           <table className={style["table"]}>
             <thead>
               <tr>
+                <th scope="col">Date</th>
                 <th scope="col">Device Name</th>
                 <th scope="col">Start GPS location</th>
                 <th scope="col">Distance Between Points</th>
                 {/* <th scope="col">Description</th> */}
                 <th scope="col">Map</th>
-                <th scope="col">Date</th>
                 <th scope="col">Description</th>
                 <th scope="col">Operator</th>
                 <th scope="col">Location District</th>
@@ -218,12 +201,12 @@ const onViewClick = (instance:InstanceType) => {
             <tbody>
             {instances && Array.isArray(instances) && instances.map((instance: InstanceType, index: number) => (
                         <tr  key={instance.instanceId}>
+                          <td>{instance.localDateTime.toLocaleString()}</td>
                           <td>{instance.deviceName}</td>
                           <td>{instance.startGpsLocation}</td>
                           <td>{instance.distanceBetweenPoints}</td>
                           <td>{instance.map}</td>
-                          {/* <td>{instance.localDateTime.toLocaleString()}</td> */}
-                          <td>{instance.description}</td>
+                          {/* <td>{instance.description}</td> */}
                           <td>{instance.operator}</td>
                           <td>{instance.locationDistrict}</td>
                           {loggedInUser.isLoggedIn && <td>

@@ -6,21 +6,23 @@ import Why from './components/Why/index';
 import Network from './components/Network/index';
 import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
-import GenerateInstances from './components/Instances/Instances';
+import Instances from './components/Instances/Instances'
+import Map from './components/Map/Map';
 
 
 export default function Home() {
   return (
     <main>
       <Banner />
-      <Companies />
-      <Buyers />
-      <Provide />
+      <Instances/> 
+      {/* <Map /> */}
+      {/* <Companies /> */}
       <Why />
-      <Network />
-      <Clientsay />
-      <Newsletter />
-      <GenerateInstances/>
+      {/* <Buyers /> */}
+      {/* <Provide /> */}
+      {/* <Network /> */}
+      {/* <Clientsay /> */}
+      {/* <Newsletter /> */}
     </main>
   )
 }
