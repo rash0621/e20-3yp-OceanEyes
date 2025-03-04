@@ -35,6 +35,10 @@ public class TestDistanceController {
         }
     }
 
+    @GetMapping("/getAll")
+    public List<TestDistance> getAll() {
+        return testDistanceService.getAllDistances();
+    }
 
 
 }
