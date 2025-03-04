@@ -9,7 +9,7 @@ import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
 import Instances from './components/Instances/Instances'
 import Map from './components/Map/Map';
-import GenerateInstances from './components/Instances/Instances';
+// import GenerateInstances from './components/Instances/Instances';
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
 
@@ -17,35 +17,34 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+ const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
 
-  useEffect(() => {
-      const checkAuth = () => {
-          setIsAuthenticated(isTokenValid());
-      };
+    useEffect(() => {
+        const checkAuth = () => {
+            setIsAuthenticated(isTokenValid());
+        };
 
-      window.addEventListener("storage", checkAuth);
+        window.addEventListener("storage", checkAuth);
 
-      return () => {
-          window.removeEventListener("storage", checkAuth);
-      };
-  }, []);
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, []);
 
 
   return (
     <main>
       <Banner />
-      <Instances/> 
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />
+      {isAuthenticated && <Instances/> }
       {/* <Buyers /> */}
       {/* <Provide /> */}
       {/* <Network /> */}
       {/* <Clientsay /> */}
       {/* <Newsletter /> */}
       {/* <GenerateInstances/> */}
-      {isAuthenticated && <GenerateInstances />}
     </main>
   )
 }
