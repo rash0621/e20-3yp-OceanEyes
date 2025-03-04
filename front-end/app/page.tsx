@@ -36,7 +36,7 @@ export default function Home() {
     <main>
       <Banner />
       {isAuthenticated && <Instances/> }
-      <Captures />
+      {isAuthenticated && <Captures/> }
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />

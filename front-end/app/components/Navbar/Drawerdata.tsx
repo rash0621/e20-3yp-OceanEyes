@@ -1,5 +1,7 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { isTokenValid } from "../Authentications/tokenValidation";
 
 interface NavigationItem {
   name: string;
@@ -20,6 +22,21 @@ function classNames(...classes: string[]) {
 }
 
 const Data = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+  
+      useEffect(() => {
+          const checkAuth = () => {
+              setIsAuthenticated(isTokenValid());
+          };
+  
+          window.addEventListener("storage", checkAuth);
+  
+          return () => {
+              window.removeEventListener("storage", checkAuth);
+          };
+      }, []);
+      
   return (
     <div className="rounded-md max-w-sm w-full mx-auto">
       <div className="flex-1 space-y-4 py-1">
@@ -39,12 +56,19 @@ const Data = () => {
               </Link>
             ))}
             <div className="mt-4"></div>
-            <button className="bg-white w-full text-blue border border-lightblue font-medium py-2 px-4 rounded">
+            {
+              !isAuthenticated && (
+                <>
+              <button className="bg-white w-full text-blue border border-lightblue font-medium py-2 px-4 rounded">
               Sign In
             </button>
             <button className="bg-lightblue w-full hover:bg-blue hover:text-white text-blue font-medium my-2 py-2 px-4 rounded">
               Sign up
             </button>
+            </>
+            )
+            }
+            
           </div>
         </div>
       </div>
