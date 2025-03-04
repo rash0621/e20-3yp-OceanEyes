@@ -1,11 +1,15 @@
+"use client"
+
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Drawer from "./Drawer";
 import Drawerdata from "./Drawerdata";
 import Signdialog from "./Signdialog";
 import Registerdialog from "./Registerdialog";
+import Logout from "./Logout";
+import {isTokenValid} from '../Authentications/tokenValidation';
 
 
 interface NavigationItem {
@@ -27,11 +31,27 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
+
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = React.useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+
+    useEffect(() => {
+        const checkAuth = () => {
+            setIsAuthenticated(isTokenValid());
+        };
+
+        window.addEventListener("storage", checkAuth);
+
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, []);
+
 
     return (
+        <>
         <Disclosure as="nav" className="navbar">
             <>
                 <div className="mx-auto max-w-7xl px-6 lg:py-4 lg:px-8">
@@ -77,13 +97,13 @@ const Navbar = () => {
 
                         {/* SIGNIN DIALOG */}
 
-                        <Signdialog />
-
+                        {!isAuthenticated && <Signdialog />}
 
                         {/* REGISTER DIALOG */}
 
-                        <Registerdialog />
+                        {!isAuthenticated && <Registerdialog />}
 
+                        {isAuthenticated && <Logout/>}
 
                         {/* DRAWER FOR MOBILE VIEW */}
 
@@ -103,6 +123,7 @@ const Navbar = () => {
                 </div>
             </>
         </Disclosure>
+      </>
     )
 }
 

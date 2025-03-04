@@ -80,10 +80,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
-			<version>5.2.1</version>
-		</dependency>
 	</dependencies>
 
 	<build>

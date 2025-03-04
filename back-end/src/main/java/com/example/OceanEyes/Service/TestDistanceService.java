@@ -25,4 +25,8 @@ public class TestDistanceService {
     public List<TestDistance> getTestDistanceById(float testDistanceId){
         return testDistanceRepo.findTestDistanceById(testDistanceId);
     }
+
+    public List<TestDistance> getAllDistances() {
+        return testDistanceRepo.findAll();
+    }
 }
