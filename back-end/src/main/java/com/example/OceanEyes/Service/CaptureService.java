@@ -1,6 +1,7 @@
 package com.example.OceanEyes.Service;
 
 import com.example.OceanEyes.Entity.Capture;
+import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Repo.CaptureRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,9 @@ public class CaptureService {
 
     public List<Capture> getCapturesById(String captureId) {
         return captureRepo.findCaptureById(captureId);
+    }
+
+    public List<Capture> getAllCaptures() {
+        return captureRepo.findAll();
     }
 }

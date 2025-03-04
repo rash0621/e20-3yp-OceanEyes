@@ -1,6 +1,7 @@
 package com.example.OceanEyes.Controller;
 
 import com.example.OceanEyes.Entity.Capture;
+import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Service.CaptureService;
 import com.example.OceanEyes.Service.FileService;
 import jakarta.annotation.Resource;
@@ -63,5 +64,8 @@ public class CaptureController {
         }).orElseGet(() -> ResponseEntity.status(404).body(new byte[0]));  //
     }
 
-
+    @GetMapping("/allCaptures")
+    public List<Capture> getAllCaptures() {
+        return captureService.getAllCaptures();
+    }
 }

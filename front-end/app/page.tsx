@@ -9,6 +9,7 @@ import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
 import Instances from './components/Instances/Instances'
 import Map from './components/Map/Map';
+import Captures from './components/Capture/Captures'
 import GenerateInstances from './components/Instances/Instances';
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
@@ -36,6 +37,7 @@ export default function Home() {
     <main>
       <Banner />
       <Instances/> 
+      <Captures />
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />

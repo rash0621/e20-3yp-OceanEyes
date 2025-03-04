@@ -154,7 +154,7 @@ const AddInstance = () => {
                                                             required
                                                             className="relative block w-full appearance-none rounded-none rounded-b-md border border-grey500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                                             placeholder="Distance Between Points"
-                                                            value={distanceBetweenPoints}
+                                                            value={distanceBetweenPoints || ''}
                                                             onChange={(e) => setDistanceBetweenPoints(Number(e.target.value))}
                                                         />
                                                     </div>
@@ -169,7 +169,7 @@ const AddInstance = () => {
                                                             required
                                                             className="relative block w-full appearance-none rounded-none rounded-b-md border border-grey500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                                             placeholder="Map"
-                                                            value={map}
+                                                            value={map || ''}
                                                             onChange={(e) => setMap(Number(e.target.value))}
                                                         />
                                                     </div>
