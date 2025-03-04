@@ -14,7 +14,7 @@ public class InstanceService {
     @Autowired
     private InstanceRepo instanceRepo;
 
-    public Instance saveInstance(String deviceName, String startGpsLocation, int distanceBetweenPoints, int map, String description, String Operator, String locationDistrict) throws IOException {
+    public Instance saveInstance(String deviceName, String startGpsLocation, Integer distanceBetweenPoints, Integer map, String description, String Operator, String locationDistrict) throws IOException {
         Instance instance = new Instance();
         instance.setDeviceName(deviceName);
         instance.setStartGpsLocation(startGpsLocation);

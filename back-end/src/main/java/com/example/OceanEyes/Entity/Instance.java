@@ -1,5 +1,6 @@
 package com.example.OceanEyes.Entity;
 
+import com.mongodb.lang.Nullable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,13 +11,21 @@ import java.util.List;
 public class Instance {
     @Id
     private String id;
+    @Nullable
     private String deviceName;
+    @Nullable
     private String startGpsLocation;
-    private int distanceBetweenPoints;
-    private int map;
+    @Nullable
+    private Integer distanceBetweenPoints;
+    @Nullable
+    private Integer map;
+    @Nullable
     private LocalDateTime localDateTime;
+    @Nullable
     private String description;
+    @Nullable
     private String operator;
+    @Nullable
     private String locationDistrict;
 
     public String getInstanceId() {
@@ -43,19 +52,19 @@ public class Instance {
         this.startGpsLocation = startGpsLocation;
     }
 
-    public int getDistanceBetweenPoints() {
+    public Integer getDistanceBetweenPoints() {
         return distanceBetweenPoints;
     }
 
-    public void setDistanceBetweenPoints(int distanceBetweenPoints) {
+    public void setDistanceBetweenPoints(Integer distanceBetweenPoints) {
         this.distanceBetweenPoints = distanceBetweenPoints;
     }
 
-    public int getMap() {
+    public Integer getMap() {
         return map;
     }
 
-    public void setMap(int map) {
+    public void setMap(Integer map) {
         this.map = map;
     }
 

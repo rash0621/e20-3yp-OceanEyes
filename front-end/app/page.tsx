@@ -7,9 +7,12 @@ import Why from './components/Why/index';
 import Network from './components/Network/index';
 import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
+import Instances from './components/Instances/Instances'
+import Map from './components/Map/Map';
 import GenerateInstances from './components/Instances/Instances';
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
+
 
 
 export default function Home() {
@@ -32,13 +35,15 @@ export default function Home() {
   return (
     <main>
       <Banner />
-      <Companies />
-      <Buyers />
-      <Provide />
+      <Instances/> 
+      {/* <Map /> */}
+      {/* <Companies /> */}
       <Why />
-      <Network />
-      <Clientsay />
-      <Newsletter />
+      {/* <Buyers /> */}
+      {/* <Provide /> */}
+      {/* <Network /> */}
+      {/* <Clientsay /> */}
+      {/* <Newsletter /> */}
       {/* <GenerateInstances/> */}
       {isAuthenticated && <GenerateInstances />}
     </main>

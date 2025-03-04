@@ -11,16 +11,16 @@ interface whydata {
 
 const whydata: whydata[] = [
     {
-        heading: "Quality",
-        subheading: "Follow a hashtag growth total posts, videos and images.more revitions",
+        heading: "Pollution Detection",
+        subheading: "Detects plastic waste, and debris in the water, and pinpoints the locations of these materials.",
     },
     {
-        heading: "Communication",
-        subheading: "Follow a hashtag growth total posts, videos and images.more revitions",
+        heading: "Sea State Monitoring",
+        subheading: "Gauges the conditions of the sea and determines whether it is calm or rough.",
     },
     {
-        heading: "Reliability",
-        subheading: "Follow a hashtag growth total posts, videos and images.more revitions",
+        heading: "Data Accessibility",
+        subheading: "Offers visual representations of locations with pollutants via a software platform.",
     }
 ]
 
@@ -46,22 +46,30 @@ const Why = () => {
                 <div className='grid grid-cols-1 lg:grid-cols-2'>
 
                     {/* COLUMN-1 */}
-                    <div className="relative lg:-ml-64">
-                        {imageSrc ? (
-                            <img
-                                src={imageSrc}
-                                alt="Fetched Image from Backend"
-                                style={{ width: '100%', height: 'auto' }}
-                            />
-                        ) : (
-                            <p>Loading image...</p> // Show a loading message until the image is fetched
-                        )}
-                    </div>
+                    <div className="relative lg:ml-10"> {/* Adjusted the margin to fit your layout */}
+                    {imageSrc ? (
+                        <img
+                            src="/assets/why/about.jpg"
+                            alt="Fetched Image from Backend"
+                            style={{
+                                maxWidth: '90%',     // Image will take up to 80% of the container width
+                                height: 'auto',      // Height will adjust proportionally to maintain aspect ratio
+                                marginRight: '10%',
+                                marginTop: '20%',
+                                marginBottom: '20%',
+                                objectFit: 'contain' // Ensure the image maintains its aspect ratio while filling the available space
+                            }}
+                        />
+                    ) : (
+                        <p>Loading image...</p> // Show a loading message until the image is fetched
+                    )}
+                </div>
 
                     {/* COLUMN-2 */}
                     <div>
-                        <h3 className="text-4xl lg:text-5xl pt-4 font-semibold sm:leading-tight mt-5 text-center lg:text-start">Why we best?</h3>
-                        <h4 className="text-lg pt-4 font-normal sm:leading-tight text-center text-beach lg:text-start">Don't waste time on search manual tasks. Let Automation do it for you. Simplify workflows, reduce errors, and save time.</h4>
+                        <h3 className="text-4xl lg:text-5xl pt-4 font-semibold sm:leading-tight mt-5 text-center lg:text-start">About</h3>
+                        <h4 className="text-lg pt-4 font-normal sm:leading-tight text-center text-beach lg:text-start">OceanEyes is an innovative system designed to monitor and analyze sea pollution
+                        levels and sea state in real time.</h4>
 
                         <div className="mt-10">
                             {whydata.map((items, i) => (
