@@ -9,13 +9,9 @@ import { Dialog, DialogContent } from "@mui/material";
 import {domainName} from "../DomainName"
 import AddInstance from "./AddInstance";
 
-function GenerateInstances() {
+function Instances() {
 
-  const token = localStorage.getItem("jwtToken");
-
-  // return token ? <Outlet /> : <Navigate to="/login" />;
   let loggedInUser = {"isLoggedIn":true};
-
   const [instances, setInstances] = useState<InstanceType[]>([]);;    
 
   useEffect(()=>{
@@ -187,7 +183,7 @@ const onViewClick = (instance:InstanceType) => {
       <h3 className="text-4xl sm:text-6xl font-semibold text-center my-10 lh-81">Current Instances</h3>
     </div>
     <div className={style["container"]}>
-      <AddInstance />
+      {/* <AddInstance /> */}
       <div className={style["tableContainer"]}>
           <table className={style["table"]}>
             <thead>
@@ -409,4 +405,4 @@ const onViewClick = (instance:InstanceType) => {
   );
 }
   
-export default GenerateInstances;
+export default Instances;
