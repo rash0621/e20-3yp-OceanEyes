@@ -1,3 +1,4 @@
+
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
@@ -30,7 +31,7 @@ const Signin = () => {
         <>
             <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:pr-0">
                 <div className='hidden lg:block'>
-                    <button type="button" className='text-lg text-blue font-medium' onClick={openModal}>
+                    <button suppressHydrationWarning type="button" className='text-lg text-blue font-medium' onClick={openModal}>
                         Log Out
                     </button>
                 </div>

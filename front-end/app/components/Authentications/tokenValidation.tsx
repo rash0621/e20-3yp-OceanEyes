@@ -1,5 +1,4 @@
 export const isTokenValid = (): boolean => {
-
     const token = localStorage.getItem("jwtToken");
     if (!token) return false; // No token = Not authenticated
 
