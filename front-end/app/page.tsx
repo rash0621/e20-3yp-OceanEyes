@@ -9,7 +9,7 @@ import Clientsay from './components/Clientsay/index';
 import Newsletter from './components/Newsletter/Newsletter';
 import Instances from './components/Instances/Instances'
 import Map from './components/Map/Map';
-// import GenerateInstances from './components/Instances/Instances';
+import Captures from './components/Capture/Captures'
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
 
@@ -35,6 +35,7 @@ export default function Home() {
   return (
     <main>
       <Banner />
+      <Captures />
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />
@@ -44,7 +45,6 @@ export default function Home() {
       {/* <Network /> */}
       {/* <Clientsay /> */}
       {/* <Newsletter /> */}
-      {/* <GenerateInstances/> */}
     </main>
   )
 }
