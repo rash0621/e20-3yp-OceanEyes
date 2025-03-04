@@ -18,12 +18,14 @@ interface NavigationItem {
     current: boolean;
 }
 
+// TODO:
+
 const navigation: NavigationItem[] = [
     { name: 'OceanEyes', href: '/', current: true },
     { name: 'Home', href: '/', current: true },
-    { name: 'Services', href: '#services', current: false },
+    // { name: 'Services', href: '#services', current: false },
     { name: 'About', href: '#about', current: false },
-    { name: 'Device Management', href: '#about', current: false },
+    // { name: 'Device Management', href: '#about', current: false },
     { name: 'Help', href: '/', current: false },
 ]
 
@@ -95,6 +97,7 @@ const Navbar = () => {
                             </div>
                         </div>
 
+                        
                         {/* SIGNIN DIALOG */}
 
                         {!isAuthenticated && <Signdialog />}
@@ -102,6 +105,8 @@ const Navbar = () => {
                         {/* REGISTER DIALOG */}
 
                         {!isAuthenticated && <Registerdialog />}
+
+                        {/* LOGOUT DIALOG */}
 
                         {isAuthenticated && <Logout/>}
 

@@ -1,8 +1,24 @@
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { isTokenValid } from "../Authentications/tokenValidation";
 
 
 
 const Banner = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+    
+        useEffect(() => {
+            const checkAuth = () => {
+                setIsAuthenticated(isTokenValid());
+            };
+    
+            window.addEventListener("storage", checkAuth);
+    
+            return () => {
+                window.removeEventListener("storage", checkAuth);
+            };
+        }, []);
+
     return (
         <main>
             <div className="px-6 lg:px-8">
@@ -16,8 +32,9 @@ const Banner = () => {
                         </p>
                     </div>
 
-
-                    <div className="text-center mt-5">
+                    {isAuthenticated && (
+                        <>
+                        <div className="text-center mt-5">
                         <button type="button" className='text-15px text-white font-medium bg-blue py-5 px-9 mt-2 leafbutton'>
                             View Maps
                         </button>
@@ -26,6 +43,9 @@ const Banner = () => {
                         </button>
                         
                     </div>
+                        </>
+                    )}
+                    
 
                     {/* <Image src={'/assets/banner/dashboard.svg'} alt="banner-image" width={1200} height={598} /> */}
                 </div>
