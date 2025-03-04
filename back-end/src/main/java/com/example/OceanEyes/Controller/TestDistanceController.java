@@ -24,7 +24,7 @@ public class TestDistanceController {
         return ResponseEntity.ok(savedTestDistance);
     }
 
-    @GetMapping("/testDistance/{testDistanceId}")
+    @GetMapping("/{testDistanceId}")
     public ResponseEntity<List<TestDistance>> getTestDistance(@PathVariable Long testDistanceId){
         List<TestDistance> testDistance = testDistanceService.getTestDistanceById(testDistanceId);
 

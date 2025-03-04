@@ -20,17 +20,22 @@ public class InstanceController {
     private InstanceService instanceService;
 
     @PostMapping(value = "/save")
-    public ResponseEntity<Instance> createInstance(
-            @RequestParam("deviceName") String deviceName,
-            @RequestParam("startGpsLocation") String startGpsLocation,
-            @RequestParam("distanceBetweenPoints") int distanceBetweenPoints,
-            @RequestParam("map") int map,
-            @RequestParam("description") String description,
-            @RequestParam("operator") String operator,
-            @RequestParam("locationDistrict") String locationDistrict
+    public ResponseEntity<ActionStatusMessage<Instance>> createInstance(
+            @RequestParam(value = "deviceName") String deviceName,
+            @RequestParam(value = "startGpsLocation", required = false) String startGpsLocation,
+            @RequestParam(value = "distanceBetweenPoints", required = false) Integer distanceBetweenPoints,
+            @RequestParam(value = "map", required = false) Integer map,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "operator", required = false) String operator,
+            @RequestParam(value = "locationDistrict", required = false) String locationDistrict
     ) throws IOException {
         Instance savedInstance = instanceService.saveInstance(deviceName, startGpsLocation, distanceBetweenPoints, map, description, operator, locationDistrict);
-        return ResponseEntity.ok(savedInstance);
+
+        return ResponseEntity.ok(new ActionStatusMessage<Instance> (
+                "SUCCESS",
+                "Device started successfully!",
+                savedInstance
+        ));
     }
 
 
