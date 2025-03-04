@@ -31,12 +31,13 @@ export default function Home() {
         };
     }, []);
 
+    if (isAuthenticated === null) return null; // Avoid rendering mismatched content
 
   return (
     <main>
       <Banner />
       {isAuthenticated && <Instances/> }
-      {isAuthenticated && <Captures/> }
+      {isAuthenticated && <Captures /> }
       {/* <Map /> */}
       {/* <Companies /> */}
       <Why />
