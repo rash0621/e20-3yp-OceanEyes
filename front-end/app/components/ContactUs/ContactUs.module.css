@@ -1,0 +1,96 @@
+  /* Contact Us form styles */
+  .ContactUsTitle {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .ContactUsTitle h3 {
+    font-size: 50px;
+    font-family: Arial, sans-serif;
+    font-weight: bolder;
+    color: hsl(0, 0%, 0%);
+  }
+  
+  .ContactUsSubTitle {
+    color: #555;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .contactUsForm {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto 5rem;
+    padding: 1rem;
+    text-align: left;
+    font-size: 1.125rem;
+  }
+  
+  .contactUsForm form {
+    flex: 1;
+    margin: 0 1rem;
+  }
+  
+  .inputbox {
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+  
+  .inputbox label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .field,
+  .field-mess {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 2px solid #c9e1ef;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    outline: none;
+  }
+  
+  .field:focus,
+  .field-mess:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  .field-mess {
+    min-height: 70px;
+    resize: vertical;
+    resize: none;
+  }
+
+  .contactButton {
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+    background-color: hsl(214, 76%, 94%);
+    color: hsl(211, 91%, 49%);
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .contactButton:hover {
+    background-color: hsl(211, 91%, 49%);
+    color: #ffffff;
+  }
+  
+
+  

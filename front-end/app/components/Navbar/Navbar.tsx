@@ -27,6 +27,7 @@ const navigation: NavigationItem[] = [
     { name: 'About', href: '#about', current: false },
     // { name: 'Device Management', href: '#about', current: false },
     { name: 'Help', href: '/', current: false },
+    { name: 'Contact Us', href: '#contactus', current: false },
 ]
 
 function classNames(...classes: string[]) {
