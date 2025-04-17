@@ -12,7 +12,7 @@ import Map from './components/Map/Map';
 import Captures from './components/Capture/Captures'
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
-
+import ContactUs from './components/ContactUs/ContactUs'
 
 
 export default function Home() {
@@ -46,6 +46,7 @@ export default function Home() {
       {/* <Network /> */}
       {/* <Clientsay /> */}
       {/* <Newsletter /> */}
+      <ContactUs />
     </main>
   )
 }
