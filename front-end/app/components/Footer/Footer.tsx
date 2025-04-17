@@ -14,14 +14,14 @@ const products: ProductType[] = [
     },
     {
         id: 2,
-        link: ['Help', 'About', 'Team']
+        link: ['Help', 'About', 'Team', 'Contact Us']
     }
 ]
 
 const footer = () => {
     return (
-        <div className="bg-darkblue -mt-40">
-            <div className="mx-auto max-w-2xl pt-48 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="bg-darkblue pt-1"> {/*footer background size and colour*/}
+            <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div className="my-24 grid grid-cols-1 gap-y-10 gap-x-16 sm:grid-cols-2 lg:grid-cols-12 xl:gap-x-8">
 
                     {/* COLUMN-1 */}

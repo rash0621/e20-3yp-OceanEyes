@@ -1,32 +1,35 @@
-
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-import {domainName} from "../DomainName"
-
+import { domainName } from "../DomainName"
+import { passwordStrength } from 'check-password-strength'
 
 const Register = () => {
     let [isOpen, setIsOpen] = useState(false)
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
 
-    const closeModal = () => {
-        setIsOpen(false)
-    }
+    const closeModal = () => setIsOpen(false)
+    const openModal = () => setIsOpen(true)
 
-    const openModal = () => {
-        setIsOpen(true)
-    }
+    const strength = passwordStrength(password);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // Allow only Medium and Strong passwords
+        if (strength.value === 'Too weak' || strength.value === 'Weak') {
+            alert("Password is too weak. Please use at least a medium-strength password.");
+            return;
+        }
+
         try {
             const response = await fetch(`${domainName}user/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ "userEmail":email, "userPassword":password }),
+                body: JSON.stringify({ "userEmail": email, "userPassword": password }),
             });
 
             const data = await response.json();
@@ -43,12 +46,24 @@ const Register = () => {
         }
     }
 
+    const getStrengthColor = (value: string) => {
+        switch (value) {
+            case 'Too weak': return 'text-red-600';
+            case 'Weak': return 'text-yellow-600';
+            case 'Medium': return 'text-blue-600';
+            case 'Strong': return 'text-green-600';
+            default: return 'text-gray-600';
+        }
+    };
+
     return (
         <>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto  sm:pr-0">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0">
                 <div className='hidden lg:block'>
-                    <button className="text-blue text-lg font-medium ml-9 py-5 px-16 transition duration-150 ease-in-out leafbutton bg-lightblue hover:text-white hover:bg-blue" onClick={openModal}>
-                        Resgister
+                    <button
+                        className="text-blue text-lg font-medium ml-9 py-5 px-16 transition duration-150 ease-in-out leafbutton bg-lightblue hover:text-white hover:bg-blue"
+                        onClick={openModal}>
+                        Register
                     </button>
                 </div>
             </div>
@@ -79,7 +94,6 @@ const Register = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-
                                     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                                         <div className="w-full max-w-md space-y-8">
                                             <div>
@@ -92,7 +106,7 @@ const Register = () => {
                                                     Register your account
                                                 </h2>
                                             </div>
-                                            <form onSubmit={handleRegister} className="mt-8 space-y-6" action="#" method="POST">
+                                            <form onSubmit={handleRegister} className="mt-8 space-y-6">
                                                 <input type="hidden" name="remember" defaultValue="true" />
                                                 <div className="-space-y-px rounded-md shadow-sm">
                                                     <div>
@@ -126,6 +140,16 @@ const Register = () => {
                                                             value={password}
                                                             onChange={(e) => setPassword(e.target.value)}
                                                         />
+                                                        {password && (
+                                                            <div className="mt-2">
+                                                                <p className={`text-sm font-medium ${getStrengthColor(strength.value)}`}>
+                                                                    Password strength: {strength.value}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500 mt-1">
+                                                                    Password must be at least 10 characters and include uppercase, lowercase, a number, and a symbol.
+                                                                </p>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
 
@@ -141,13 +165,14 @@ const Register = () => {
                                                             Remember me
                                                         </label>
                                                     </div>
-
                                                 </div>
 
                                                 <div>
                                                     <button
                                                         type="submit"
-                                                        className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                        disabled={strength.value === 'Too weak' || strength.value === 'Weak'}
+                                                        className={`group relative flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                                                            ${(strength.value === 'Medium' || strength.value === 'Strong') ? 'bg-blue hover:bg-darkblue' : 'bg-gray-400 cursor-not-allowed'}`}
                                                     >
                                                         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                                                             <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
@@ -159,11 +184,10 @@ const Register = () => {
                                         </div>
                                     </div>
 
-
                                     <div className="mt-4 flex justify-end">
                                         <button
                                             type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 "
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900"
                                             onClick={closeModal}
                                         >
                                             Cancel
