@@ -24,7 +24,7 @@ const navigation: NavigationItem[] = [
     // { name: 'OceanEyes', href: '/', current: true },
     { name: 'Home', href: '/', current: true },
     // { name: 'Services', href: '#services', current: false },
-    { name: 'Map', href: '#OceanMap', current: false },
+    // { name: 'Map', href: '#OceanMap', current: false },
     // { name: 'Device Management', href: '#about', current: false },
     { name: 'Help', href: '/', current: false },
     { name: 'About', href: '#about', current: false },
