@@ -13,7 +13,7 @@ import Captures from './components/Capture/Captures'
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
 import ContactUs from './components/ContactUs/ContactUs'
-import OceanMap from './components/OceanMap/OceanMap'
+// import OceanMap from './components/OceanMap/OceanMap'
 
 
 export default function Home() {
@@ -41,7 +41,6 @@ export default function Home() {
       {isAuthenticated && <Captures /> }
       {/* <Map /> */}
       {/* <Companies /> */}
-      <OceanMap/>
       <Why />
       {/* <Buyers /> */}
       {/* <Provide /> */}
