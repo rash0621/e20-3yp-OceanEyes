@@ -32,11 +32,12 @@ html:not([data-scroll="0"]) .navbar {
 
 .banner-image {
     background-image: url('/assets/banner/bg.jpg');
-    width: 500vw;
+    width: 100vw;
     height: 100vh;
     background-repeat: no-repeat;
     background-position: top;
-    background-size: contain;
+    /* background-size: contain; */
+    background-size: 100% 100%;
 }
 
 hr {

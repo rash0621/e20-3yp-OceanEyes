@@ -55,8 +55,8 @@ const Why = () => {
                                 maxWidth: '90%',     // Image will take up to 80% of the container width
                                 height: 'auto',      // Height will adjust proportionally to maintain aspect ratio
                                 marginRight: '10%',
-                                marginTop: '20%',
-                                marginBottom: '20%',
+                                marginTop: '5%',
+                                marginBottom: '5%',
                                 objectFit: 'contain' // Ensure the image maintains its aspect ratio while filling the available space
                             }}
                         />

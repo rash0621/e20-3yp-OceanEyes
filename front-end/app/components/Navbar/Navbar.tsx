@@ -21,12 +21,13 @@ interface NavigationItem {
 // TODO:
 
 const navigation: NavigationItem[] = [
-    { name: 'OceanEyes', href: '/', current: true },
+    // { name: 'OceanEyes', href: '/', current: true },
     { name: 'Home', href: '/', current: true },
     // { name: 'Services', href: '#services', current: false },
-    { name: 'About', href: '#about', current: false },
+    { name: 'Map', href: '#OceanMap', current: false },
     // { name: 'Device Management', href: '#about', current: false },
     { name: 'Help', href: '/', current: false },
+    { name: 'About', href: '#about', current: false },
     { name: 'Contact Us', href: '#contactus', current: false },
 ]
 
@@ -63,18 +64,15 @@ const Navbar = () => {
 
                             {/* LOGO */}
 
-                            {/* <div className="flex flex-shrink-0 items-center">
+                            <div className="flex flex-shrink-1 items-center space-x-3">
                                 <img
-                                    className="block h-12 w-40 lg:hidden"
-                                    src={'/assets/logo/logo.png'}
+                                    className="hidden h-[200px] w-[200px] lg:block"
+                                    src={'/assets/banner/logo.png'}
                                     alt="dsign-logo"
                                 />
-                                <img
-                                    className="hidden h-full w-full lg:block"
-                                    src={'/assets/logo/logo.png'}
-                                    alt="dsign-logo"
-                                />
-                            </div> */}
+                                <span className="hidden lg:block ml-3 text-2xl font-bold text-gray-500 opacity-70">OceanEyes</span>
+                            </div>
+
 
                             {/* LINKS */}
 
