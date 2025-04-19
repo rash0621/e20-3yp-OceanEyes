@@ -1,12 +1,14 @@
+"use client"
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { isTokenValid } from "../Authentications/tokenValidation";
-
+import { useRouter } from 'next/navigation';
 
 
 const Banner = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
-    
+    const router = useRouter();
+
         useEffect(() => {
             const checkAuth = () => {
                 setIsAuthenticated(isTokenValid());
@@ -35,13 +37,22 @@ const Banner = () => {
                     {isAuthenticated && (
                         <>
                         <div className="text-center mt-5">
-                        <button type="button" className='text-15px text-white font-medium bg-blue py-5 px-9 mt-2 leafbutton'>
-                            View Maps
+                        <button 
+                                type="button" 
+                                className='text-15px text-white font-medium bg-blue py-5 px-9 mt-2 leafbutton'
+                                onClick={() => router.push('/map')} >
+                            View Map
                         </button>
-                        <button type="button" className='text-15px ml-4 mt-2 text-blue transition duration-150 ease-in-out hover:text-white hover:bg-blue font-medium py-5 px-16 border border-lightgrey leafbutton'>
-                            Controller
+                        <button type="button" 
+                                className='text-15px ml-4 mt-2 text-blue transition duration-150 ease-in-out hover:text-white hover:bg-blue font-medium py-5 px-16 border border-lightgrey leafbutton'
+                                onClick={() => router.push('/device-registration')}>
+                            Device Registration
                         </button>
-                        
+                        <button type="button" 
+                                className='text-15px ml-4 mt-2 text-blue transition duration-150 ease-in-out hover:text-white hover:bg-blue font-medium py-5 px-16 border border-lightgrey leafbutton'
+                                onClick={() => router.push('/device-management')} >
+                            Device Management
+                        </button>
                     </div>
                         </>
                     )}
