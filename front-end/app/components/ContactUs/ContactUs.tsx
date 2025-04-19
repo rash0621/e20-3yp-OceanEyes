@@ -1,5 +1,6 @@
 import React, { FormEvent } from 'react';
 import style from './ContactUs.module.css';
+import Image from "next/image";
 
 const ContactUs: React.FC = () => {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -38,6 +39,9 @@ const ContactUs: React.FC = () => {
   return (
     <div id="contactus">
       <div className={style.ContactUsTitle}>
+        <div className="flex justify-center items-center mt-8">
+          <Image src="/assets/banner/contactus.png" alt="contactus-image" width={80} height={80} />
+        </div>
         <h3>Contact Us</h3>
         <p className={style.ContactUsSubTitle}>
           For inquiries or support, contact us and we&apos;ll respond promptly
