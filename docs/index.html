@@ -487,17 +487,17 @@
         </div>
 
         <!-- Inserted Budget Table -->
-        <div style="overflow-x:auto;">
-          <h4 style="text-align:center; margin-bottom: 20px;">Detailed Budget</h4>
-          <table style="width: 100%; border-collapse: collapse; margin: 0 auto 40px auto; font-family: Arial, sans-serif;">
-            <thead>
-              <tr>
-                <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Item</th>
-                <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Quantity</th>
-                <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Unit Cost (LKR)</th>
-                <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Total (LKR)</th>
-              </tr>
-            </thead>
+        <div style="display: flex; justify-content: center; margin-top: 30px;">
+          <div style="overflow-x: auto; border: 2px solid #333; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; text-align: center;">
+              <thead>
+                <tr>
+                  <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Item</th>
+                  <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Quantity</th>
+                  <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Unit Cost (LKR)</th>
+                  <th style="border: 1px solid #888; padding: 10px; background-color: #f0f0f0;">Total (LKR)</th>
+                </tr>
+              </thead>
             <tbody>
               <tr><td style="border: 1px solid #888; padding: 10px;">ESP32 Development Board</td><td>2</td><td>1950</td><td>3900</td></tr>
               <tr><td style="border: 1px solid #888; padding: 10px;">ESP32 module with CAM</td><td>1</td><td>2160</td><td>2160</td></tr>
@@ -516,15 +516,17 @@
               <tr><td style="border: 1px solid #888; padding: 10px;">Humidity Sensor</td><td>1</td><td>1360</td><td>1360</td></tr>
               <tr><td style="border: 1px solid #888; padding: 10px;">Outer casing for the self guided device</td><td>1</td><td>5000</td><td>5000</td></tr>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" style="border: 1px solid #888; padding: 10px; font-weight: bold; background-color: #e6ffe6;">Total</td>
-                <td style="border: 1px solid #888; padding: 10px; font-weight: bold; background-color: #e6ffe6;">28500</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      <!-- End Budget Table -->
+          <tfoot>
+          <tr>
+            <td colspan="3" style="border: 1px solid #888; padding: 10px; font-weight: bold; background-color: #e6ffe6;">Total</td>
+            <td style="border: 1px solid #888; padding: 10px; font-weight: bold; background-color: #e6ffe6;">28500</td>
+          </tr>
+          </tfoot>
+      </table>
+      </div>
+    </div>
+    <!-- End Budget Table -->
+
 
       <div class="row">
         <!-- Existing budget feature boxes can remain here or be replaced -->
@@ -535,10 +537,10 @@
         <a href="">
           View All
         </a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 <!-- end Budget section -->
 
