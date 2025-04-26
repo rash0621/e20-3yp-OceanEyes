@@ -92,10 +92,15 @@
 			<artifactId>aws-iot-device-sdk</artifactId>
 			<version>1.23.0</version>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>software.amazon.awssdk</groupId>-->
+<!--			<artifactId>core</artifactId>-->
+<!--			<version>1.12.775</version>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>core</artifactId>
-			<version>1.12.775</version>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>dotenv-java</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
 	<build>
