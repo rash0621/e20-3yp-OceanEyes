@@ -1,10 +1,19 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import style from "./DeviceRegistration.module.css";
 import { domainName } from "../components/DomainName";
 import RequireAuth from "../components/RequireAuth";
 
 const DeviceRegistration = () => {
+  
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+ 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -78,16 +87,30 @@ const DeviceRegistration = () => {
 
           <div className={style.inputbox}>
             <label htmlFor="password">Device Password</label>
+            <div style={{ position: 'relative' }}>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               className={style.field}
               placeholder="Enter Password"
               required
+              style={{ paddingRight: '2.5rem' }} 
             />
+            <span 
+              onClick={togglePasswordVisibility} 
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                cursor: 'pointer',
+                color: '#666',
+              }}>
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </span>
           </div>
-
+          </div>
           <button type="submit" className={style.submitButton}>
             Register Device
           </button>
