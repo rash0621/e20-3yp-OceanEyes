@@ -3,6 +3,8 @@ import { Fragment, useState } from 'react'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { domainName } from "../DomainName"
 import { passwordStrength } from 'check-password-strength'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Register = () => {
     let [isOpen, setIsOpen] = useState(false)
@@ -13,6 +15,12 @@ const Register = () => {
     const openModal = () => setIsOpen(true)
 
     const strength = passwordStrength(password);
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+    };
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -129,17 +137,31 @@ const Register = () => {
                                                         <label htmlFor="password" className="sr-only">
                                                             Password
                                                         </label>
-                                                        <input
-                                                            id="password"
-                                                            name="password"
-                                                            type="password"
-                                                            autoComplete="current-password"
-                                                            required
-                                                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-grey500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                            placeholder="Password"
-                                                            value={password}
-                                                            onChange={(e) => setPassword(e.target.value)}
-                                                        />
+                                                        <div style={{ position: 'relative' }}>
+                                                            <input
+                                                                id="password"
+                                                                name="password"
+                                                                type={showPassword ? 'text' : 'password'}
+                                                                autoComplete="current-password"
+                                                                required
+                                                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-grey500 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                                                placeholder="Password"
+                                                                value={password}
+                                                                onChange={(e) => setPassword(e.target.value)}
+                                                            />
+                                                            <span 
+                                                                onClick={togglePasswordVisibility} 
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    right: '10px',
+                                                                    top: '50%',
+                                                                    transform: 'translateY(-50%)',
+                                                                    cursor: 'pointer',
+                                                                    color: '#666',
+                                                                }}>
+                                                                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                                                            </span>
+                                                        </div>
                                                         {password && (
                                                             <div className="mt-2">
                                                                 <p className={`text-sm font-medium ${getStrengthColor(strength.value)}`}>
