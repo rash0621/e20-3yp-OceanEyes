@@ -67,11 +67,20 @@ const DeviceManagement=() => {
     return (
       
       <RequireAuth>
-      <div className="p-6 text-2xl font-bold">
-        Device Management Page
-      </div>
+      <div style={{
+          height: "300px",           
+          display: "flex",
+          flexDirection: 'column',
+          justifyContent: "center",  
+          alignItems: "center"      
+        }}>
+      <div className="pageTitle">
+          <h5>Device Management Page</h5>
+          <p className="pageSubTitle">
+            OceanEyes Device Control
+          </p>
+        </div>
       <div style={{ padding: "20px" }}>
-      <h2>OceanEyes Device Control</h2>
       <button
           onClick={startOceanEye}
           disabled={deviceRunning || loadingStart}
@@ -93,6 +102,7 @@ const DeviceManagement=() => {
         >
           {loadingStop ? "Stopping..." : "Stop Device"}
         </button>
+      </div>
       </div>
       </RequireAuth>
 
