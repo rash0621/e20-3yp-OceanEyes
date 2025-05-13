@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
@@ -19,14 +19,32 @@ L.Icon.Default.mergeOptions({
     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Create a component to handle map recentering
+const RecenterMap = ({ center, selectedTurn }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedTurn) {
+      map.setView([7.8731, 80.7718], map.getZoom());
+    } else {
+      map.setView(center, map.getZoom());
+    }
+  }, [selectedTurn, center, map]);
+
+  return null;
+};
+
+
 const Map = () => {
-  const [position, setPosition] = useState(null);
   const [turns, setTurns] = useState([]); //As of now Turns, later change this to an turn
+  const [selectedTurn, setSelectedTurn] = useState(null);
+  const [turnImages, setTurnImages] = useState([]);
+  const defaultCenter = [7.8731, 80.7718];
 
   useEffect(() => {
     const fetchTurns = async () => {
       try {
-        const response = await axios.get(`${domainName}turns/allTurns`);
+        const response = await axios.get(`${domainName}turn/allTurns`);
         console.log("Fetched Turns:", response.data); // DEBUG: show fetched data
         setTurns(response.data); // assuming array of Turns with gpsLocation
       } catch (err) {
@@ -36,40 +54,50 @@ const Map = () => {
     fetchTurns();
   }, []);
 
-  const LocationMarker = () => {
-    useMapEvents({
-      click(e) {
-        setPosition(e.latlng);
-      },
-    });
+   // Fetch images when selectedTurn changes
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!selectedTurn) return;
+      console.log("Fetching images for turnId:", selectedTurn.turnId);
 
-    return position === null ? null : <Marker position={position} />;
-  };
+      if (!selectedTurn) return;
 
-  const handleSave = async () => {
-    if (position) {
       try {
-        await axios.post('http://localhost:8080/api/location', position);
-        alert('Location saved successfully!');
+        const response = await axios.get(`${domainName}capture/images/turn/${selectedTurn.id}`);
+        console.log("Image Fetch Response:", response.data);
+        if (response.data.status === "SUCCESS") {
+          const imageByteArrays = response.data.data;
+          const base64Images = imageByteArrays.map((base64String) =>
+            `data:image/jpeg;base64,${base64String}`
+          );
+          setTurnImages(base64Images);
+        } else {
+          setTurnImages([]);
+        }
       } catch (err) {
-        alert('Error saving location');
-        console.error(err);
+        console.error("Failed to fetch images for selected turn", err);
+        setTurnImages([]);
       }
-    }
-  };
+    };
 
+    fetchImages();
+  }, [selectedTurn]);
+  
   return (
     <div id="OceanMap" className="mx-24 pt-2 relative z-0">
+      <div className="flex gap-4">
+      {/* Map container - Left half */}
+      <div className={`${selectedTurn ? 'w-1/2' : 'w-full'}`}>
       <MapContainer
-        center={[7.8731, 80.7718]}
+        center={defaultCenter}
         zoom={7}
         style={{ height: '80vh', width: '100%' }}
       >
+        <RecenterMap center={defaultCenter} selectedTurn={selectedTurn} />
         <TileLayer 
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         
-        <LocationMarker />
         {/* Show capture markers */}
         {turns.map((turn, index) => (
           <Marker
@@ -78,42 +106,66 @@ const Map = () => {
               turn.gpsLocationLatitude,
               turn.gpsLocationLongitude
             ]}
-            // position={(() => {
-            //   const [lat, lng] = turn.startGpsLocation.split(" ").map(Number);
-            // return [lat, lng];
-            // })()}
+            eventHandlers={{
+              click: () => {
+                console.log("Marker clicked:", turn); // DEBUG
+                setSelectedTurn(turn);
+              }
+            }}
           >
-            <Popup>
+            {/* <Popup>
               <div>
                 <h3 className="font-bold">Turn Details</h3>
-                <p><strong>ID:</strong> {turn._id}</p>
-                {/* <p><strong>Device Name:</strong> {turn.deviceName}</p>
-                <p><strong>Description:</strong> {turn.description}</p>
-                <p><strong>Operator:</strong> {turn.operator}</p>
-                <p><strong>District:</strong> {turn.locationDistrict}</p>
-                <p><strong>Distance Between Points:</strong> {turn.distanceBetweenPoints} m</p>
-                <p><strong>Map ID:</strong> {turn.map}</p>
-                <p><strong>Timestamp:</strong> {new Date(turn.localDateTime).toLocaleString()}</p> */}
-
+                <p><strong>Instance ID:</strong> {turn.instanceId}</p>
+                <p><strong>Date:</strong> {turn.date}</p>
+                <p><strong>Time:</strong> {turn.time}</p>
+                <p><strong>Longitude:</strong> {turn.gpsLocationLongitude}</p>
+                <p><strong>Latitude:</strong> {turn.gpsLocationLatitude}</p>
               </div>
-            </Popup>
+            </Popup> */}
           </Marker>
         ))}
-
       </MapContainer>
-      <div className="mt-4 text-center">
-        {position && (
-          <>
-            <p className="mt-2">
-              Selected: Latitude {position.lat}, Longitude {position.lng}
-            </p>
-            <button
-              onClick={handleSave}
-              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
-              Save Location
+      </div>
+
+      {/* Details Panel - Right half */}
+      {selectedTurn && (
+        <div className="w-1/2 bg-white shadow-lg rounded-lg p-4 border border-gray-200 overflow-y-auto max-h-[80vh]">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Turn Details</h2>
+            <button onClick={() => {
+                  setSelectedTurn(null);
+                  setTurnImages([]);
+                }} 
+                className="text-red-500 font-bold text-lg">
+              ✕
             </button>
-          </>
+          </div>
+          <div className="space-y-1 text-sm">
+                <p><strong>Instance ID:</strong> {selectedTurn.instanceId}</p>
+                <p><strong>Date:</strong> {selectedTurn.date}</p>
+                <p><strong>Time:</strong> {selectedTurn.time}</p>
+                <p><strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude}</p>
+                <p><strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude}</p>
+          </div>
+          
+        {/* Images from backend */}
+            {turnImages.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {turnImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Turn image ${i}`}
+                    className="w-full h-24 object-cover rounded"
+                  />
+                ))}
+              </div>
+            )}
+            {turnImages.length === 0 && (
+              <p className="mt-4 text-gray-500 text-sm">No images available for this turn.</p>
+            )}
+          </div>
         )}
       </div>
     </div>

@@ -26,7 +26,7 @@ const navigation: NavigationItem[] = [
     // { name: 'Services', href: '#services', current: false },
     // { name: 'Map', href: '#OceanMap', current: false },
     // { name: 'Device Management', href: '#about', current: false },
-    { name: 'Help', href: '/', current: false },
+    //{ name: 'Help', href: '/', current: false },
     { name: 'About', href: '#about', current: false },
     { name: 'Contact Us', href: '#contactus', current: false },
 ]

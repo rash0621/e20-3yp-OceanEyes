@@ -34,9 +34,9 @@ public class TurnController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<ActionStatusMessage<Turn>> createTurn(
-            @RequestParam(value = "instanceId", required = false) String instanceId,
-            @RequestParam(value = "date", required = false) LocalDate date,
-            @RequestParam(value = "time", required = false) LocalTime time,
+            @RequestParam(value = "instanceId") String instanceId,
+            @RequestParam(value = "date") LocalDate date,
+            @RequestParam(value = "time") LocalTime time,
             @RequestParam(value = "gpsLocationLongitude", required = false) Float gpsLocationLongitude,
             @RequestParam(value = "gpsLocationLatitude", required = false) Float gpsLocationLatitude,
             @RequestParam(value = "capturedImages", required = false) MultipartFile[] capturedImages
@@ -50,7 +50,7 @@ public class TurnController {
                 for (MultipartFile capturedImage : capturedImages) {
                     String filename = capturedImage.getOriginalFilename();
                     if (filename != null) {
-                        String[] info = filename.split("[_.]");
+                        String[] info = filename.split("[_]");
                         if (info.length >= 3) {
                             try {
                                 //01_90deg_5.6.jpg -> turnNo_angle_distance
