@@ -9,7 +9,5 @@ import java.util.List;
 public interface TurnRepo extends MongoRepository <Turn, String>{
     List<Turn> findTurnById(String turnId);
 
-    List<Turn> findByInstance(Instance instance);
-
-    List<Turn> findByInstance_Id(String instanceId);
+    List<Turn> findByInstanceId(String instanceId);
 }

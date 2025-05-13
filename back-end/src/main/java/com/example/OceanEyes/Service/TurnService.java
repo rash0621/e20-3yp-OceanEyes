@@ -35,7 +35,7 @@ public class TurnService {
     }
 
     public List<Turn> getTurnsByInstanceId(String instanceId) {
-        return turnRepo.findByInstance_Id(instanceId);
+        return turnRepo.findByInstanceId(instanceId);
     }
     public List<Turn> getAllTurns() {
         return turnRepo.findAll();

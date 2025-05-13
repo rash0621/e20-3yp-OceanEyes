@@ -34,7 +34,7 @@ public class CaptureService {
     }
 
     public List<Capture> getCapturesByTurnId(String turnId) {
-        return captureRepo.findCaptureByTurnId(turnId);
+        return captureRepo.findByTurnId(turnId);
     }
     public List<Capture> getAllCaptures() {
         return captureRepo.findAll();

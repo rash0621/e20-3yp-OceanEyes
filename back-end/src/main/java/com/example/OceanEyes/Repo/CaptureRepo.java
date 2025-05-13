@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CaptureRepo extends MongoRepository <Capture, String>{
 
-    List<Capture> findCaptureByTurnId(String turnId);
+    List<Capture> findByTurnId(String turnId);
 
 }
