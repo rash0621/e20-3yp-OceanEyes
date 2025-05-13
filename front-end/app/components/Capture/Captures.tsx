@@ -9,6 +9,24 @@ import { Dialog, DialogContent } from "@mui/material";
 import {domainName} from "../DomainName"
 
 function GenerateInstances() {
+  
+  const [imageUrl, setImageUrl] = useState('');
+
+    const fetchImage = async (imageId:string) => {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/v1/capture/image/680f53814d7abf5f6e614d67`, {
+          responseType: 'blob', 
+        });
+
+        const imageUrl = URL.createObjectURL(response.data);
+        setImageUrl(imageUrl);
+      } catch (error) {
+        console.error('Error fetching the image:', error);
+      }
+    };
+
+    fetchImage("");
+
 
   const token = localStorage.getItem("jwtToken");
 
@@ -39,11 +57,13 @@ function GenerateInstances() {
   
   //Initialize the object
   const [capture, setCapture] = useState({  
+    captureId:"",
     distance: "",
     imageId: ""
 })
 
 interface CaptureType {
+    captureId: string;
     distance: string;
     imageId: string;
   }
@@ -62,6 +82,7 @@ const onInputChange=(e: React.ChangeEvent<HTMLFormElement>)=>{
     setEditRow(false);
     setViewRow(false); 
     setCapture({
+      captureId:"",
         distance: "",
         imageId: ""
     });
@@ -162,6 +183,9 @@ const onViewClick = (capture:CaptureType) => {
   <>
   
     <div className="pageTitle">
+
+        <img src={imageUrl} alt="Captured" style={{ maxWidth: '100%', maxHeight: '500px' }} />
+
       <h3 className="text-4xl sm:text-6xl font-semibold text-center my-10 lh-81">Current Captures</h3>
     </div>
     <div className={style["container"]}>

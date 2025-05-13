@@ -15,14 +15,14 @@ public class TestDistanceService {
     @Autowired
     private TestDistanceRepo testDistanceRepo;
 
-    public TestDistance saveTestDistance(float testDistance) throws IOException {
+    public TestDistance saveTestDistance(double testDistance) throws IOException {
         TestDistance testDistance1 = new TestDistance();
         testDistance1.setDistance(testDistance);
 
         return testDistanceRepo.save(testDistance1);
     }
 
-    public List<TestDistance> getTestDistanceById(float testDistanceId){
+    public List<TestDistance> getTestDistanceById(double testDistanceId){
         return testDistanceRepo.findTestDistanceById(testDistanceId);
     }
 

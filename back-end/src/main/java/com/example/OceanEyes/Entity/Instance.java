@@ -11,22 +11,14 @@ import java.util.List;
 public class Instance {
     @Id
     private String id;
-    @Nullable
     private String deviceName;
-    @Nullable
-    private String startGpsLocation;
-    @Nullable
-    private Integer distanceBetweenPoints;
-    @Nullable
-    private Integer map;
-    @Nullable
-    private LocalDateTime localDateTime;
-    @Nullable
-    private String description;
-    @Nullable
-    private String operator;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+    private Integer timeBetweenCaptures;
     @Nullable
     private String locationDistrict;
+    @Nullable
+    private String description;
 
     public String getInstanceId() {
         return id;
@@ -44,59 +36,37 @@ public class Instance {
         this.deviceName = deviceName;
     }
 
-    public String getStartGpsLocation() {
-        return startGpsLocation;
+    public LocalDateTime getStartLocalDateTime() {
+        return startDateTime;
     }
 
-    public void setStartGpsLocation(String startGpsLocation) {
-        this.startGpsLocation = startGpsLocation;
+    public void setStartLocalDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
-    public Integer getDistanceBetweenPoints() {
-        return distanceBetweenPoints;
-    }
+    public LocalDateTime getEndLocalDateTime() {return endDateTime;}
 
-    public void setDistanceBetweenPoints(Integer distanceBetweenPoints) {
-        this.distanceBetweenPoints = distanceBetweenPoints;
-    }
+    public void setEndLocalDateTime(LocalDateTime endDateTime) {this.endDateTime = endDateTime;}
 
-    public Integer getMap() {
-        return map;
-    }
-
-    public void setMap(Integer map) {
-        this.map = map;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
-    }
-
+    @Nullable
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
+    @Nullable
     public String getLocationDistrict() {
         return locationDistrict;
     }
 
-    public void setLocationDistrict(String locationDistrict) {
+    public void setLocationDistrict(@Nullable String locationDistrict) {
         this.locationDistrict = locationDistrict;
     }
+
+    public Integer getTimeBetweenCaptures() {return timeBetweenCaptures;}
+
+    public void setTimeBetweenCaptures(Integer timeBetweenCaptures) {this.timeBetweenCaptures = timeBetweenCaptures;}
 }

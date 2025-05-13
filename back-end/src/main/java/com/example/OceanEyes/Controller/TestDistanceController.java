@@ -18,7 +18,7 @@ public class TestDistanceController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<TestDistance> createTestDistance(
-            @RequestParam(value = "distance", required = false) Float testDistance
+            @RequestParam(value = "distance", required = false) Double testDistance
     ) throws IOException {
         TestDistance savedTestDistance = testDistanceService.saveTestDistance(testDistance);
         return ResponseEntity.ok(savedTestDistance);

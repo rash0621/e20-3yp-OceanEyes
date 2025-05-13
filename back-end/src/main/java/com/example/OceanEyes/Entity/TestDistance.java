@@ -12,13 +12,13 @@ public class TestDistance {
     private String id;
 
     @Nullable
-    private float distance;
+    private double distance;
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 }

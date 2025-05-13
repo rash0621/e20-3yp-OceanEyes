@@ -10,8 +10,8 @@ public class Device {
 
     @Id
     private String id;
-    private String deviceName;;
-    private String devicePassword;;
+    private String deviceName;
+    private String devicePassword;
 
     public Device(String id, String deviceName, String devicePassword) {
         this.id = id;

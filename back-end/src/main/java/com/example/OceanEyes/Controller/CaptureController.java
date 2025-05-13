@@ -4,6 +4,7 @@ import com.example.OceanEyes.Entity.Capture;
 import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Service.CaptureService;
 import com.example.OceanEyes.Service.FileService;
+import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +29,39 @@ public class CaptureController {
     @Autowired
     private FileService fileService;
 
-    @PostMapping(value = "/save")
-    public ResponseEntity<Capture> createCapture(
-            @RequestParam(value = "image", required = false) MultipartFile file,
-            @RequestParam(value = "direction", required = false) String direction,
-            @RequestParam(value = "distance", required = false) Float distance,
-            @RequestParam(value = "gpsLocation", required = false) String gpsLocation
-    ) throws IOException {
-        Capture savedCapture = captureService.saveCapture(file, direction, distance, gpsLocation);
-        return ResponseEntity.ok(savedCapture);
+
+    @GetMapping("/images/turn/{turnId}")
+    public ResponseEntity<ActionStatusMessage<List<byte[]>>> getImagesByTurnId(@PathVariable String turnId) {
+        List<Capture> captures = captureService.getCapturesByTurnId(turnId);
+        List<byte[]> images = new ArrayList<>();
+
+        for (Capture capture : captures) {
+            String imageId = capture.getImageId();
+            Optional<GridFsResource> file = fileService.getFile(imageId);
+
+            file.ifPresent(resource -> {
+                try (InputStream inputStream = resource.getInputStream();
+                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) != -1) {
+                        byteArrayOutputStream.write(buffer, 0, length);
+                    }
+
+                    images.add(byteArrayOutputStream.toByteArray());
+
+                } catch (IOException e) {
+                    // You can log error or skip silently
+                    System.err.println("Error reading image: " + imageId);
+
+                }
+            });
+        }
+        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved info successfully", images));
+
     }
+
 
     @GetMapping("/image/{imageId}")
     public ResponseEntity<byte[]> getImage(@PathVariable String imageId) {
@@ -64,8 +89,5 @@ public class CaptureController {
         }).orElseGet(() -> ResponseEntity.status(404).body(new byte[0]));  //
     }
 
-    @GetMapping("/allCaptures")
-    public List<Capture> getAllCaptures() {
-        return captureService.getAllCaptures();
-    }
+
 }
