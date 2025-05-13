@@ -18,22 +18,24 @@ public class CaptureService {
     @Autowired
     private FileService fileService;
 
-    public Capture saveCapture(MultipartFile file, String direction, Float distance, String gpsLocation) throws IOException {
+    public Capture saveCapture(String turnId,MultipartFile file, String angle, Float distance) throws IOException {
+
         String imageId = fileService.saveFile(file);
-
-        Capture capture = new Capture();
-        capture.setImageId(imageId);
-        capture.setDirection(direction);
-        capture.setDistance(distance);
-        capture.setGpsLocation(gpsLocation);
-
-        return captureRepo.save(capture);
+        if(imageId!=null){
+            Capture capture = new Capture();
+            capture.setTurnId(turnId);
+            capture.setImageId(imageId);
+            capture.setAngle(angle);
+            capture.setDistance(distance);
+            return captureRepo.save(capture);
+        }else{
+            throw new IOException("Failed to save image file. imageId is null.");
+        }
     }
 
-    public List<Capture> getCapturesById(String captureId) {
-        return captureRepo.findCaptureById(captureId);
+    public List<Capture> getCapturesByTurnId(String turnId) {
+        return captureRepo.findByTurnId(turnId);
     }
-
     public List<Capture> getAllCaptures() {
         return captureRepo.findAll();
     }

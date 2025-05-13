@@ -11,10 +11,15 @@ import lombok.NoArgsConstructor;
      * data: Any type of response}
      */
     @Data
-    @AllArgsConstructor
     @NoArgsConstructor
     public class ActionStatusMessage<T> {
         private String status;
         private String message;
         private T data;
+
+        public ActionStatusMessage(String status, String message, T data) {
+            this.status= status;
+            this.message = message;
+            this.data = data;
+        }
     }

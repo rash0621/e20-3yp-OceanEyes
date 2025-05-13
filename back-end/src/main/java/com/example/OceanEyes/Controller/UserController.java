@@ -27,10 +27,10 @@ public class UserController {
                 String token = jwtUtil.generateToken(deviceId);
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User saved successfully", token));
             }
-            else return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User creation failed", null));
+            else return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User already exists", null));
 
         }catch (Exception e) {
-            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User already exists", null));
+            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User creation failed", null));
         }
     }
 

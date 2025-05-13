@@ -19,23 +19,35 @@ public class InstanceController {
     @Autowired
     private InstanceService instanceService;
 
-    @PostMapping(value = "/save")
+    @PostMapping(value = "/create")
     public ResponseEntity<ActionStatusMessage<Instance>> createInstance(
             @RequestParam(value = "deviceName") String deviceName,
-            @RequestParam(value = "startGpsLocation", required = false) String startGpsLocation,
-            @RequestParam(value = "distanceBetweenPoints", required = false) Integer distanceBetweenPoints,
-            @RequestParam(value = "map", required = false) Integer map,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "operator", required = false) String operator,
-            @RequestParam(value = "locationDistrict", required = false) String locationDistrict
-    ) throws IOException {
-        Instance savedInstance = instanceService.saveInstance(deviceName, startGpsLocation, distanceBetweenPoints, map, description, operator, locationDistrict);
+            @RequestParam(value = "startDateTime") LocalDateTime startDateTime,
+            @RequestParam(value = "endDateTime") LocalDateTime endDateTime,
+            @RequestParam(value = "endDateTime") Integer timeBetweenCaptures,
+            @RequestParam(value = "locationDistrict", required = false) String locationDistrict,
+            @RequestParam(value = "description", required = false) String description) {
 
-        return ResponseEntity.ok(new ActionStatusMessage<Instance> (
-                "SUCCESS",
-                "Device started successfully!",
-                savedInstance
-        ));
+        try {
+
+            Instance instance = new Instance();
+            instance.setDeviceName(deviceName);
+            instance.setStartLocalDateTime(startDateTime);
+            instance.setEndLocalDateTime(endDateTime);
+            instance.setTimeBetweenCaptures(timeBetweenCaptures);
+            instance.setDescription(description);
+            instance.setLocationDistrict(locationDistrict);
+
+            Instance savedInstance = instanceService.saveInstance(instance);
+
+            if (savedInstance== null) {
+                return ResponseEntity.status(500).body(new ActionStatusMessage<Instance>("SUCCESS", "Conflicting instances exists!", savedInstance));
+            }
+            return ResponseEntity.ok(new ActionStatusMessage<Instance>("SUCCESS", "Instance created successfully!", savedInstance));
+        } catch (IOException e) {
+
+            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL",e.getMessage(), null));
+        }
     }
 
 
@@ -48,9 +60,14 @@ public class InstanceController {
     public List<Instance> getAllInstances() {
         return instanceService.getAllInstances();
     }
-//    @GetMapping("/allInstances")
-//     public ResponseEntity<ActionStatusMessage<List<Instance>>> getAllInstances() {
-//        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User saved successfully", instanceService.getAllInstances()));
-//
-//    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<ActionStatusMessage<String>> deleteInstanceById(@PathVariable String id){
+        if (instanceService.deleteInstanceById(id)) {
+            return ResponseEntity.ok(new ActionStatusMessage<String>("SUCCESS","Deleted successfully",""));
+        } else {
+            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL","Deletion failed", "No instance exists with the given id"));        }
+
+    }
+
 }

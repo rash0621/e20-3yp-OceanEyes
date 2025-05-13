@@ -9,57 +9,32 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Capture {
     @Id
     private String id;
-
-    @DBRef
-    private Instance instance;
-
-
-    @Nullable
+    private String turnId;
     private String imageId;
-    @Nullable
-    private String direction;
-    @Nullable
+    private String angle;
     private Float distance;
-    @Nullable
-    private String gpsLocation;
 
-    public byte[] getImageId() {
-        return imageId.getBytes();
-    }
+    public String getId() {return id;}
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
+    public void setId(String id) {this.id = id;}
 
-    public Instance getInstance() {
-        return instance;
-    }
+    public String getImageId() {return imageId;}
 
-    public void setInstance(Instance instance) {
-        this.instance = instance;
-    }
+    public void setImageId(String imageId) {this.imageId = imageId;}
 
-    public String getDirection() {
-        return direction;
-    }
+    public String getAngle() {return angle;}
 
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
+    public void setAngle(String angle) {this.angle = angle;}
 
-    public float getDistance() {
-        return distance;
-    }
+    public float getDistance() {return distance;}
 
     public void setDistance(float distance) {
         this.distance = distance;
     }
 
-    public String getGpsLocation() {
-        return gpsLocation;
-    }
+    public String getTurnId(){return turnId; }
 
-    public void setGpsLocation(String gpsLocation) {
-        this.gpsLocation = gpsLocation;
-    }
+    public void setTurnId(String turnId){ this.turnId = turnId; }
+
+
 }
