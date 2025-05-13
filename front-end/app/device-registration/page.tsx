@@ -52,7 +52,7 @@ const DeviceRegistration = () => {
   return (
     <RequireAuth>
     <div id="deviceregistration">
-      <div className={style.DeviceRegistrationTitle}>
+      <div className="pageTitle">
         <h5>Register IoT Device</h5>
         <p className={style.DeviceRegistrationSubTitle}>
           Link your IoT device to our system to start receiving data

@@ -48,6 +48,21 @@ hr {
     width: 270px;
 }
 
+.pageTitle{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.pageTitle h5{
+     font-size: 30px;
+    font-family: Arial, sans-serif;
+    font-weight: bolder;
+    color: hsl(0, 0%, 0%);
+}
+.pageSubTitle {
+    color: #555;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
 
 @media screen and (min-width :1000px) {
     .lh-96 {

@@ -52,6 +52,9 @@ const Map = () => {
       }
     };
     fetchTurns();
+    const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
+
+    return () => clearInterval(interval); // cleanup on unmount
   }, []);
 
    // Fetch images when selectedTurn changes
@@ -102,13 +105,14 @@ const Map = () => {
         {turns.map((turn, index) => (
           <Marker
             key={index}
-            position={[
-              turn.gpsLocationLatitude,
-              turn.gpsLocationLongitude
-            ]}
+            position={
+              (turn.gpsLocationLatitude == 0 && turn.gpsLocationLongitude == 0)
+                ? [7.254657057824213, 80.591233976167]
+                : [turn.gpsLocationLatitude, turn.gpsLocationLongitude]
+            }
             eventHandlers={{
               click: () => {
-                console.log("Marker clicked:", turn); // DEBUG
+                console.log("Marker clicked:", turn);
                 setSelectedTurn(turn);
               }
             }}
@@ -175,7 +179,9 @@ const Map = () => {
 export default function ViewMap() {
   return (
     <RequireAuth>
-      <div className="p-6 text-2xl font-bold text-center">Map</div>
+      <div className="pageTitle">
+              <h5>Map</h5>
+        </div>
       <Map />
     </RequireAuth>
   );
