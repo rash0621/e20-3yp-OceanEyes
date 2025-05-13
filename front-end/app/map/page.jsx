@@ -21,19 +21,19 @@ L.Icon.Default.mergeOptions({
 
 const Map = () => {
   const [position, setPosition] = useState(null);
-  const [instances, setInstances] = useState([]); //As of now instances, later change this to an instance
+  const [turns, setTurns] = useState([]); //As of now Turns, later change this to an turn
 
   useEffect(() => {
-    const fetchInstances = async () => {
+    const fetchTurns = async () => {
       try {
-        const response = await axios.get(`${domainName}instance/allInstances`);
-        console.log("Fetched instances:", response.data); // DEBUG: show fetched data
-        setInstances(response.data); // assuming array of instances with gpsLocation
+        const response = await axios.get(`${domainName}turns/allTurns`);
+        console.log("Fetched Turns:", response.data); // DEBUG: show fetched data
+        setTurns(response.data); // assuming array of Turns with gpsLocation
       } catch (err) {
-        console.error('Failed to fetch instances', err);
+        console.error('Failed to fetch Turns', err);
       }
     };
-    fetchInstances();
+    fetchTurns();
   }, []);
 
   const LocationMarker = () => {
@@ -71,29 +71,29 @@ const Map = () => {
         
         <LocationMarker />
         {/* Show capture markers */}
-        {instances.map((instance, index) => (
+        {turns.map((turn, index) => (
           <Marker
             key={index}
-            // position={[
-            //   instance.gpsLocation.lat,
-            //   instance.gpsLocation.lng
-            // ]}
-            position={(() => {
-              const [lat, lng] = instance.startGpsLocation.split(" ").map(Number);
-            return [lat, lng];
-            })()}
+            position={[
+              turn.gpsLocationLatitude,
+              turn.gpsLocationLongitude
+            ]}
+            // position={(() => {
+            //   const [lat, lng] = turn.startGpsLocation.split(" ").map(Number);
+            // return [lat, lng];
+            // })()}
           >
             <Popup>
               <div>
-                <h3 className="font-bold">instance Details</h3>
-                <p><strong>ID:</strong> {instance._id}</p>
-                <p><strong>Device Name:</strong> {instance.deviceName}</p>
-                <p><strong>Description:</strong> {instance.description}</p>
-                <p><strong>Operator:</strong> {instance.operator}</p>
-                <p><strong>District:</strong> {instance.locationDistrict}</p>
-                <p><strong>Distance Between Points:</strong> {instance.distanceBetweenPoints} m</p>
-                <p><strong>Map ID:</strong> {instance.map}</p>
-                <p><strong>Timestamp:</strong> {new Date(instance.localDateTime).toLocaleString()}</p>
+                <h3 className="font-bold">Turn Details</h3>
+                <p><strong>ID:</strong> {turn._id}</p>
+                {/* <p><strong>Device Name:</strong> {turn.deviceName}</p>
+                <p><strong>Description:</strong> {turn.description}</p>
+                <p><strong>Operator:</strong> {turn.operator}</p>
+                <p><strong>District:</strong> {turn.locationDistrict}</p>
+                <p><strong>Distance Between Points:</strong> {turn.distanceBetweenPoints} m</p>
+                <p><strong>Map ID:</strong> {turn.map}</p>
+                <p><strong>Timestamp:</strong> {new Date(turn.localDateTime).toLocaleString()}</p> */}
 
               </div>
             </Popup>

@@ -86,4 +86,10 @@ public class TurnController {
         }
 
     }
+
+    @GetMapping("/allTurns")
+    public List<Turn> getAllTurns() {
+        return turnService.getAllTurns();
+    }
+
 }

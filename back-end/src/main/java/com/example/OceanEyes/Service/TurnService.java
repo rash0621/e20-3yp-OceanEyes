@@ -1,5 +1,6 @@
 package com.example.OceanEyes.Service;
 
+import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Entity.Turn;
 import com.example.OceanEyes.Repo.TurnRepo;
 import org.springframework.beans.factory.annotation.Autowired;
