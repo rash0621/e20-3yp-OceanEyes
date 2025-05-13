@@ -8,23 +8,24 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class InstanceService {
     @Autowired
     private InstanceRepo instanceRepo;
 
-    public Instance saveInstance(String deviceName, String startGpsLocation, Integer distanceBetweenPoints, Integer map, String description, String Operator, String locationDistrict) throws IOException {
-        Instance instance = new Instance();
-        instance.setDeviceName(deviceName);
-        instance.setStartGpsLocation(startGpsLocation);
-        instance.setDistanceBetweenPoints(distanceBetweenPoints);
-        instance.setMap(map);
-        instance.setLocalDateTime(LocalDateTime.now());
-        instance.setDescription(description);
-        instance.setOperator(Operator);
-        instance.setLocationDistrict(locationDistrict);
+    public Instance saveInstance(Instance instance) throws IOException {
 
+        String deviceName = instance.getDeviceName();
+        LocalDateTime start = instance.getStartLocalDateTime();
+        LocalDateTime end = instance.getEndLocalDateTime();
+        List<Instance> conflicts = instanceRepo.findConflictingInstancesByDeviceName(deviceName, start, end);
+
+        if (!conflicts.isEmpty()) {
+            return null;
+        }
         return instanceRepo.save(instance);
     }
 
@@ -34,5 +35,13 @@ public class InstanceService {
 
     public List<Instance> getAllInstances() {
         return instanceRepo.findAll();
+    }
+
+    public boolean deleteInstanceById(String id) {
+        if (instanceRepo.existsById(id)) {
+            instanceRepo.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

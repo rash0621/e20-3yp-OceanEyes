@@ -18,7 +18,7 @@ public class DeviceController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping(value = "/addDevice")
+    @PostMapping(value = "/add")
     private ResponseEntity<ActionStatusMessage<String>> saveDevice(@RequestBody Device device) {
         try {
             boolean deviceSaved = deviceService.addNewDevice(device);
