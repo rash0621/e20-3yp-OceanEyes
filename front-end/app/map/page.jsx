@@ -149,8 +149,14 @@ const Map = () => {
                 <p><strong>Instance ID:</strong> {selectedTurn.instanceId}</p>
                 <p><strong>Date:</strong> {selectedTurn.date}</p>
                 <p><strong>Time:</strong> {selectedTurn.time}</p>
-                <p><strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude}</p>
-                <p><strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude}</p>
+                {/* <p><strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude}</p>
+                <p><strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude}</p> */}
+                <p>
+                    <strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude == 0 ? 7.254657057824213 : selectedTurn.gpsLocationLongitude}
+                </p>
+                <p>
+                  <strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude == 0 ? 80.591233976167 : selectedTurn.gpsLocationLatitude}
+                </p>
           </div>
           
         {/* Images from backend */}

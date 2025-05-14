@@ -67,7 +67,7 @@ public class DeviceController {
 
     @PostMapping("/start")
     public ResponseEntity<String> startDevice() {
-        String piUrl = "https://b0cb-112-134-177-53.ngrok-free.app/start-device"; // ngrok URL
+        String piUrl = "https://4f1b-192-248-41-84.ngrok-free.app/start-device"; // ngrok URL
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -91,7 +91,7 @@ public class DeviceController {
 
     @PostMapping("/stop")
     public ResponseEntity<String> stopDevice() {
-        String piUrl = "https://b0cb-112-134-177-53.ngrok-free.app/stop-device"; // ngrok URL
+        String piUrl = "https://4f1b-192-248-41-84.ngrok-free.app/stop-device"; // ngrok URL
 
         RestTemplate restTemplate = new RestTemplate();
 
