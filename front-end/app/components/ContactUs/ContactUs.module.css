@@ -79,12 +79,12 @@
     background-color: hsl(214, 76%, 94%);
     color: hsl(211, 91%, 49%);
     border: none;
-    border-radius: 6px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 1rem;
+    border-radius: 0px 30px 30px 40px;
   }
   
   .contactButton:hover {

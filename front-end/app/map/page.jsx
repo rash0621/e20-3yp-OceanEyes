@@ -185,9 +185,14 @@ const Map = () => {
 export default function ViewMap() {
   return (
     <RequireAuth>
-      <div className="pageTitle">
+      <img 
+        src="/assets/nav/viewMap.jpg" 
+        alt="OceanEyes Device"
+        style={{ width: "140px", display: "block", margin: "10px auto"}}
+      />
+      {/* <div className="pageTitle">
               <h5>Map</h5>
-        </div>
+        </div> */}
       <Map />
     </RequireAuth>
   );

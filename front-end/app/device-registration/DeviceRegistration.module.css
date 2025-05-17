@@ -76,6 +76,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 1rem;
+    border-radius: 0px 30px 30px 40px;
   }
   
   .submitButton:hover {
