@@ -53,7 +53,12 @@ const DeviceRegistration = () => {
     <RequireAuth>
     <div id="deviceregistration">
       <div className="pageTitle">
-        <h5>Register IoT Device</h5>
+        {/* <h5>Register IoT Device</h5> */}
+        <img 
+          src="/assets/nav/register.jpg" 
+          alt="OceanEyes Device"
+          style={{ width: "200px", display: "block", margin: "10px auto"}}
+        />
         <p className={style.DeviceRegistrationSubTitle}>
           Link your IoT device to our system to start receiving data
         </p>

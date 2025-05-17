@@ -203,10 +203,14 @@ const DeviceManagement = () => {
         justifyContent: "center",
         alignItems: "center"
       }}>
-        <div className="pageTitle">
+        {/* <div className="pageTitle">
           <h5>Device Management</h5>
-        </div>
-
+        </div> */}
+      <img 
+        src="/assets/nav/manage.jpg" 
+        alt="OceanEyes Device"
+        style={{ width: "220px", display: "block", margin: "10px auto"}}
+      />
 
         {/* Device Control Details */}
         <div
