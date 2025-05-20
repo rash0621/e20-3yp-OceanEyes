@@ -3,7 +3,9 @@ package com.example.OceanEyes.Controller;
 
 import com.example.OceanEyes.Config.JwtUtil;
 import com.example.OceanEyes.Entity.Device;
+import com.example.OceanEyes.Entity.User;
 import com.example.OceanEyes.Service.DeviceService;
+import com.example.OceanEyes.Service.UserService;
 import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -19,6 +21,8 @@ public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -50,15 +54,29 @@ public class DeviceController {
     }
 
     @PostMapping(value = "/loginDevice")
-    private ResponseEntity<ActionStatusMessage<String>> loginDevice(@RequestBody Device device) {
+    private ResponseEntity<ActionStatusMessage<String>> loginDevice(
+            @RequestParam(value = "deviceName") String deviceName,
+            @RequestParam(value = "devicePassword") String devicePassword,
+            @RequestParam(value = "userId") String userId
+    ) {
         try {
+            Device device = new Device();
+            device.setDeviceName(deviceName);
+            device.setDevicePassword(devicePassword);
             boolean loginSuccess = deviceService.loginNewDevice(device);
             if (loginSuccess){
+                User user = userService.getUserById(userId);
+                if (user!=null){
+                    user.setLoggedInDevices(device);
                 String deviceId = device.getId();
                 String token = jwtUtil.generateToken(deviceId);
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Successfully logged in", token));
+                }else{
+                    return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "No such user exists", null));
+
+                }
             }
-            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid Credentials", null));
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Error in credentials", null));
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Error in logging", null));

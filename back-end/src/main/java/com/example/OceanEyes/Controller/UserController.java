@@ -44,14 +44,6 @@ public class UserController {
         }
     }
 
-/////**   EDIT THIS **/
-//    @PutMapping(value = "/edit/{id}")
-//    private User updateUser(@RequestBody User user, @PathVariable(name = "id")String id) {
-//
-//        user.setId(id);
-//        userService.editUser(user);
-//        return user;
-//    }
 
     @DeleteMapping("/delete/{id}")
     private ResponseEntity<ActionStatusMessage<String>> deleteUser(@PathVariable(name = "id")String id) {
