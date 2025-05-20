@@ -1,9 +1,12 @@
 package com.example.OceanEyes.Entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Document(collection = "users")
 public class User {
@@ -11,7 +14,9 @@ public class User {
     @Id
     private String id;
     private String userEmail;;
-    private String userPassword;;
+    private String userPassword;
+    @DBRef
+    private List<Device> loggedInDevices = new ArrayList<>();
 
     public String getUserPassword() {
         return userPassword;
@@ -42,6 +47,10 @@ public class User {
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
+
+    public List<Device> getLoggedInDevices() {return loggedInDevices;}
+
+    public void setLoggedInDevices(Device loggedInDevice) {this.loggedInDevices.add(loggedInDevice);}
 
     @Override
     public String toString() {

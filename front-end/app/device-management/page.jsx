@@ -118,10 +118,10 @@
 import RequireAuth from "../components/RequireAuth";
 import { domainName } from "../components/DomainName";
 
+import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 
 const DeviceManagement = () => {

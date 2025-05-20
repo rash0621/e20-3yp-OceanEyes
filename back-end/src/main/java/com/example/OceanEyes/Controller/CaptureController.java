@@ -7,7 +7,9 @@ import com.example.OceanEyes.Service.FileService;
 import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,35 +33,32 @@ public class CaptureController {
 
 
     @GetMapping("/images/turn/{turnId}")
-    public ResponseEntity<ActionStatusMessage<List<byte[]>>> getImagesByTurnId(@PathVariable String turnId) {
+    public ResponseEntity<ActionStatusMessage<List<String>>> getImageUrlsByTurnId(@PathVariable String turnId) {
         List<Capture> captures = captureService.getCapturesByTurnId(turnId);
-        List<byte[]> images = new ArrayList<>();
+        List<String> imageUrls = new ArrayList<>();
 
         for (Capture capture : captures) {
             String imageId = capture.getImageId();
-            Optional<GridFsResource> file = fileService.getFile(imageId);
-
-            file.ifPresent(resource -> {
-                try (InputStream inputStream = resource.getInputStream();
-                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = inputStream.read(buffer)) != -1) {
-                        byteArrayOutputStream.write(buffer, 0, length);
-                    }
-
-                    images.add(byteArrayOutputStream.toByteArray());
-
-                } catch (IOException e) {
-                    // You can log error or skip silently
-                    System.err.println("Error reading image: " + imageId);
-
-                }
-            });
+            imageUrls.add("capture/images/file/" + imageId);
         }
-        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved info successfully", images));
 
+        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved image URLs successfully", imageUrls));
+    }
+
+    @GetMapping("/images/file/{imageId}")
+    public ResponseEntity<?> getImageById(@PathVariable String imageId) {
+        Optional<GridFsResource> resource = fileService.getFile(imageId);
+        if (resource.isPresent()) {
+            try {
+                return ResponseEntity
+                        .ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new InputStreamResource(resource.get().getInputStream()));
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading image");
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
 

@@ -24,7 +24,7 @@ public class InstanceController {
             @RequestParam(value = "deviceName") String deviceName,
             @RequestParam(value = "startDateTime") LocalDateTime startDateTime,
             @RequestParam(value = "endDateTime") LocalDateTime endDateTime,
-            @RequestParam(value = "endDateTime") Integer timeBetweenCaptures,
+            @RequestParam(value = "timeBetweenCaptures") Integer timeBetweenCaptures,
             @RequestParam(value = "locationDistrict", required = false) String locationDistrict,
             @RequestParam(value = "description", required = false) String description) {
 
@@ -41,7 +41,7 @@ public class InstanceController {
             Instance savedInstance = instanceService.saveInstance(instance);
 
             if (savedInstance== null) {
-                return ResponseEntity.status(500).body(new ActionStatusMessage<Instance>("SUCCESS", "Conflicting instances exists!", savedInstance));
+                return ResponseEntity.status(401).body(new ActionStatusMessage<Instance>("FAIL", "Conflicting instances exists!", null));
             }
             return ResponseEntity.ok(new ActionStatusMessage<Instance>("SUCCESS", "Instance created successfully!", savedInstance));
         } catch (IOException e) {
@@ -66,7 +66,7 @@ public class InstanceController {
         if (instanceService.deleteInstanceById(id)) {
             return ResponseEntity.ok(new ActionStatusMessage<String>("SUCCESS","Deleted successfully",""));
         } else {
-            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL","Deletion failed", "No instance exists with the given id"));        }
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL","Deletion failed", "No instance exists with the given id"));        }
 
     }
 

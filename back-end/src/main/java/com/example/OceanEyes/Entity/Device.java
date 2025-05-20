@@ -3,7 +3,6 @@ package com.example.OceanEyes.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Collections;
 
 @Document(collection = "devices")
 public class Device {

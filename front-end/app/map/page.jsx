@@ -45,35 +45,37 @@ const Map = () => {
     const fetchTurns = async () => {
       try {
         const response = await axios.get(`${domainName}turn/allTurns`);
-        console.log("Fetched Turns:", response.data); // DEBUG: show fetched data
+        // console.log("Fetched Turns:", response.data); // DEBUG: show fetched data
         setTurns(response.data); // assuming array of Turns with gpsLocation
       } catch (err) {
         console.error('Failed to fetch Turns', err);
       }
     };
     fetchTurns();
-    const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
+    // const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
 
-    return () => clearInterval(interval); // cleanup on unmount
+    // return () => clearInterval(interval); // cleanup on unmount
   }, []);
 
    // Fetch images when selectedTurn changes
   useEffect(() => {
     const fetchImages = async () => {
       if (!selectedTurn) return;
-      console.log("Fetching images for turnId:", selectedTurn.turnId);
 
-      if (!selectedTurn) return;
-
+      const cached = localStorage.getItem(`turnImages_${selectedTurn.id}`);
+    if (cached) {
+      setTurnImages(JSON.parse(cached));
+      return;
+    }
       try {
         const response = await axios.get(`${domainName}capture/images/turn/${selectedTurn.id}`);
         console.log("Image Fetch Response:", response.data);
-        if (response.data.status === "SUCCESS") {
-          const imageByteArrays = response.data.data;
-          const base64Images = imageByteArrays.map((base64String) =>
-            `data:image/jpeg;base64,${base64String}`
-          );
-          setTurnImages(base64Images);
+
+              if (response.data.status === "SUCCESS") {
+                const imageUrls = response.data.data;
+                setTurnImages(imageUrls); // now contains /capture/images/file/{imageId}
+                localStorage.setItem(`turnImages_${selectedTurn.id}`, JSON.stringify(imageUrls));
+
         } else {
           setTurnImages([]);
         }
@@ -85,6 +87,7 @@ const Map = () => {
 
     fetchImages();
   }, [selectedTurn]);
+
   
   return (
     <div id="OceanMap" className="mx-24 pt-2 relative z-0">
@@ -162,14 +165,8 @@ const Map = () => {
         {/* Images from backend */}
             {turnImages.length > 0 && (
               <div className="mt-4 grid grid-cols-3 gap-2">
-                {turnImages.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt={`Turn image ${i}`}
-                    className="w-full h-24 object-cover rounded"
-                  />
-                ))}
+                {turnImages.map((url, idx) => (
+                  <img key={idx} src={`${domainName}${url}`} alt={`Turn ${idx}`} style={{ width: "100px" }} />))}
               </div>
             )}
             {turnImages.length === 0 && (
