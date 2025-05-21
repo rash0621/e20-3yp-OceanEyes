@@ -51,13 +51,13 @@ const Map = () => {
         console.error('Failed to fetch Turns', err);
       }
     };
-    fetchTurns();
-    const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
+    fetchTurns(); // initial load
+    // const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
 
-    return () => clearInterval(interval); // cleanup on unmount
+    // return () => clearInterval(interval); // cleanup on unmount
   }, []);
 
-   // Fetch images when selectedTurn changes
+  // Fetch images when selectedTurn changes
   useEffect(() => {
     const fetchImages = async () => {
       if (!selectedTurn) return;
