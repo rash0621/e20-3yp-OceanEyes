@@ -1,9 +1,9 @@
 "use client";
 import RequireAuth from "../components/RequireAuth";
 import { domainName } from "../components/DomainName";
+import 'leaflet/dist/leaflet.css';
 import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import styles from "./deviceManagement.module.css"; // import CSS module
 
 const DeviceManagement = () => {

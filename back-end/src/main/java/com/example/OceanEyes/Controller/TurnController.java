@@ -32,6 +32,7 @@ public class TurnController {
     @Autowired
     private CaptureService captureService;
 
+
     @PostMapping(value = "/save")
     public ResponseEntity<ActionStatusMessage<Turn>> createTurn(
             @RequestParam(value = "instanceId") String instanceId,
@@ -74,8 +75,6 @@ public class TurnController {
 
         }
     }
-
-
 
     public ResponseEntity<ActionStatusMessage<Iterable<Turn>>> getTurnsByInstanceId(@PathVariable String instanceId) {
         try{
