@@ -1,0 +1,126 @@
+/* deviceManagement.module.css */
+
+.container {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.deviceImage {
+  width: 220px;
+  display: block;
+  margin: 10px auto;
+}
+
+.deviceControlBox {
+  width: 80%;
+  padding: 30px;
+  margin-bottom: 10px;
+  text-align: center;
+  display: inline-block;
+  background-image: url("/assets/deviceMng/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.deviceDesignImage {
+  width: 150px;
+  display: block;
+  margin: 10px auto;
+}
+
+.startButton,
+.stopButton {
+  padding: 20px 64px;
+  font-size: 15px;
+  margin-left: 16px;
+  margin-top: 8px;
+  font-weight: 500;
+  transition: background-color 0.15s ease-in-out;
+  border-radius: 0px 30px 30px 40px;
+  cursor: pointer;
+}
+
+.startButton:disabled {
+  background-color: #d1d5db;
+  color: #4b5563;
+  cursor: not-allowed;
+}
+
+.startButton:enabled {
+  background-color: #16a34a;
+  color: white;
+}
+
+.stopButton:disabled {
+  background-color: #d1d5db;
+  color: #4b5563;
+  cursor: not-allowed;
+}
+
+.stopButton:enabled {
+  background-color: #dc2626;
+  color: white;
+}
+
+.statusBox {
+  width: 80%;
+  padding: 30px;
+  margin: 10px 0 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url("/assets/deviceMng/bg2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.tabButtons {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.tabButton {
+  padding: 20px 64px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 0px 30px 30px 40px;
+  cursor: pointer;
+}
+
+.tabButtonActive {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tabButtonInactive {
+  background-color: #d1d5db;
+  color: #111827;
+}
+
+.tabContent {
+  margin-top: 16px;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+}
