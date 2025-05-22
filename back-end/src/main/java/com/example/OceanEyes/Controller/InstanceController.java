@@ -23,7 +23,7 @@ public class InstanceController {
     public ResponseEntity<ActionStatusMessage<Instance>> createInstance(
             @RequestParam(value = "deviceName") String deviceName,
             @RequestParam(value = "startDateTime") LocalDateTime startDateTime,
-            @RequestParam(value = "endDateTime") LocalDateTime endDateTime,
+            @RequestParam(value = "endDateTime", required = false) LocalDateTime endDateTime,
             @RequestParam(value = "timeBetweenCaptures") Integer timeBetweenCaptures,
             @RequestParam(value = "locationDistrict", required = false) String locationDistrict,
             @RequestParam(value = "description", required = false) String description) {
