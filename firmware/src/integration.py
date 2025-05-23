@@ -196,14 +196,13 @@ def mainFunction():
 # ----------------- Flask Routes -----------------
 @app.route('/start-device', methods=['POST'])
 def start_device():
-    global running, turnNumber
-    # global instance_id, start_time, end_time, timeBetweenCaptures
+    global running, turnNumber,instance_id, start_time, end_time, timeBetweenCaptures
 
-    # data = request.get_json()
-    # instance_id = data.get('instanceId')
-    # start_time = data.get('startDateTime')    
-    # end_time = data.get('endDateTime')   
-    # timeBetweenCaptures = data.get('timeBetweenCaptures')   
+    data = request.get_json()
+    instance_id = data.get('instanceId')
+    start_time = data.get('startDateTime')    
+    end_time = data.get('endDateTime')   
+    timeBetweenCaptures = data.get('timeBetweenCaptures')   
     
     if not running:
         running = True

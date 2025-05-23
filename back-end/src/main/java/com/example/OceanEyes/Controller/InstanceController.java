@@ -24,7 +24,7 @@ public class InstanceController {
             @RequestParam(value = "deviceName") String deviceName,
             @RequestParam(value = "startDateTime") LocalDateTime startDateTime,
             @RequestParam(value = "endDateTime", required = false) LocalDateTime endDateTime,
-            @RequestParam(value = "timeBetweenCaptures") Integer timeBetweenCaptures,
+            @RequestParam(value = "timeBetweenTurns") Integer timeBetweenTurns,
             @RequestParam(value = "locationDistrict", required = false) String locationDistrict,
             @RequestParam(value = "description", required = false) String description) {
 
@@ -34,7 +34,7 @@ public class InstanceController {
             instance.setDeviceName(deviceName);
             instance.setStartLocalDateTime(startDateTime);
             instance.setEndLocalDateTime(endDateTime);
-            instance.setTimeBetweenCaptures(timeBetweenCaptures);
+            instance.setTimeBetweenCaptures(timeBetweenTurns);
             instance.setDescription(description);
             instance.setLocationDistrict(locationDistrict);
 

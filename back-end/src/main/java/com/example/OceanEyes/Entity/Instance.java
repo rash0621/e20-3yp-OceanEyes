@@ -14,7 +14,7 @@ public class Instance {
     private String deviceName;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private Integer timeBetweenCaptures;
+    private Integer timeBetweenTurns;
     @Nullable
     private String locationDistrict;
     @Nullable
@@ -66,7 +66,7 @@ public class Instance {
         this.locationDistrict = locationDistrict;
     }
 
-    public Integer getTimeBetweenCaptures() {return timeBetweenCaptures;}
+    public Integer getTimeBetweenCaptures() {return timeBetweenTurns;}
 
-    public void setTimeBetweenCaptures(Integer timeBetweenCaptures) {this.timeBetweenCaptures = timeBetweenCaptures;}
+    public void setTimeBetweenCaptures(Integer timeBetweenTurns) {this.timeBetweenTurns = timeBetweenTurns;}
 }
