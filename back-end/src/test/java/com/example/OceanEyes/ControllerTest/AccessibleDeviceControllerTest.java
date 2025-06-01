@@ -1,10 +1,9 @@
-package com.example.OceanEyes;
+package com.example.OceanEyes.ControllerTest;
 
 import com.example.OceanEyes.Controller.AccessibleDeviceController;
 import com.example.OceanEyes.Entity.Device;
 import com.example.OceanEyes.Entity.AccessibleDevice;
 import com.example.OceanEyes.Service.AccessibleDeviceService;
-import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
