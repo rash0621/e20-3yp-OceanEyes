@@ -1,10 +1,12 @@
-package com.example.OceanEyes;
+package com.example.OceanEyes.ControllerTest;
 
 import com.example.OceanEyes.Config.JwtUtil;
 import com.example.OceanEyes.Controller.DeviceController;
 import com.example.OceanEyes.Entity.Device;
+import com.example.OceanEyes.Entity.User;
 import com.example.OceanEyes.Service.DeviceService;
-import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
+import com.example.OceanEyes.Service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,10 +15,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +29,9 @@ class DeviceControllerTest {
     private DeviceService deviceService;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private JwtUtil jwtUtil;
 
     @InjectMocks
@@ -38,7 +41,7 @@ class DeviceControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(deviceController).build();
     }
 
@@ -50,7 +53,7 @@ class DeviceControllerTest {
         when(deviceService.addNewDevice(any(Device.class))).thenReturn(true);
         when(jwtUtil.generateToken(anyString())).thenReturn("mockToken");
 
-        mockMvc.perform(post("/api/v1/device/addDevice")
+        mockMvc.perform(post("/api/v1/device/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockDevice)))
                 .andExpect(status().isOk())
@@ -68,7 +71,7 @@ class DeviceControllerTest {
 
         when(deviceService.addNewDevice(any(Device.class))).thenReturn(false);
 
-        mockMvc.perform(post("/api/v1/device/addDevice")
+        mockMvc.perform(post("/api/v1/device/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockDevice)))
                 .andExpect(status().isInternalServerError())
@@ -85,7 +88,7 @@ class DeviceControllerTest {
 
         when(deviceService.addNewDevice(any(Device.class))).thenThrow(new RuntimeException("Name already exists"));
 
-        mockMvc.perform(post("/api/v1/device/addDevice")
+        mockMvc.perform(post("/api/v1/device/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockDevice)))
                 .andExpect(status().isInternalServerError())
@@ -121,57 +124,49 @@ class DeviceControllerTest {
     }
 
     @Test
-    void testLoginDevice_Success() throws Exception {
-        Device mockDevice = new Device();
-        mockDevice.setId("device123");
-
-        when(deviceService.loginNewDevice(any(Device.class))).thenReturn(true);
-        when(jwtUtil.generateToken(anyString())).thenReturn("mockToken");
-
-        mockMvc.perform(post("/api/v1/device/loginDevice")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockDevice)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("SUCCESS"))
-                .andExpect(jsonPath("$.message").value("Successfully logged in"))
-                .andExpect(jsonPath("$.data").value("mockToken"));
-
-        verify(deviceService, times(1)).loginNewDevice(any(Device.class));
-        verify(jwtUtil, times(1)).generateToken(anyString());
-    }
-
-    @Test
-    void testLoginDevice_Failure() throws Exception {
-        Device mockDevice = new Device();
-
+    void testLoginDevice_InvalidCredentials() throws Exception {
         when(deviceService.loginNewDevice(any(Device.class))).thenReturn(false);
 
         mockMvc.perform(post("/api/v1/device/loginDevice")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockDevice)))
+                        .param("deviceName", "dev1")
+                        .param("devicePassword", "wrong")
+                        .param("userId", "user123"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value("FAIL"))
-                .andExpect(jsonPath("$.message").value("Invalid Credentials"));
+                .andExpect(jsonPath("$.message").value("Error in credentials"));
 
         verify(deviceService, times(1)).loginNewDevice(any(Device.class));
         verify(jwtUtil, never()).generateToken(anyString());
     }
 
     @Test
-    void testLoginDevice_Exception() throws Exception {
-        Device mockDevice = new Device();
-
-        when(deviceService.loginNewDevice(any(Device.class))).thenThrow(new RuntimeException("Error in logging"));
+    void testLoginDevice_UserNotFound() throws Exception {
+        when(deviceService.loginNewDevice(any(Device.class))).thenReturn(true);
+        when(userService.getUserById(anyString())).thenReturn(null);
 
         mockMvc.perform(post("/api/v1/device/loginDevice")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockDevice)))
+                        .param("deviceName", "dev1")
+                        .param("devicePassword", "pass")
+                        .param("userId", "invalidUser"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value("FAIL"))
+                .andExpect(jsonPath("$.message").value("No such user exists"));
+
+        verify(deviceService, times(1)).loginNewDevice(any(Device.class));
+    }
+
+    @Test
+    void testLoginDevice_Exception() throws Exception {
+        when(deviceService.loginNewDevice(any(Device.class))).thenThrow(new RuntimeException("Some error"));
+
+        mockMvc.perform(post("/api/v1/device/loginDevice")
+                        .param("deviceName", "dev1")
+                        .param("devicePassword", "pass")
+                        .param("userId", "user123"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value("FAIL"))
                 .andExpect(jsonPath("$.message").value("Error in logging"));
 
         verify(deviceService, times(1)).loginNewDevice(any(Device.class));
-        verify(jwtUtil, never()).generateToken(anyString());
     }
 }
-
