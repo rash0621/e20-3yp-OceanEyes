@@ -3,6 +3,8 @@ package com.example.OceanEyes.Controller;
 
 import com.example.OceanEyes.Config.JwtUtil;
 import com.example.OceanEyes.Entity.Device;
+import com.example.OceanEyes.Entity.Instance;
+import com.example.OceanEyes.Entity.TestDistance;
 import com.example.OceanEyes.Entity.User;
 import com.example.OceanEyes.Service.DeviceService;
 import com.example.OceanEyes.Service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -51,6 +54,12 @@ public class DeviceController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Device deletion failed", null));
         }
+    }
+
+    @GetMapping("/getAll")
+    public List<Device> getAllDevices() {
+
+        return deviceService.getAllDevices();
     }
 
     @PostMapping(value = "/loginDevice")
