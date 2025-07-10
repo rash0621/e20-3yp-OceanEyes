@@ -1,11 +1,14 @@
 
 package com.example.OceanEyes.Service;
 import com.example.OceanEyes.Entity.Device;
+import com.example.OceanEyes.Entity.Instance;
+import com.example.OceanEyes.Entity.TestDistance;
 import com.example.OceanEyes.Repo.DeviceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,10 @@ public class DeviceService {
 
     public void deleteDevice(String id) {
         deviceRepository.deleteById(id);
+    }
+
+    public List<Device> getAllDevices() {
+        return deviceRepository.findAll();
     }
 
     public boolean addNewDevice(Device device) {
