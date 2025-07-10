@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { isTokenValid } from "../Authentications/tokenValidation";
@@ -9,34 +8,42 @@ interface NavigationItem {
   current: boolean;
 }
 
-const navigation: NavigationItem[] = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Services', href: '#services', current: false },
+const homeNav: NavigationItem = { name: 'Home', href: '/', current: true };
+
+const guestNavigation: NavigationItem[] = [
   { name: 'About', href: '#about', current: false },
-  { name: 'Project', href: '#project', current: false },
-  { name: 'Help', href: '/', current: false },
-]
+  { name: 'Contact Us', href: '#contactus', current: false },
+];
+
+const authNavigation: NavigationItem[] = [
+  { name: 'View Map', href: '/map', current: false },
+  { name: 'Device Registration', href: '/device-registration', current: false },
+  { name: 'Device Management', href: '/device-management', current: false },
+];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 const Data = () => {
-
   const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
-  
-      useEffect(() => {
-          const checkAuth = () => {
-              setIsAuthenticated(isTokenValid());
-          };
-  
-          window.addEventListener("storage", checkAuth);
-  
-          return () => {
-              window.removeEventListener("storage", checkAuth);
-          };
-      }, []);
-      
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (typeof window !== 'undefined') {
+        const valid = isTokenValid();
+        setIsAuthenticated(valid);
+      }
+    };
+    window.addEventListener("storage", checkAuth);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, []);
+
+  // Combine Home with either guest or auth nav items
+  const navigation = [homeNav, ...(isAuthenticated ? authNavigation : guestNavigation)];
+
   return (
     <div className="rounded-md max-w-sm w-full mx-auto">
       <div className="flex-1 space-y-4 py-1">
@@ -56,19 +63,16 @@ const Data = () => {
               </Link>
             ))}
             <div className="mt-4"></div>
-            {
-              !isAuthenticated && (
-                <>
-              <button className="bg-white w-full text-blue border border-lightblue font-medium py-2 px-4 rounded">
-              Sign In
-            </button>
-            <button className="bg-lightblue w-full hover:bg-blue hover:text-white text-blue font-medium my-2 py-2 px-4 rounded">
-              Sign up
-            </button>
-            </>
-            )
-            }
-            
+            {!isAuthenticated && (
+              <>
+                <button className="bg-white w-full text-blue border border-lightblue font-medium py-2 px-4 rounded">
+                  Sign In
+                </button>
+                <button className="bg-lightblue w-full hover:bg-blue hover:text-white text-blue font-medium my-2 py-2 px-4 rounded">
+                  Register
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

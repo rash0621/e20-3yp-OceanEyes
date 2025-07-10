@@ -38,16 +38,19 @@ const Signin = () => {
 
             const data = await response.json();
             if (response.ok) {
-                
-                localStorage.setItem("jwtToken", JSON.stringify(data.data));
+                //  Save token to localStorage (no need for JSON.stringify here)
+                localStorage.setItem("jwtToken", data.data);
+
+                // Optional: trigger other parts of the app to re-render if needed
                 window.dispatchEvent(new Event("storage"));
                 alert(data.message);
                 closeModal();
             } else {
-                alert(data.message);
+                alert(data.message|| "Login failed");
             }
         } catch (error) {
             console.error("Login failed:", error);
+            alert("Login failed: " + error);
         }
     }
    

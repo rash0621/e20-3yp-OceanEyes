@@ -1,28 +1,32 @@
 "use client"
-import Banner from './components/Banner/Banner';
-import Companies from './components/Companies/Companies';
-import Buyers from './components/Buyers/index';
-import Provide from './components/Provide/index';
+import Awareness from './components/Awareness/Awareness';
+// import Buyers from './components/Buyers/index';
+// import Provide from './components/Provide/index';
 import Why from './components/Why/index';
-import Network from './components/Network/index';
-import Clientsay from './components/Clientsay/index';
-import Newsletter from './components/Newsletter/Newsletter';
-import Instances from './components/Instances/Instances'
-import Map from './components/Map/Map';
-import Captures from './components/Capture/Captures'
+// import Network from './components/Network/index';
+// import Clientsay from './components/Clientsay/index';
+// import Newsletter from './components/Newsletter/Newsletter';
+// import Map from './components/Map/Map';
 import {isTokenValid} from './components/Authentications/tokenValidation'
 import { useState, useEffect } from 'react';
 import ContactUs from './components/ContactUs/ContactUs'
 // import OceanMap from './components/OceanMap/OceanMap'
+import dynamic from "next/dynamic";
+
+const Banner = dynamic(() => import('./components/Banner/Banner'), {
+  ssr: false,
+});
 
 
 export default function Home() {
 
- const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+ const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());//<boolean | null>(null);
 
     useEffect(() => {
         const checkAuth = () => {
-            setIsAuthenticated(isTokenValid());
+          if (typeof window !== 'undefined') {
+            const valid = isTokenValid();
+            setIsAuthenticated(valid);}
         };
 
         window.addEventListener("storage", checkAuth);
@@ -40,13 +44,13 @@ export default function Home() {
       {/* {isAuthenticated && <Instances/> }
       {isAuthenticated && <Captures /> } */}
       {/* <Map /> */}
-      {/* <Companies /> */}
       <Why />
       {/* <Buyers /> */}
       {/* <Provide /> */}
       {/* <Network /> */}
       {/* <Clientsay /> */}
       {/* <Newsletter /> */}
+      <Awareness />
       <ContactUs />
     </main>
   )

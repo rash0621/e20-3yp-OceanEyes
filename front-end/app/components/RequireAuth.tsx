@@ -10,12 +10,17 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
+    
     const checkAuth = () => {
-      if (!isTokenValid()) {
-        router.replace("/"); // send to home
-      } else {
-        setChecked(true);
+       if (typeof window !== 'undefined') {
+            const valid = isTokenValid();
+        if (!isTokenValid()) {
+          router.replace("/"); // send to home
+        } else {
+          setChecked(true);
+        }
       }
+
     };
 
     checkAuth(); // Initial auth check

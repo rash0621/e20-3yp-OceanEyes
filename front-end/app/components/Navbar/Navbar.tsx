@@ -5,11 +5,22 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import Drawer from "./Drawer";
-import Drawerdata from "./Drawerdata";
-import Signdialog from "./Signdialog";
 import Registerdialog from "./Registerdialog";
-import Logout from "./Logout";
 import { isTokenValid } from '../Authentications/tokenValidation';
+import dynamic from "next/dynamic";
+import DeviceManagement from "../../device-management/page";
+
+const Drawerdata = dynamic(() => import('./Drawerdata'), {
+  ssr: false,
+});
+
+const Signdialog = dynamic(() => import('./Signdialog'), {
+  ssr: false,
+});
+
+const Logout = dynamic(() => import('./Logout'), {
+  ssr: false,
+});
 
 interface NavigationItem {
     name: string;
@@ -24,6 +35,7 @@ function classNames(...classes: string[]) {
 const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+    const [showDeviceManagement, setShowDeviceManagement] = React.useState(false);
 
     // Always show Home
     const homeNav: NavigationItem = { name: 'Home', href: '/', current: true };
@@ -46,9 +58,13 @@ const Navbar = () => {
         { name: 'Device Management', href: '/device-management', current: false },
     ];
 
+
     useEffect(() => {
         const checkAuth = () => {
-            setIsAuthenticated(isTokenValid());
+             if (typeof window !== 'undefined') {
+            const valid = isTokenValid();
+            setIsAuthenticated(valid);}
+            // setIsAuthenticated(isTokenValid());
         };
 
         window.addEventListener("storage", checkAuth);
@@ -57,9 +73,9 @@ const Navbar = () => {
             window.removeEventListener("storage", checkAuth);
         };
     }, []);
-
-    // Combine Home with either guest or auth nav items
+    
     const navigation = [homeNav, ...(isAuthenticated ? authNavigation : guestNavigation)];
+    // Combine Home with either guest or auth nav items
 
     return (
         <>
@@ -82,6 +98,7 @@ const Navbar = () => {
                                 {/* LINKS */}
                                 <div className="hidden lg:block m-auto">
                                     <div className="flex space-x-4">
+                                        {showDeviceManagement && <DeviceManagement />}
                                         {navigation.map((item) => (
                                             <Link
                                                 key={item.name}

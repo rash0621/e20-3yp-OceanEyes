@@ -1,86 +1,75 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
-import RequireAuth from "../components/RequireAuth";
+import React, { useState, useEffect, useMemo } from "react";
+import "leaflet/dist/leaflet.css";
 import { domainName } from "../components/DomainName";
+import dynamic from "next/dynamic";
+import axios from "axios";
 
-// Fix default marker icon issue in Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-// Create a component to handle map recentering
-const RecenterMap = ({ center, selectedTurn }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (selectedTurn) {
-      map.setView([7.8731, 80.7718], map.getZoom());
-    } else {
-      map.setView(center, map.getZoom());
-    }
-  }, [selectedTurn, center, map]);
-
-  return null;
-};
-
+// Dynamically import react-leaflet components to disable SSR
+const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
+const RequireAuth = dynamic(() => import("../components/RequireAuth"), { ssr: false });
+const RecenterMap = dynamic(() => import("./RecenterMap"), { ssr: false });
 
 const Map = () => {
-  const [turns, setTurns] = useState([]); //As of now Turns, later change this to an turn
+  const [turns, setTurns] = useState([]);
   const [selectedTurn, setSelectedTurn] = useState(null);
   const [turnImages, setTurnImages] = useState([]);
-  const defaultCenter = [7.8731, 80.7718];
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [leafletReady, setLeafletReady] = useState(false);
 
+  const defaultCenter = useMemo(() => [7.8731, 80.7718], []);
+
+  // Setup Leaflet default icons once on mount
+  useEffect(() => {
+    import("leaflet").then(L => {
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      });
+      setLeafletReady(true);
+    });
+  }, []);
+
+  // Fetch turns data on mount
   useEffect(() => {
     const fetchTurns = async () => {
       try {
         const response = await axios.get(`${domainName}turn/allTurns`);
-        // console.log("Fetched Turns:", response.data); // DEBUG: show fetched data
-        setTurns(response.data); // assuming array of Turns with gpsLocation
+        setTurns(response.data);
       } catch (err) {
-        console.error('Failed to fetch Turns', err);
+        console.error(err);
       }
     };
-    fetchTurns(); // initial load
-    // const interval = setInterval(fetchTurns, 10000); // fetch every 10 seconds
-
-    // return () => clearInterval(interval); // cleanup on unmount
+    fetchTurns();
   }, []);
 
-  // Fetch images when selectedTurn changes
+  // Fetch images when a turn is selected
   useEffect(() => {
     const fetchImages = async () => {
       if (!selectedTurn) return;
 
-      const cached = localStorage.getItem(`turnImages_${selectedTurn.id}`);
-    if (cached) {
-      setTurnImages(JSON.parse(cached));
-      return;
-    }
+      const cached = typeof window !== "undefined" ? localStorage.getItem(`turnImages_${selectedTurn.id}`) : null;
+      if (cached) {
+        setTurnImages(JSON.parse(cached));
+        return;
+      }
       try {
         const response = await axios.get(`${domainName}capture/images/turn/${selectedTurn.id}`);
-        console.log("Image Fetch Response:", response.data);
-
-              if (response.data.status === "SUCCESS") {
-                const imageUrls = response.data.data;
-                setTurnImages(imageUrls); // now contains /capture/images/file/{imageId}
-                localStorage.setItem(`turnImages_${selectedTurn.id}`, JSON.stringify(imageUrls));
-
+        if (response.data.status === "SUCCESS") {
+          const imageUrls = response.data.data;
+          setTurnImages(imageUrls);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(`turnImages_${selectedTurn.id}`, JSON.stringify(imageUrls));
+          }
         } else {
           setTurnImages([]);
         }
       } catch (err) {
-        console.error("Failed to fetch images for selected turn", err);
         setTurnImages([]);
       }
     };
@@ -88,109 +77,215 @@ const Map = () => {
     fetchImages();
   }, [selectedTurn]);
 
-  
   return (
-    <div id="OceanMap" className="mx-24 pt-2 relative z-0">
-      <div className="flex gap-4">
-      {/* Map container - Left half */}
-      <div className={`${selectedTurn ? 'w-1/2' : 'w-full'}`}>
-      <MapContainer
-        center={defaultCenter}
-        zoom={7}
-        style={{ height: '80vh', width: '100%' }}
-      >
-        <RecenterMap center={defaultCenter} selectedTurn={selectedTurn} />
-        <TileLayer 
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        
-        {/* Show capture markers */}
-        {turns.map((turn, index) => (
-          <Marker
-            key={index}
-            position={
-              (turn.gpsLocationLatitude == 0 && turn.gpsLocationLongitude == 0)
-                ? [7.254657057824213, 80.591233976167]
-                : [turn.gpsLocationLatitude, turn.gpsLocationLongitude]
-            }
-            eventHandlers={{
-              click: () => {
-                console.log("Marker clicked:", turn);
-                setSelectedTurn(turn);
-              }
-            }}
-          >
-            {/* <Popup>
-              <div>
-                <h3 className="font-bold">Turn Details</h3>
-                <p><strong>Instance ID:</strong> {turn.instanceId}</p>
-                <p><strong>Date:</strong> {turn.date}</p>
-                <p><strong>Time:</strong> {turn.time}</p>
-                <p><strong>Longitude:</strong> {turn.gpsLocationLongitude}</p>
-                <p><strong>Latitude:</strong> {turn.gpsLocationLatitude}</p>
-              </div>
-            </Popup> */}
-          </Marker>
-        ))}
-      </MapContainer>
-      </div>
+    <RequireAuth>
+      <img
+        src="/assets/nav/viewMap.jpg"
+        alt="OceanEyes Device"
+        style={{ width: "140px", display: "block", margin: "10px auto" }}
+      />
+      <div id="OceanMap" className="mx-24 pt-2 mb-10 relative z-0">
+        <div className="flex gap-4">
+          <div className={`${selectedTurn ? "w-1/2" : "w-full"}`}>
+            {/* Use a stable key here to force remount when selectedTurn changes */}
+            <MapContainer
+              key={selectedTurn ? `turn-${selectedTurn.id}` : "default"}
+              center={defaultCenter}
+              zoom={selectedTurn ? 9 : 7}
+              style={{ height: "80vh", width: "100%" }}
+            >
+              {leafletReady && (
+                <RecenterMap
+                  center={
+                    selectedTurn
+                      ? [selectedTurn.gpsLocationLatitude, selectedTurn.gpsLocationLongitude]
+                      : defaultCenter
+                  }
+                  zoom={selectedTurn ? 9 : 7}
+                />
+              )}
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {turns.map((turn, index) => (
+                <Marker
+                  key={index}
+                  position={
+                    turn.gpsLocationLatitude === 0 && turn.gpsLocationLongitude === 0
+                      ? [7.254657057824213, 80.591233976167]
+                      : [turn.gpsLocationLatitude, turn.gpsLocationLongitude]
+                  }
+                  eventHandlers={{
+                    click: () => setSelectedTurn(turn),
+                  }}
+                />
+              ))}
+            </MapContainer>
+          </div>
 
-      {/* Details Panel - Right half */}
-      {selectedTurn && (
-        <div className="w-1/2 bg-white shadow-lg rounded-lg p-4 border border-gray-200 overflow-y-auto max-h-[80vh]">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Turn Details</h2>
-            <button onClick={() => {
-                  setSelectedTurn(null);
-                  setTurnImages([]);
-                }} 
-                className="text-red-500 font-bold text-lg">
-              ✕
-            </button>
-          </div>
-          <div className="space-y-1 text-sm">
-                <p><strong>Instance ID:</strong> {selectedTurn.instanceId}</p>
-                <p><strong>Date:</strong> {selectedTurn.date}</p>
-                <p><strong>Time:</strong> {selectedTurn.time}</p>
-                {/* <p><strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude}</p>
-                <p><strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude}</p> */}
-                <p>
-                    <strong>Longitude:</strong> {selectedTurn.gpsLocationLongitude == 0 ? 7.254657057824213 : selectedTurn.gpsLocationLongitude}
-                </p>
-                <p>
-                  <strong>Latitude:</strong> {selectedTurn.gpsLocationLatitude == 0 ? 80.591233976167 : selectedTurn.gpsLocationLatitude}
-                </p>
-          </div>
-          
-        {/* Images from backend */}
-            {turnImages.length > 0 && (
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                {turnImages.map((url, idx) => (
-                  <img key={idx} src={`${domainName}${url}`} alt={`Turn ${idx}`} style={{ width: "100px" }} />))}
+          {selectedTurn && (
+            <div className="w-1/2 bg-white shadow-2xl rounded-2xl p-6 border border-gray-300 overflow-y-auto max-h-[80vh] transition-all">
+              <div className="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
+                  <img
+                    src="/assets/icons/map.png"
+                    alt="Map Marker Icon"
+                    className="mr-2 w-12 h-12"
+                  />
+                  Turn Details
+                </h2>
+                <button
+                  onClick={() => {
+                    setSelectedTurn(null);
+                    setTurnImages([]);
+                  }}
+                  className="text-red-500 font-bold text-lg"
+                  aria-label="Close turn details"
+                >
+                  <img
+                    src="/assets/icons/close.png"
+                    alt="Close Icon"
+                    className="w-5 h-5"
+                  />
+                </button>
               </div>
-            )}
-            {turnImages.length === 0 && (
-              <p className="mt-4 text-gray-500 text-sm">No images available for this turn.</p>
-            )}
+
+              {/* Table for Turn Details */}
+              <table className="w-full text-left text-gray-700 text-sm">
+                <tbody>
+                  <tr className="border-b border-gray-300">
+                    <td className="py-2 font-medium flex items-center">
+                      <img
+                        src="/assets/icons/id.png"
+                        alt="ID Badge Icon"
+                        className="mr-2 w-5 h-5"
+                      />
+                      Instance ID
+                    </td>
+                    <td className="py-2">{selectedTurn.instanceId}</td>
+                  </tr>
+                  <tr className="border-b border-gray-300">
+                    <td className="py-2 font-medium flex items-center">
+                      <img
+                        src="/assets/icons/calendar.png"
+                        alt="Calendar Icon"
+                        className="mr-2 w-5 h-5"
+                      />
+                      Date
+                    </td>
+                    <td className="py-2">{selectedTurn.date}</td>
+                  </tr>
+                  <tr className="border-b border-gray-300">
+                    <td className="py-2 font-medium flex items-center">
+                      <img
+                        src="/assets/icons/clock.png"
+                        alt="Clock Icon"
+                        className="mr-2 w-5 h-5"
+                      />
+                      Time
+                    </td>
+                    <td className="py-2">{selectedTurn.time}</td>
+                  </tr>
+                  <tr className="border-b border-gray-300">
+                    <td className="py-2 font-medium flex items-center">
+                      <img
+                        src="/assets/icons/equator.png"
+                        alt="Longitude Icon"
+                        className="mr-2 w-5 h-5"
+                      />
+                      Longitude
+                    </td>
+                    <td className="py-2">
+                      {selectedTurn.gpsLocationLongitude === 0
+                        ? 7.254657057824213
+                        : selectedTurn.gpsLocationLongitude}
+                    </td>
+                  </tr>
+                  <tr className="border-b border-gray-300">
+                    <td className="py-2 font-medium flex items-center">
+                      <img
+                        src="/assets/icons/earth.png"
+                        alt="Latitude Icon"
+                        className="mr-2 w-5 h-5"
+                      />
+                      Latitude
+                    </td>
+                    <td className="py-2">
+                      {selectedTurn.gpsLocationLatitude === 0
+                        ? 80.591233976167
+                        : selectedTurn.gpsLocationLatitude}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {turnImages.length > 0 ? (
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {turnImages.map((url, idx) => (
+                    <img
+                      key={idx}
+                      src={`${domainName}${url}`}
+                      alt={`Turn ${idx}`}
+                      className="cursor-pointer rounded shadow hover:scale-105 transition-transform duration-200"
+                      onClick={() => setSelectedImage(`${domainName}${url}`)}
+                      tabIndex={0}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          setSelectedImage(`${domainName}${url}`);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 text-gray-500 text-sm flex items-center">
+                  <img
+                    src="/assets/icons/no-pictures.png"
+                    alt="No Images Icon"
+                    className="mr-2 w-5 h-5"
+                  />
+                  No images available for this turn.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Image Popup Modal */}
+        {selectedImage && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]"
+            onClick={() => setSelectedImage(null)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div
+              className="bg-white rounded-lg p-4 max-w-4xl w-full max-h-[90vh] overflow-auto relative mb-10"
+              onClick={e => e.stopPropagation()}
+            >
+              <img
+                src={selectedImage}
+                alt="Enlarged"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-3 right-3 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-red-400"
+                aria-label="Close image popup"
+              >
+                <img
+                  src="/assets/icons/close.png"
+                  alt="Close Icon"
+                  className="w-5 h-5"
+                />
+              </button>
+            </div>
           </div>
         )}
       </div>
-    </div>
+    </RequireAuth>
   );
 };
 
-export default function ViewMap() {
-  return (
-    <RequireAuth>
-      <img 
-        src="/assets/nav/viewMap.jpg" 
-        alt="OceanEyes Device"
-        style={{ width: "140px", display: "block", margin: "10px auto"}}
-      />
-      {/* <div className="pageTitle">
-              <h5>Map</h5>
-        </div> */}
-      <Map />
-    </RequireAuth>
-  );
-}
+export default Map;

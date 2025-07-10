@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import { isTokenValid } from "../Authentications/tokenValidation";
 import { useRouter } from 'next/navigation';
 
-
 const Banner = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
     const router = useRouter();
 
         useEffect(() => {
             const checkAuth = () => {
-                setIsAuthenticated(isTokenValid());
+                 if (typeof window !== 'undefined') {
+                    const valid = isTokenValid();
+                    setIsAuthenticated(valid);}
+                // setIsAuthenticated(isTokenValid());
             };
     
             window.addEventListener("storage", checkAuth);
