@@ -1,7 +1,6 @@
-package com.example.OceanEyes;
+package com.example.OceanEyes.ControllerTest;
 
 import com.example.OceanEyes.Controller.CaptureController;
-import com.example.OceanEyes.Entity.Capture;
 import com.example.OceanEyes.Service.CaptureService;
 import com.example.OceanEyes.Service.FileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 

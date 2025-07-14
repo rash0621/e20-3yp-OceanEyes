@@ -17,7 +17,7 @@ The world is facing a serious marine pollution problem, with large amounts of ga
 - **Environmental Impact** : Promotes awareness and accountability by sharing data with stakeholders and aids in developing targeted solutions to combat pollution.
 
 ## Solution Architecture
-<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Solution_Architecture.jpg" width="512" height="288"/>
+<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/solarchi.JPG" width="512" height="288"/>
 
 ## Data and Control Flow
 <img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288"/>
