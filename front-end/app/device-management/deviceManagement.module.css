@@ -37,6 +37,19 @@
   margin-bottom: 16px;
 }
 
+.DeviceManagementTitle h5 {
+    font-size: 30px;
+    font-family: Arial, sans-serif;
+    font-weight: bolder;
+    color: hsl(0, 0%, 0%);
+  }
+  
+.DeviceManagementSubTitle {
+    color: #555;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+
 .deviceDesignImage {
   width: 150px;
   display: block;
