@@ -15,6 +15,8 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ location, battery }) => {
       <Typography>Location: {location}</Typography>
       <Typography>Battery: {battery}%</Typography>
     </div>
+    
+    
   );
 };
 

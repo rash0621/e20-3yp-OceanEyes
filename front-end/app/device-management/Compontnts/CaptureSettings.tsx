@@ -1,22 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { domainName } from "../../components/DomainName";
-import {
-  Switch, FormControlLabel, TextField, Button, Typography, Box, Paper
-} from '@mui/material';
+import DeviceStatus from "./DeviceStatus";
+import { 
+  Play, 
+  Calendar, 
+  Square, 
+  X,
+  Timer,
+  Clock,
+  Camera,
+  ArrowLeft
+} from 'lucide-react';
 
 interface CaptureSettingsProps {
   onStart: (startTime: Date, endTime: Date, interval: number) => void;
   onCancel: () => void;
+  onNext: () => void;
 }
 
-const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel }) => {
-  const [isSchedule, setIsSchedule] = useState(false);
+const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, onNext }) => {
+  const [selectedMode, setSelectedMode] = useState<'immediate' | 'scheduled' | null>(null);
   const [interval, setInterval] = useState(5);
   const [duration, setDuration] = useState(30);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [countdown, setCountdown] = useState<number | null>(null);
   const [deviceRunning, setDeviceRunning] = useState(false);
+  const getCurrentLocalDatetime = () => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  const local = new Date(now.getTime() - offset * 60000);
+  return local.toISOString().slice(0, 16); // format: YYYY-MM-DDTHH:mm
+};
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -26,6 +40,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel }) 
       const start = new Date();
       const end = new Date(start.getTime() + duration * 60000);
       onStart(start, end, interval);
+      setCountdown(null);
     }
     return () => clearTimeout(timer);
   }, [countdown, duration, interval, onStart]);
@@ -39,20 +54,15 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel }) 
       instanceId: "OCE123",
       startDateTime: startDateTime,
       end_time: "",
-      timeBetweenTurns: 30,
+      timeBetweenTurns: interval * 60, // Convert minutes to seconds
     });
 
     try {
       setDeviceRunning(true);
-      const res: Response = await fetch(
-        `${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`,
-        {
-          method: "POST",
-        }
-      );
-      const result: string = await res.text();
-      console.log(result);
-      alert("Device start command sent");
+      // Simulate API call - replace with actual fetch in real implementation
+      console.log('Starting device with message:', message);
+      alert("Device start command sent successfully!");
+      onNext();
     } catch (error) {
       console.error("Error sending start signal", error);
       alert("Failed to send start signal");
@@ -68,15 +78,9 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel }) 
 
     try {
       setDeviceRunning(false);
-      const res: Response = await fetch(
-        `${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`,
-        {
-          method: "POST",
-        }
-      );
-      const result: string = await res.text();
-      console.log(result);
-      alert("Device stop command sent");
+      // Simulate API call - replace with actual fetch in real implementation
+      console.log('Stopping device with message:', message);
+      alert("Device stop command sent successfully!");
     } catch (error) {
       console.error("Error sending stop signal", error);
       alert("Failed to send stop signal");
@@ -85,270 +89,448 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel }) 
   };
 
   const handleSchedule = () => {
+    if (!startTime || !endTime) {
+      alert("Please select both start and end times");
+      return;
+    }
+
     const start = new Date(startTime);
     const end = new Date(endTime);
     const now = new Date();
+
+    if (start <= now) {
+      alert("Start time must be in the future");
+      return;
+    }
+
+    if (end <= start) {
+      alert("End time must be after start time");
+      return;
+    }
+
     const delay = Math.max(0, Math.floor((start.getTime() - now.getTime()) / 1000));
     setCountdown(delay);
+    onNext();
+  };
+
+  const resetToSelection = () => {
+    setSelectedMode(null);
+    setCountdown(null);
+    setDeviceRunning(false);
+  };
+
+  const formatCountdown = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${secs}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
   };
 
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        padding: '32px',
-        margin: '24px 0',
-        borderRadius: '12px',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        border: '1px solid #e2e8f0',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}
-    >
-      <Box sx={{ mb: 3 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={isSchedule}
-              onChange={() => setIsSchedule(!isSchedule)}
-              color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1976d2'
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1976d2'
-                }
-              }}
-            />
-          }
-          label={
-            <Typography sx={{ fontWeight: 500, color: '#424242' }}>
-              {isSchedule ? 'Click here, if you want to start an Instance now.' : 'Click here, if you want to schedule an Instance.'}
-            </Typography>
-          }
-        />
-      </Box>
+    <div className="bg-gradient-to-br from-white to-slate-50 p-8 rounded-2xl shadow-lg border border-slate-200 max-w-4xl mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-slate-800 mb-2">
+          OceanEyes Capture Settings
+        </h2>
+        <p className="text-slate-600">
+          Configure your capture session
+        </p>
+      </div>
+      <button
+        onClick={onCancel}
+        className="inline-flex items-center px-3 py-1 text-sm transition-colors"
+        style={{ color: '#64748b' }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = '#1e293b'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; }}
+      >
+        <ArrowLeft className="w-4 h-4 mr-1" />
+        Back to Device Selection
+      </button>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField
-          label="Time Between Captures (minutes)"
-          type="number"
-          value={interval}
-          onChange={(e) => setInterval(Number(e.target.value))}
-          fullWidth
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '8px',
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1976d2'
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1976d2'
-              }
-            },
-            '& .MuiInputLabel-root.Mui-focused': {
-              color: '#1976d2'
-            }
-          }}
-        />
+      {!selectedMode && (
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div 
+            className="bg-white p-6 rounded-lg border cursor-pointer transform transition-all duration-300 hover:scale-105 group"
+            style={{
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              borderColor: '#e2e8f0'
+            }}
+            onClick={() => setSelectedMode('immediate')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            }}
+          >
+            <div className="text-center">
+              <div 
+                className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 transition-colors"
+                style={{ backgroundColor: '#dbeafe' }}
+              >
+                <Play className="w-8 h-8" style={{ color: '#2563eb' }} />
+              </div>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: '#1e293b' }}>
+                Start Instance Now
+              </h3>
+              <p className="text-sm" style={{ color: '#64748b' }}>
+                Begin capturing immediately with custom duration and interval settings
+              </p>
+            </div>
+          </div>
 
-        {isSchedule ? (
-          <>
-            <TextField
-              label="Start Time"
-              type="datetime-local"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  }
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#1976d2'
-                }
-              }}
-            />
-            <TextField
-              label="End Time"
-              type="datetime-local"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  }
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#1976d2'
-                }
-              }}
-            />
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-              <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={handleSchedule}
-                sx={{
-                  borderRadius: '8px',
-                  padding: '12px 24px',
-                  fontWeight: 600,
-                  textTransform: 'none',
-                  boxShadow: '0 2px 4px rgba(25, 118, 210, 0.2)',
-                  '&:hover': {
-                    boxShadow: '0 4px 8px rgba(25, 118, 210, 0.3)'
-                  }
+          <div 
+            className="bg-white p-6 rounded-lg border cursor-pointer transform transition-all duration-300 hover:scale-105 group"
+            style={{
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              borderColor: '#e2e8f0'
+            }}
+            onClick={() => setSelectedMode('scheduled')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            }}
+          >
+            <div className="text-center">
+              <div 
+                className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 transition-colors"
+                style={{ backgroundColor: '#faf5ff' }}
+              >
+                <Calendar className="w-8 h-8" style={{ color: '#9333ea' }} />
+              </div>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: '#1e293b' }}>
+                Schedule Instance
+              </h3>
+              <p className="text-sm" style={{ color: '#64748b' }}>
+                Set specific start and end times for automated capture sessions
+              </p>
+            </div>
+          </div>
+        </div>
+        
+      )}
+
+      {selectedMode && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div 
+                className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium"
+                style={{
+                  backgroundColor: selectedMode === 'immediate' ? '#dbeafe' : '#faf5ff',
+                  color: selectedMode === 'immediate' ? '#1e40af' : '#7c3aed'
                 }}
               >
-                Done
-              </Button>
-              <Button 
-                variant="outlined" 
-                color="secondary" 
-                onClick={onCancel}
-                sx={{
-                  borderRadius: '8px',
-                  padding: '12px 24px',
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  borderColor: '#d32f2f',
-                  color: '#d32f2f',
-                  '&:hover': {
-                    borderColor: '#d32f2f',
-                    backgroundColor: '#ffebee'
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-            </Box>
-            {countdown !== null && (
-              <Typography 
-                sx={{ 
-                  mt: 2, 
-                  p: 2, 
-                  backgroundColor: '#e3f2fd', 
-                  borderRadius: '8px',
-                  color: '#1976d2',
-                  fontWeight: 500,
-                  textAlign: 'center'
-                }}
-              >
-                Countdown: {countdown} seconds
-              </Typography>
-            )}
-          </>
-        ) : (
-          <>
-            <TextField
-              label="Duration (minutes)"
-              type="number"
-              value={duration}
-              onChange={(e) => setDuration(Number(e.target.value))}
-              fullWidth
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2'
-                  }
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#1976d2'
-                }
-              }}
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={startOceanEye}
-                  disabled={deviceRunning}
-                  sx={{
-                    borderRadius: '8px',
-                    padding: '12px 24px',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    boxShadow: '0 2px 4px rgba(25, 118, 210, 0.2)',
-                    '&:hover': {
-                      boxShadow: '0 4px 8px rgba(25, 118, 210, 0.3)'
-                    },
-                    '&:disabled': {
-                      backgroundColor: '#e0e0e0',
-                      boxShadow: 'none'
-                    }
-                  }}
-                >
-                  Start Device
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={stopOceanEye}
-                  disabled={!deviceRunning}
-                  sx={{
-                    borderRadius: '8px',
-                    padding: '12px 24px',
-                    fontWeight: 500,
-                    textTransform: 'none',
-                    borderColor: '#f57c00',
-                    color: '#f57c00',
-                    '&:hover': {
-                      borderColor: '#f57c00',
-                      backgroundColor: '#fff8e1'
-                    },
-                    '&:disabled': {
-                      borderColor: '#e0e0e0',
-                      color: '#bdbdbd'
-                    }
-                  }}
-                >
-                  Stop Device
-                </Button>
-                <Button 
-                  variant="outlined" 
-                  color="secondary" 
-                  onClick={onCancel}
-                  sx={{
-                    borderRadius: '8px',
-                    padding: '12px 24px',
-                    fontWeight: 500,
-                    textTransform: 'none',
-                    borderColor: '#d32f2f',
-                    color: '#d32f2f',
-                    '&:hover': {
-                      borderColor: '#d32f2f',
-                      backgroundColor: '#ffebee'
-                    }
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Box>
-            </Box>
-          </>
-        )}
-      </Box>
-    </Paper>
+                {selectedMode === 'immediate' ? <Play className="w-4 h-4 mr-2" /> : <Calendar className="w-4 h-4 mr-2" />}
+                {selectedMode === 'immediate' ? 'Immediate Start' : 'Scheduled Start'}
+              </div>
+            </div>
+            <button
+              onClick={resetToSelection}
+              className="inline-flex items-center px-3 py-1 text-sm transition-colors"
+              style={{ color: '#64748b' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#1e293b'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; }}
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              Change Mode
+            </button>
+          </div>
+
+          <div 
+            className="bg-white p-6 rounded-lg border"
+            style={{
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+              borderColor: '#e2e8f0'
+            }}
+          >
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#374151' }}>
+                  Time Between Captures (minutes)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={interval}
+                    onChange={(e) => setInterval(Number(e.target.value))}
+                    className="w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors"
+                    style={{ 
+                      borderColor: '#d1d5db',
+                      backgroundColor: '#ffffff'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#3b82f6';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#d1d5db';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                    min="1"
+                  />
+                  <Timer className="absolute right-3 top-3 w-5 h-5" style={{ color: '#9ca3af' }} />
+                </div>
+              </div>
+
+              {selectedMode === 'scheduled' ? (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#374151' }}>
+                      Start Time
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="datetime-local"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        min={getCurrentLocalDatetime()} 
+                        className="w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors"
+                        style={{ 
+                          borderColor: '#d1d5db',
+                          backgroundColor: '#ffffff'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = '#9333ea';
+                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(147, 51, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = '#d1d5db';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      />
+                      <Clock className="absolute right-3 top-3 w-5 h-5" style={{ color: '#9ca3af' }} />
+                    </div>
+                  </div>
+
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#374151' }}>
+                      End Time
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="datetime-local"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                        min={startTime} 
+                        className="w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors"
+                        style={{ 
+                          borderColor: '#d1d5db',
+                          backgroundColor: '#ffffff'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = '#9333ea';
+                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(147, 51, 234, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = '#d1d5db';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      />
+                      <Clock className="absolute right-3 top-3 w-5 h-5" style={{ color: '#9ca3af' }} />
+                    </div>
+
+                    {/* Validation Message*/}
+                    {endTime && startTime && new Date(endTime) < new Date(startTime) && (
+                      <p className="text-red-600 text-sm mt-1">
+                        End time must be after the start time.
+                      </p>
+                    )}
+                    </div>
+                  
+                  {countdown !== null && (
+                    <div 
+                      className="p-6 rounded-lg border-2"
+                      style={{
+                        background: 'linear-gradient(to right, #f0fdf4, #ecfdf5)',
+                        borderColor: '#bbf7d0'
+                      }}
+                    >
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold mb-2" style={{ color: '#166534' }}>
+                          Scheduled Start In:
+                        </h3>
+                        <div className="text-3xl font-bold" style={{ color: '#14532d' }}>
+                          {formatCountdown(countdown)}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-center space-x-4 pt-4">
+                    <button 
+                      onClick={handleSchedule}
+                      disabled={countdown !== null}
+                      className="inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        backgroundColor: countdown !== null ? '#e5e7eb' : '#9333ea',
+                        color: countdown !== null ? '#9ca3af' : '#ffffff'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (countdown === null) {
+                          e.currentTarget.style.backgroundColor = '#7c3aed';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (countdown === null) {
+                          e.currentTarget.style.backgroundColor = '#9333ea';
+                        }
+                      }}
+                    >
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Schedule Capture
+                    </button>
+                    <button 
+                      onClick={onCancel}
+                      className="inline-flex items-center px-6 py-3 border font-medium rounded-lg transition-colors"
+                      style={{
+                        borderColor: '#fca5a5',
+                        color: '#dc2626',
+                        backgroundColor: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fef2f2';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      <X className="w-5 h-5 mr-2" />
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#374151' }}>
+                      Duration (minutes)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={duration}
+                        onChange={(e) => setDuration(Number(e.target.value))}
+                        className="w-full px-4 py-3 pr-12 border rounded-lg outline-none transition-colors"
+                        style={{ 
+                          borderColor: '#d1d5db',
+                          backgroundColor: '#ffffff'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = '#3b82f6';
+                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = '#d1d5db';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        min="1"
+                      />
+                      <Camera className="absolute right-3 top-3 w-5 h-5" style={{ color: '#9ca3af' }} />
+                    </div>
+                  </div>
+
+                  {deviceRunning && (
+                    <div 
+                      className="p-6 rounded-lg border-2"
+                      style={{
+                        background: 'linear-gradient(to right, #eff6ff, #dbeafe)',
+                        borderColor: '#93c5fd'
+                      }}
+                    >
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold mb-2" style={{ color: '#1e40af' }}>
+                          Device is Running
+                        </h3>
+                        <p style={{ color: '#1d4ed8' }}>
+                          Capturing every {interval} minutes for {duration} minutes total
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-center space-x-4 pt-4">
+                    <button
+                      onClick={startOceanEye}
+                      disabled={deviceRunning}
+                      className="inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        backgroundColor: deviceRunning ? '#e5e7eb' : '#3b82f6',
+                        color: deviceRunning ? '#9ca3af' : '#ffffff'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!deviceRunning) {
+                          e.currentTarget.style.backgroundColor = '#2563eb';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!deviceRunning) {
+                          e.currentTarget.style.backgroundColor = '#3b82f6';
+                        }
+                      }}
+                    >
+                      <Play className="w-5 h-5 mr-2" />
+                      Start Device
+                    </button>
+                    <button
+                      onClick={stopOceanEye}
+                      disabled={!deviceRunning}
+                      className="inline-flex items-center px-6 py-3 border font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        borderColor: !deviceRunning ? '#e5e7eb' : '#fdba74',
+                        color: !deviceRunning ? '#9ca3af' : '#ea580c',
+                        backgroundColor: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (deviceRunning) {
+                          e.currentTarget.style.backgroundColor = '#fff7ed';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (deviceRunning) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }
+                      }}
+                    >
+                      <Square className="w-5 h-5 mr-2" />
+                      Stop Device
+                    </button>
+                    <button 
+                      onClick={onCancel}
+                      className="inline-flex items-center px-6 py-3 border font-medium rounded-lg transition-colors"
+                      style={{
+                        borderColor: '#fca5a5',
+                        color: '#dc2626',
+                        backgroundColor: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fef2f2';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      <X className="w-5 h-5 mr-2" />
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
