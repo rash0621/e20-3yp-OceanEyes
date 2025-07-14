@@ -59,7 +59,9 @@ public class UserController {
         try {
             boolean loginSuccess = userService.loginUser(loginUser);
             if (loginSuccess) {
-                String token = jwtUtil.generateToken(loginUser.getId());
+                System.out.println("Login user: "+ loginUser); // User{_id='null', userEmail='kasundiehewawasam@gmail.com'}
+                System.out.println("Get ID in login function: "+ loginUser.getId()); //null
+                String token = jwtUtil.generateToken(loginUser.getId()); //nul
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Successfully logged in", token));
             }
             return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid Credentials", null));
@@ -77,14 +79,21 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<ActionStatusMessage<User>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        System.out.println(token);  //valid token was printed
+        System.out.println(jwtUtil.validateToken(token));   // true was printed
+
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
+        }
         try {
-            String token = authHeader.replace("Bearer ", "");
             String userId = jwtUtil.extractUserId(token); // Implement extractUserId in JwtUtil
+            System.out.println(userId);
             User user = userService.getUserById(userId);
             return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User info fetched", user));
         } catch (Exception e) {
+            e.printStackTrace(); // for debuggin
             return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
         }
     }
-
 }

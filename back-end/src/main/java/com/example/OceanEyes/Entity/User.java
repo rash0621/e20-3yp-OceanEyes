@@ -41,7 +41,7 @@ public class User {
     }
 
     public void setId(String _id) {
-        this.id = id;
+        this.id = _id;
     }
 
     public void setUserEmail(String userEmail) {
