@@ -1,5 +1,4 @@
 "use client"
-
 import { SetStateAction, useEffect, useState } from 'react';
 import style from './Instances.module.css'
 import axios from "axios"
@@ -7,7 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Dialog, DialogContent } from "@mui/material";
 import {domainName} from "../DomainName"
-import AddInstance from "./AddInstance";
+import dynamic from "next/dynamic";
+
+const AddInstance = dynamic(() => import('./AddInstance'), {
+  ssr: false,
+});
 
 function Instances() {
 

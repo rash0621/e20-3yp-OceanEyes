@@ -1,7 +1,10 @@
 import './globals.css';
-import Navbar from './components/Navbar/index';
 import Footer from './components/Footer/Footer';
+import dynamic from "next/dynamic";
 
+const Navbar = dynamic(() => import('./components/Navbar/index'), {
+  ssr: false,
+});
 
 export const metadata = {
   title: 'OceanEyes',

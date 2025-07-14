@@ -26,43 +26,28 @@ const whydata: whydata[] = [
 
 const Why = () => {
 
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
-
-    // Fetching image from the backend
-    useEffect(() => {
-        fetch("http://localhost:8081/api/v1/capture/image/67bef32b8b33e92930cfc52b")
-        .then((response) => response.blob())
-        .then((blob) => {
-            const imageUrl = URL.createObjectURL(blob);
-            setImageSrc(imageUrl);
-        })
-        .catch((error) => console.error("Error fetching image:", error));
-    }, []);
-
     return (
         <div id="about">
 
-            <div className='mx-auto max-w-7xl px-4 my-20 sm:py-20 lg:px-8'>
+            <div className='mx-auto max-w-7xl px-4 my-10 sm:py-10 lg:px-8'>
                 <div className='grid grid-cols-1 lg:grid-cols-2'>
 
                     {/* COLUMN-1 */}
                     <div className="relative lg:ml-10"> {/* Adjusted the margin to fit your layout */}
-                    {imageSrc ? (
-                        <img
-                            src="/assets/why/about.jpg"
-                            alt="Fetched Image from Backend"
-                            style={{
-                                maxWidth: '90%',     // Image will take up to 80% of the container width
-                                height: 'auto',      // Height will adjust proportionally to maintain aspect ratio
-                                marginRight: '10%',
-                                marginTop: '5%',
-                                marginBottom: '5%',
-                                objectFit: 'contain' // Ensure the image maintains its aspect ratio while filling the available space
-                            }}
-                        />
-                    ) : (
-                        <p>Loading image...</p> // Show a loading message until the image is fetched
-                    )}
+                    
+                    <img
+                        src="/assets/why/about.jpg"
+                        alt="Fetched Image from Backend"
+                        style={{
+                            maxWidth: '90%',     // Image will take up to 80% of the container width
+                            height: 'auto',      // Height will adjust proportionally to maintain aspect ratio
+                            marginRight: '10%',
+                            marginTop: '5%',
+                            marginBottom: '5%',
+                            objectFit: 'contain' // Ensure the image maintains its aspect ratio while filling the available space
+                        }}
+                    />
+                    
                 </div>
 
                     {/* COLUMN-2 */}

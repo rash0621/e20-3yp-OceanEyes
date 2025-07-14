@@ -1,11 +1,10 @@
-/* deviceManagement.module.css */
-
 .container {
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .deviceImage {
@@ -123,4 +122,36 @@
   padding: 20px;
   width: 100%;
   text-align: center;
+} 
+
+.stepContent {
+  margin-top: 20px;
 }
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.countdown {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.tableContainer {
+  max-width: 70%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.configSection {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.inputField {
+  width: 100%;
+}
+ 
