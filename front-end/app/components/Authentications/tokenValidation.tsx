@@ -1,4 +1,6 @@
 export const isTokenValid = (): boolean => {
+     if (typeof window !== "undefined") {
+    
     const token = localStorage.getItem("jwtToken");
     if (!token) return false; // No token = Not authenticated
 
@@ -11,5 +13,6 @@ export const isTokenValid = (): boolean => {
         return decodedToken.exp > currentTime; // Token is valid if not expired
     } catch (error) {
         return false; // Invalid token
-    }
+    } }
+    return false;
 };
