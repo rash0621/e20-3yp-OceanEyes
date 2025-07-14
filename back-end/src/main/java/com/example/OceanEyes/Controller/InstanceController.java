@@ -26,7 +26,9 @@ public class InstanceController {
             @RequestParam(value = "endDateTime", required = false) LocalDateTime endDateTime,
             @RequestParam(value = "timeBetweenTurns") Integer timeBetweenTurns,
             @RequestParam(value = "locationDistrict", required = false) String locationDistrict,
-            @RequestParam(value = "description", required = false) String description) {
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "mqttTopic") String mqttTopic
+            ) {
 
         try {
 
@@ -43,6 +45,8 @@ public class InstanceController {
             if (savedInstance== null) {
                 return ResponseEntity.status(401).body(new ActionStatusMessage<Instance>("FAIL", "Conflicting instances exists!", null));
             }
+            //send mqtt start signal
+
             return ResponseEntity.ok(new ActionStatusMessage<Instance>("SUCCESS", "Instance created successfully!", savedInstance));
         } catch (IOException e) {
 
