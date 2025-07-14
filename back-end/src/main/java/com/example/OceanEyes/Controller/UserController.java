@@ -22,14 +22,14 @@ public class UserController {
         try {
             boolean userSaved = userService.registerUser(user);
 
-            if (userSaved){
+            if (userSaved) {
                 String deviceId = user.getId();
                 String token = jwtUtil.generateToken(deviceId);
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User saved successfully", token));
-            }
-            else return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User already exists", null));
+            } else
+                return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User already exists", null));
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User creation failed", null));
         }
     }
@@ -44,9 +44,8 @@ public class UserController {
         }
     }
 
-
     @DeleteMapping("/delete/{id}")
-    private ResponseEntity<ActionStatusMessage<String>> deleteUser(@PathVariable(name = "id")String id) {
+    private ResponseEntity<ActionStatusMessage<String>> deleteUser(@PathVariable(name = "id") String id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User deleted successfully", ""));
@@ -59,7 +58,7 @@ public class UserController {
     private ResponseEntity<ActionStatusMessage<String>> loginUser(@RequestBody User loginUser) {
         try {
             boolean loginSuccess = userService.loginUser(loginUser);
-            if (loginSuccess){
+            if (loginSuccess) {
                 String token = jwtUtil.generateToken(loginUser.getId());
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Successfully logged in", token));
             }
@@ -72,10 +71,20 @@ public class UserController {
 
     /** For testing purposes **/
     @RequestMapping("/search/{id}")
-    private User getUser(@PathVariable(name = "id")String userId) {
+    private User getUser(@PathVariable(name = "id") String userId) {
         return userService.getUserById(userId);
     }
 
-
+    @GetMapping("/me")
+    public ResponseEntity<ActionStatusMessage<User>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String userId = jwtUtil.extractUserId(token); // Implement extractUserId in JwtUtil
+            User user = userService.getUserById(userId);
+            return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User info fetched", user));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
+        }
+    }
 
 }
