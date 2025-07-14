@@ -23,7 +23,7 @@ const Signin = () => {
         setEmail("");
         setPassword("");
         localStorage.removeItem("jwtToken");
-        window.dispatchEvent(new Event("storage"));
+        window.dispatchEvent(new Event("storage")); // Notifies other tabs
     }
    
 

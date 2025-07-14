@@ -33,20 +33,25 @@ public class UserService {
     }
 
     public User getUserById(String userid) {
-        return userRepository.findById(userid).get();
+        return userRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userid));
     }
 
     public boolean loginUser(User loginUser) {
+        Optional<User> userOptional = userRepository.findByUserEmail(loginUser.getUserEmail());
 
-        Optional<User> user = userRepository.findByUserEmail(loginUser.getUserEmail());
-        boolean userExists = user.isPresent();
+        if (userOptional.isPresent()) {
+            User dbUser = userOptional.get();
 
-        if (userExists) {
-            User dbUser = user.get();
-            return passwordEncoder.matches(loginUser.getUserPassword(), dbUser.getUserPassword());
+            // Check if the password matches
+            if (passwordEncoder.matches(loginUser.getUserPassword(), dbUser.getUserPassword())) {
+                loginUser.setId(dbUser.getId());  // Now set the ID of the logged-in user
+                return true;
+            } else {
+                throw new RuntimeException("Invalid password");
+            }
         } else {
             throw new RuntimeException("User not found");
-
         }
     }
 
