@@ -76,7 +76,7 @@ public class DeviceController {
             if (loginSuccess){
                 User user = userService.getUserById(userId);
                 if (user!=null){
-                    user.setLoggedInDevice(device);
+                    user.setLoggedInDevices(device);
                 String deviceId = device.getId();
                 String token = jwtUtil.generateToken(deviceId);
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Successfully logged in", token));
