@@ -1,12 +1,17 @@
 package com.example.OceanEyes.Controller;
 
 import com.example.OceanEyes.Config.JwtUtil;
+import com.example.OceanEyes.Entity.Device;
 import com.example.OceanEyes.Entity.User;
+import com.example.OceanEyes.Service.DeviceService;
 import com.example.OceanEyes.Service.UserService;
 import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -14,6 +19,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DeviceService deviceService;
+
     @Autowired
     private JwtUtil jwtUtil;
 

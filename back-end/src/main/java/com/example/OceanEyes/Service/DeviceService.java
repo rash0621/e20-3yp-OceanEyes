@@ -59,7 +59,8 @@ public class DeviceService {
             return passwordEncoder.matches(device.getDevicePassword(), dbDevice.getDevicePassword());
         } else {
             throw new RuntimeException("Device not found");
-
         }
     }
+    public Optional<Device> getDevice(String deviceId) {
+        return deviceRepository.findById(deviceId);}
 }
