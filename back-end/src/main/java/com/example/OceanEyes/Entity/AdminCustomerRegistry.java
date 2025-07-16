@@ -1,12 +1,8 @@
 package com.example.OceanEyes.Entity;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Document(collection = "admin_customer_registry")
 public class AdminCustomerRegistry {
@@ -14,32 +10,21 @@ public class AdminCustomerRegistry {
     @Id
     private String id;
 
-    @NotNull
     private String name;
-
-    @NotNull
-    @Email
     private String email;
-
-    @NotNull
-    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
     private String phone;
-
-    @NotNull
     private String organization;
     private String address;
-
-    @NotNull
-    private boolean isRegistered;
-
+    private Boolean isRegistered;
     private int numberOfDevicePurchased;
+    private String custormerID;
 
     public AdminCustomerRegistry() {
     }
 
     public AdminCustomerRegistry(String id, String name, String email, String phone, String organization,
             String address,
-            boolean isRegistered, Timestamp createdAt, int numberOfDevicePurchased) {
+            boolean isRegistered, int numberOfDevicePurchased, String custormerID) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -48,6 +33,7 @@ public class AdminCustomerRegistry {
         this.address = address;
         this.isRegistered = isRegistered;
         this.numberOfDevicePurchased = numberOfDevicePurchased;
+        this.custormerID = custormerID;
     }
 
     public String getId() {
@@ -102,7 +88,7 @@ public class AdminCustomerRegistry {
         return isRegistered;
     }
 
-    public void setRegistered(boolean registered) {
+    public void setIsRegistered(boolean registered) {
         isRegistered = registered;
     }
 
@@ -113,5 +99,12 @@ public class AdminCustomerRegistry {
 
     public void setNumberOfDevicePurchased(int numberOfDevicePurchased) {
         this.numberOfDevicePurchased = numberOfDevicePurchased;
+    }
+
+    public String getCustormerID() {
+        return custormerID;
+    }
+    public void setCustormerID(String custormerID) {
+        this.custormerID = custormerID;
     }
 }

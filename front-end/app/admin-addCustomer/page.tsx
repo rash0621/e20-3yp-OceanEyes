@@ -80,7 +80,11 @@ const validateField = (name: string, value: string): string | undefined => {
 };
 
 const handleGenerateId = async () => {
-  if (!validate()) return;
+  // console.log("Generate ID button clicked"); 
+  if (!validate()) {
+      console.log("Not validated");
+    return;
+  }
   console.log("Generating ID...");
 
   try {
@@ -258,7 +262,7 @@ const handleGenerateId = async () => {
               className={styles.button}
               style={{ marginTop: "1rem" }}
               onClick={handleGenerateId}
-              disabled={Object.keys(errors).length > 0 || idGenerated}
+              //disabled={Object.keys(errors).length > 0 || idGenerated}
             >
               Generate ID
             </button>

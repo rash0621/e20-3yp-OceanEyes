@@ -15,11 +15,15 @@ public class AdminCustomerRegistryService {
     private AdminCustomerRegistryRepo registryRepo;
 
     public AdminCustomerRegistry createRegistry(AdminCustomerRegistry registry) {
-        if (registry.getId() == null || registry.getId().isEmpty()) {
-            registry.setId(generateCustomerId());
+        Optional<AdminCustomerRegistry> existing = registryRepo.findByEmail(registry.getEmail());
+
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("A customer with this email already exists.");
         }
+        registry.setIsRegistered(false); // Enforce false during creation
         return registryRepo.save(registry);
     }
+
 
     public void deleteRegistry(String id) {
         registryRepo.deleteById(id);
