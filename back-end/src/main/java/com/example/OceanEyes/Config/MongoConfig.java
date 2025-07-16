@@ -1,12 +1,14 @@
 package com.example.OceanEyes.Config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.IndexOperations;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
+@EnableMongoAuditing
 public class MongoConfig {
 
     private final MongoTemplate mongoTemplate;

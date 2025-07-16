@@ -76,6 +76,34 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+    @PostMapping(value = "/registerUserDevice")
+    private ResponseEntity<String> registerUserDevice(
+            @RequestParam(value = "deviceId") String deviceId,
+            @RequestParam(value = "userId") String userId
+    ) {
+        try {
+            Optional<Device> availableDevice = deviceService.getDevice(deviceId);
+            Optional<User> registeredUser = Optional.ofNullable(userService.getUserById(userId));
+
+            if (availableDevice.isPresent() && registeredUser.isPresent()) {
+                User user = registeredUser.get();
+                user.setLoggedInDevice(availableDevice.get());
+                userService.saveOrUpdate(user); // Save changes to DB
+
+                return ResponseEntity.ok("Device registered for user successfully");
+            } else {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Device or user not found.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Error in registering user device with exception: " + e.getMessage());
+        }
+    }
+
+
     @GetMapping("/me")
     public ResponseEntity<ActionStatusMessage<User>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");

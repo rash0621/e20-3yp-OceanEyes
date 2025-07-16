@@ -1,5 +1,6 @@
 package com.example.OceanEyes.Service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.OceanEyes.Config.MqttConfig;
@@ -19,6 +20,11 @@ public class MqttService {
 
     public void receiveMessages(String topic) {
         mqttConfig.subscribe(topic);
+    }
+
+    @PostConstruct
+    public void init() {
+        mqttConfig.subscribe("device/data");
     }
 
     public void closeConnection() {

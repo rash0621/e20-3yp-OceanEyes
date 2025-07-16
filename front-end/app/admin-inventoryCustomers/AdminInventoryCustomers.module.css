@@ -1,0 +1,112 @@
+.inventoryCustomerTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.inventoryCustomerTitle h5 {
+  font-size: 30px;
+  font-family: Arial, sans-serif;
+  font-weight: bolder;
+  color: hsl(0, 0%, 0%);
+}
+
+.container {
+  margin: 2rem auto;
+  max-width: 1100px;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  margin-top: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.table th, .table td {
+  border: 1px solid #c9e1ef;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.table th {
+  background: hsl(214, 76%, 94%);
+  font-weight: bold;
+}
+
+.actionButtonsBlock {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: hsl(211, 91%, 49%);
+  font-size: 1.2rem;
+  padding: 0.3rem;
+  transition: color 0.2s;
+}
+
+.actionButton:hover {
+  color: #d32f2f;
+}
+
+.dialogForm {
+  padding: 1rem;
+}
+
+.inputbox {
+  margin-bottom: 1.5rem;
+}
+
+.inputbox label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.field {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 2px solid #c9e1ef;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: Arial, sans-serif;
+  background: transparent;
+  outline: none;
+}
+
+.field:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.buttonsBlock {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submitButton {
+  background-color: hsl(214, 76%, 94%);
+  color: hsl(211, 91%, 49%);
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: hsl(211, 91%, 49%);
+  color: #fff;
+}

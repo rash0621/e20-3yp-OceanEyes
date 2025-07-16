@@ -1,6 +1,7 @@
 package com.example.OceanEyes.Controller;
 
 import com.example.OceanEyes.Entity.Capture;
+import com.example.OceanEyes.Entity.CaptureDTO;
 import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Service.CaptureService;
 import com.example.OceanEyes.Service.FileService;
@@ -33,16 +34,26 @@ public class CaptureController {
 
 
     @GetMapping("/images/turn/{turnId}")
-    public ResponseEntity<ActionStatusMessage<List<String>>> getImageUrlsByTurnId(@PathVariable String turnId) {
+    public ResponseEntity<ActionStatusMessage<List<CaptureDTO>>> getImageUrlsByTurnId(@PathVariable String turnId) {
         List<Capture> captures = captureService.getCapturesByTurnId(turnId);
-        List<String> imageUrls = new ArrayList<>();
+        List<CaptureDTO> captureDTOs = new ArrayList<>();
 
         for (Capture capture : captures) {
             String imageId = capture.getImageId();
-            imageUrls.add("capture/images/file/" + imageId);
+            String imageUrl = "capture/images/file/" + imageId;
+
+            CaptureDTO dto = new CaptureDTO(
+                    imageUrl,
+                    capture.getTurnId(),
+                    capture.getAngle(),
+                    capture.getDistance(),
+                    capture.getIsPollutant(),
+                    capture.getPollutantType() != null ? capture.getPollutantType() : "None"
+            );
+            captureDTOs.add(dto);
         }
 
-        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved image URLs successfully", imageUrls));
+        return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved image URLs successfully", captureDTOs));
     }
 
     @GetMapping("/images/file/{imageId}")
