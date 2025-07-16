@@ -18,7 +18,7 @@ public class CaptureService {
     @Autowired
     private FileService fileService;
 
-    public Capture saveCapture(String turnId,MultipartFile file, String angle, Float distance) throws IOException {
+    public Capture saveCapture(String turnId,MultipartFile file, String angle, Float distance,Boolean isPollutant,String pollutantType) throws IOException {
 
         String imageId = fileService.saveFile(file);
         if(imageId!=null){
@@ -27,6 +27,8 @@ public class CaptureService {
             capture.setImageId(imageId);
             capture.setAngle(angle);
             capture.setDistance(distance);
+            capture.setIsPollutant(isPollutant);
+            capture.setPollutantType(pollutantType);
             return captureRepo.save(capture);
         }else{
             throw new IOException("Failed to save image file. imageId is null.");

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { domainName } from "../../components/DomainName";
 import DeviceStatus from "./DeviceStatus";
 import { 
   Play, 
@@ -19,6 +20,7 @@ interface CaptureSettingsProps {
 
 const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, onNext }) => {
   const [selectedMode, setSelectedMode] = useState<'immediate' | 'scheduled' | null>(null);
+  const [isScheduled, setIsScheduled] = useState(false);
   const [interval, setInterval] = useState(5);
   const [duration, setDuration] = useState(30);
   const [startTime, setStartTime] = useState('');
@@ -32,61 +34,69 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
   return local.toISOString().slice(0, 16); // format: YYYY-MM-DDTHH:mm
 };
 
+  const startOceanEye = async () => {
+      const topic = "raspi/TestDevice1/start";
+      const now = new Date(Date.now());
+      const startDateTime = now.toISOString().slice(0, 19);
+      const message = JSON.stringify({
+        instanceId: "OCE123",
+        startDateTime: startDateTime ,
+        end_time: "",
+        timeBetweenTurns: 30,
+  });
+      try {
+        // Set device to running immediately
+        setDeviceRunning(true);
+        const res = await fetch(`${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`, {
+          method: "POST"
+  //        headers: {
+  //          "Content-Type": "application/json",
+  //        },
+  //        body: JSON.stringify(data),
+        });
+        const result = await res.text();
+        console.log(result);
+        onNext(); // Proceed to next step after starting the device
+        alert("Device start command sent");
+      } catch (error) {
+        console.error("Error sending start signal", error);
+        alert("Failed to send start signal");
+        setDeviceRunning(false); // Revert if failed
+      }
+    };
+  
+
+  // const stopOceanEye = async (): Promise<void> => {
+  //   const topic = "raspi/TestDevice1/stop";
+  //   const message = JSON.stringify({
+  //     instanceId: "OCE123",
+  //   });
+
+  //   try {
+  //     setDeviceRunning(false);
+  //     // Simulate API call - replace with actual fetch in real implementation
+  //     console.log('Stopping device with message:', message);
+  //     alert("Device stop command sent successfully!");
+  //   } catch (error) {
+  //     console.error("Error sending stop signal", error);
+  //     alert("Failed to send stop signal");
+  //     setDeviceRunning(true);
+  //   }
+  // };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (countdown !== null && countdown > 0) {
+    if (isScheduled && countdown !== null && countdown > 0) {
       timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-    } else if (countdown === 0) {
+    } else if (isScheduled && countdown === 0) {
       const start = new Date();
       const end = new Date(start.getTime() + duration * 60000);
-      onStart(start, end, interval);
       setCountdown(null);
+      startOceanEye();   
+      setIsScheduled(false); 
     }
     return () => clearTimeout(timer);
-  }, [countdown, duration, interval, onStart]);
-
-  const startOceanEye = async (): Promise<void> => {
-    const topic = "raspi/TestDevice1/start";
-    const now = new Date();
-    const startDateTime = now.toISOString().slice(0, 19);
-
-    const message = JSON.stringify({
-      instanceId: "OCE123",
-      startDateTime: startDateTime,
-      end_time: "",
-      timeBetweenTurns: interval * 60, // Convert minutes to seconds
-    });
-
-    try {
-      setDeviceRunning(true);
-      // Simulate API call - replace with actual fetch in real implementation
-      console.log('Starting device with message:', message);
-      alert("Device start command sent successfully!");
-      onNext();
-    } catch (error) {
-      console.error("Error sending start signal", error);
-      alert("Failed to send start signal");
-      setDeviceRunning(false);
-    }
-  };
-
-  const stopOceanEye = async (): Promise<void> => {
-    const topic = "raspi/TestDevice1/stop";
-    const message = JSON.stringify({
-      instanceId: "OCE123",
-    });
-
-    try {
-      setDeviceRunning(false);
-      // Simulate API call - replace with actual fetch in real implementation
-      console.log('Stopping device with message:', message);
-      alert("Device stop command sent successfully!");
-    } catch (error) {
-      console.error("Error sending stop signal", error);
-      alert("Failed to send stop signal");
-      setDeviceRunning(true);
-    }
-  };
+  }, [countdown, duration, interval,isScheduled, onStart]);
 
   const handleSchedule = () => {
     if (!startTime || !endTime) {
@@ -110,7 +120,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
 
     const delay = Math.max(0, Math.floor((start.getTime() - now.getTime()) / 1000));
     setCountdown(delay);
-    onNext();
+    setIsScheduled(true);
   };
 
   const resetToSelection = () => {
@@ -348,7 +358,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
                     )}
                     </div>
                   
-                  {countdown !== null && (
+                  {isScheduled && countdown !== null && (
                     <div 
                       className="p-6 rounded-lg border-2"
                       style={{
@@ -482,7 +492,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
                       <Play className="w-5 h-5 mr-2" />
                       Start Device
                     </button>
-                    <button
+                    {/* <button
                       onClick={stopOceanEye}
                       disabled={!deviceRunning}
                       className="inline-flex items-center px-6 py-3 border font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -504,7 +514,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
                     >
                       <Square className="w-5 h-5 mr-2" />
                       Stop Device
-                    </button>
+                    </button> */}
                     <button 
                       onClick={onCancel}
                       className="inline-flex items-center px-6 py-3 border font-medium rounded-lg transition-colors"

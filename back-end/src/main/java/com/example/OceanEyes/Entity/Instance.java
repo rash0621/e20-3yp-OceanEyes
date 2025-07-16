@@ -11,6 +11,7 @@ import java.util.List;
 public class Instance {
     @Id
     private String id;
+    private String instanceName;
     private String deviceName;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
@@ -26,6 +27,12 @@ public class Instance {
 
     public void setInstanceId(String instanceId) {
         this.id = instanceId;
+    }
+
+    public String getInstanceName() {return instanceName;}
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
     }
 
     public String getDeviceName() {
