@@ -170,14 +170,14 @@ const DeviceSearchBar: React.FC<DeviceSearchBarProps> = ({
           {hasActiveSearch ? (
             resultCount === 0 ? (
               <span style={{ color: '#ef4444' }}>
-                No devices found matching "{searchTerm}"
+                No devices found matching &quot;{searchTerm}&quot;
               </span>
             ) : (
               <>
                 Showing <strong>{resultCount}</strong> of <strong>{totalCount}</strong> devices
                 {resultCount !== totalCount && (
                   <span style={{ color: '#1976d2', marginLeft: '4px' }}>
-                    for "{searchTerm}"
+                    for &quot;{searchTerm}&quot;
                   </span>
                 )}
               </>

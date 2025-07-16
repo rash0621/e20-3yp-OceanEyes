@@ -16,6 +16,7 @@ const steps = ["Select Device", "Configure Operation", "Status"];
 
 const DeviceManagementPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isScheduled, setIsScheduled] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
   const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
@@ -57,6 +58,7 @@ const DeviceManagementPage: React.FC = () => {
       setCountdown(delay > 0 ? delay : 0);
     }
     setActiveStep(prev => prev + 1);
+    console.log("active step:", activeStep );
   };
 
   const handleCancel = () => {
@@ -214,7 +216,7 @@ const DeviceManagementPage: React.FC = () => {
       {activeStep === 1 && selectedDeviceId && (
   <CaptureSettings
     onStart={(start, end, interval) => {
-      console.log("Starting device with settings:", start, end, interval);
+      console.log("Starting device with settings 2S:", start, end, interval);
       // Update state or trigger backend call
       // setDeviceStatus({ location: "Lat 6.9271, Lng 79.8612", battery: "76%" });
       setActiveStep(2);
@@ -232,22 +234,13 @@ const DeviceManagementPage: React.FC = () => {
 
         {activeStep === 2 && (
           <Box className={styles.statusBox}>
-            <Typography variant="h6">Selected Device</Typography>
+            
             <DeviceStatus 
               location="Lat 6.9271, Lon 79.8612" 
               battery={76} 
+              onCancel={handleCancel}
             />
-            {countdown !== null && countdown > 0 ? (
-              <>
-                <p>Countdown: {countdown} seconds</p>
-                <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
-              </>
-            ) : (
-              <>
-                <p><strong>Location:</strong> {deviceStatus.location}</p>
-                <p><strong>Battery:</strong> {deviceStatus.battery}</p>
-              </>
-            )}
+    
           </Box>
         )}
       </Box>
