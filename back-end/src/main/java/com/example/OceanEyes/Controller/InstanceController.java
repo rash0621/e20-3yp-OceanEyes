@@ -3,14 +3,18 @@ package com.example.OceanEyes.Controller;
 import com.example.OceanEyes.Entity.Instance;
 import com.example.OceanEyes.Service.FileService;
 import com.example.OceanEyes.Service.InstanceService;
+import com.example.OceanEyes.Service.MqttService;
 import com.example.OceanEyes.StatusMessages.ActionStatusMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -18,6 +22,8 @@ import java.util.Optional;
 public class InstanceController {
     @Autowired
     private InstanceService instanceService;
+    @Autowired
+    private MqttService mqttService;
 
     @PostMapping(value = "/create")
     public ResponseEntity<ActionStatusMessage<Instance>> createInstance(
@@ -45,9 +51,20 @@ public class InstanceController {
             if (savedInstance== null) {
                 return ResponseEntity.status(401).body(new ActionStatusMessage<Instance>("FAIL", "Conflicting instances exists!", null));
             }
-            //send mqtt start signal
 
-            return ResponseEntity.ok(new ActionStatusMessage<Instance>("SUCCESS", "Instance created successfully!", savedInstance));
+            // Build MQTT payload
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("instanceId", savedInstance.getInstanceId());  // Ensure this returns a string like "OceanEyes_20240602_001"
+            payload.put("startDateTime", startDateTime.toString());
+            payload.put("endDateTime", endDateTime != null ? endDateTime.toString() : null);
+            payload.put("timeBetweenTurns", timeBetweenTurns);
+
+            // Convert to JSON
+            String jsonMessage = new ObjectMapper().writeValueAsString(payload);
+
+            // Send to MQTT
+            mqttService.sendMessage(mqttTopic, jsonMessage);
+            return ResponseEntity.ok(new ActionStatusMessage<Instance>("SUCCESS", "Instance created and published successfully!", savedInstance));
         } catch (IOException e) {
 
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL",e.getMessage(), null));
