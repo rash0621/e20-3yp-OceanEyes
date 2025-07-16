@@ -56,10 +56,10 @@ const Navbar = () => {
     const authNavigation: NavigationItem[] = [
         { name: 'Device Registration', href: '/device-registration', current: false },
         { name: 'View Map', href: '/map', current: false },
-        { name: 'Device Management', href: '/device-management', current: false },
-        { name: 'Profile', href: '/profile', current: false },
+        { name: 'Device Management', href: '/device-management', current: false },        
         { name: 'Statistics', href: '/Statistics', current: false },
         { name: 'Downloads', href: '/downloads', current: false },
+        { name: 'Profile', href: '/profile', current: false },
     ];
 
 
