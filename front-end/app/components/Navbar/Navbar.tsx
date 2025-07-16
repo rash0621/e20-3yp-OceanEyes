@@ -9,6 +9,7 @@ import Registerdialog from "./Registerdialog";
 import { isTokenValid } from '../Authentications/tokenValidation';
 import dynamic from "next/dynamic";
 import DeviceManagement from "../../device-management/page";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Drawerdata = dynamic(() => import('./Drawerdata'), {
   ssr: false,
@@ -56,6 +57,7 @@ const Navbar = () => {
         { name: 'View Map', href: '/map', current: false },
         { name: 'Device Registration', href: '/device-registration', current: false },
         { name: 'Device Management', href: '/device-management', current: false },
+        { name: 'Profile', href: '/profile', current: false },
     ];
 
 
@@ -110,7 +112,19 @@ const Navbar = () => {
                                                 )}
                                                 aria-current={item.href ? 'page' : undefined}
                                             >
-                                                {item.name}
+                                                {item.name === 'Profile' ? (
+                                                    <AccountCircleIcon 
+                                                        fontSize="large" 
+                                                        style={{
+                                                        color: 'hsl(211, 91%, 49%)',
+                                                        verticalAlign: 'middle',
+                                                        marginRight: '8px',
+                                                    }}
+                                                />
+                                                ) : (
+                                                    item.name
+                                                )}
+                                                {/* {item.name} */}
                                             </Link>
                                         ))}
                                     </div>
