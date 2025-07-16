@@ -16,7 +16,7 @@ const RecenterMap = dynamic(() => import("./RecenterMap"), { ssr: false });
 const Map = () => {
   const [turns, setTurns] = useState([]);
   const [selectedTurn, setSelectedTurn] = useState(null);
-  const [turnImages, setTurnImages] = useState([]);
+  const [captureDTOs, setcaptureDTOs] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [leafletReady, setLeafletReady] = useState(false);
 
@@ -53,24 +53,25 @@ const Map = () => {
     const fetchImages = async () => {
       if (!selectedTurn) return;
 
-      const cached = typeof window !== "undefined" ? localStorage.getItem(`turnImages_${selectedTurn.id}`) : null;
+      const cached = typeof window !== "undefined" ? localStorage.getItem(`captureDTOs_${selectedTurn.id}`) : null;
       if (cached) {
-        setTurnImages(JSON.parse(cached));
+        setcaptureDTOs(JSON.parse(cached));
         return;
       }
       try {
         const response = await axios.get(`${domainName}capture/images/turn/${selectedTurn.id}`);
         if (response.data.status === "SUCCESS") {
-          const imageUrls = response.data.data;
-          setTurnImages(imageUrls);
+          const captureDTOs = response.data.data;
+          console.log("Fetched captureDTOs:", captureDTOs);
+          setcaptureDTOs(captureDTOs);
           if (typeof window !== "undefined") {
-            localStorage.setItem(`turnImages_${selectedTurn.id}`, JSON.stringify(imageUrls));
+            localStorage.setItem(`captureDTOs_${selectedTurn.id}`, JSON.stringify(captureDTOs));
           }
         } else {
-          setTurnImages([]);
+          setcaptureDTOs([]);
         }
       } catch (err) {
-        setTurnImages([]);
+        setcaptureDTOs([]);
       }
     };
 
@@ -138,7 +139,7 @@ const Map = () => {
                 <button
                   onClick={() => {
                     setSelectedTurn(null);
-                    setTurnImages([]);
+                    setcaptureDTOs([]);
                   }}
                   className="text-red-500 font-bold text-lg"
                   aria-label="Close turn details"
@@ -220,23 +221,30 @@ const Map = () => {
                 </tbody>
               </table>
 
-              {turnImages.length > 0 ? (
+              {captureDTOs.length > 0 ? (
+                
                 <div className="mt-4 grid grid-cols-3 gap-2">
-                  {turnImages.map((url, idx) => (
-                    <img
-                      key={idx}
-                      src={`${domainName}${url}`}
-                      alt={`Turn ${idx}`}
-                      className="cursor-pointer rounded shadow hover:scale-105 transition-transform duration-200"
-                      onClick={() => setSelectedImage(`${domainName}${url}`)}
-                      tabIndex={0}
-                      onKeyDown={e => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          setSelectedImage(`${domainName}${url}`);
-                        }
-                      }}
-                    />
-                  ))}
+                  {captureDTOs.map((capture, idx) => (
+                      <div key={idx} className="relative group">
+                        <img
+                          src={`${domainName}${capture.imageUrl}`}
+                          alt={`Turn ${capture.turnId} - ${capture.pollutantType || 'Unknown'}`}
+                          className="cursor-pointer rounded shadow hover:scale-105 transition-transform duration-200"
+                          onClick={() => setSelectedImage(`${domainName}${capture.imageUrl}`)}
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              setSelectedImage(`${domainName}${capture.imageUrl}`);
+                            }
+                          }}
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs px-2 py-1 hidden group-hover:block">
+                          Angle: {capture.angle}°, Distance: {capture.distance} cm, 
+                          {capture.isPollutant && ` Pollutant: ${capture.pollutantType}`}
+                        </div>
+                      </div>
+                    ))}
+
                 </div>
               ) : (
                 <p className="mt-4 text-gray-500 text-sm flex items-center">
