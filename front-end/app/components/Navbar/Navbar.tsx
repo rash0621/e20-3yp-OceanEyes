@@ -54,10 +54,12 @@ const Navbar = () => {
 
     // Navigation for authenticated users (excluding Home)
     const authNavigation: NavigationItem[] = [
-        { name: 'View Map', href: '/map', current: false },
         { name: 'Device Registration', href: '/device-registration', current: false },
+        { name: 'View Map', href: '/map', current: false },
         { name: 'Device Management', href: '/device-management', current: false },
         { name: 'Profile', href: '/profile', current: false },
+        { name: 'Statistics', href: '/Statistics', current: false },
+        { name: 'Downloads', href: '/downloads', current: false },
     ];
 
 
@@ -83,7 +85,7 @@ const Navbar = () => {
         <>
             <Disclosure as="nav" className="navbar">
                 <>
-                    <div className="mx-auto max-w-7xl px-6 lg:py-4 lg:px-8">
+                    <div className="mx-20 max-w-7xl px-6 lg:py-4 lg:px-0">
                         <div className="relative flex h-20 items-center justify-between">
                             <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
 
@@ -94,7 +96,7 @@ const Navbar = () => {
                                         src={'/assets/banner/logo.png'}
                                         alt="dsign-logo"
                                     />
-                                    <span className="hidden lg:block ml-3 text-2xl font-bold text-gray-500 opacity-70">OceanEyes</span>
+                                    {/* <span className="hidden lg:block ml-3 text-2xl font-bold text-gray-500 opacity-70">OceanEyes</span> */}
                                 </div>
 
                                 {/* LINKS */}
