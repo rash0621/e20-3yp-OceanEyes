@@ -1,4 +1,5 @@
 package com.example.OceanEyes.Controller;
+import com.example.OceanEyes.Service.InstanceService;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.example.OceanEyes.Entity.Capture;
@@ -33,6 +34,8 @@ public class TurnController {
 
     @Autowired
     private TurnService turnService;
+    @Autowired
+    private InstanceService instanceService;
     @Autowired
     private CaptureService captureService;
 
@@ -164,10 +167,33 @@ public class TurnController {
         }
     }
 
-    public ResponseEntity<ActionStatusMessage<Iterable<Turn>>> getTurnsByInstanceId(@PathVariable String instanceId) {
+//    public ResponseEntity<ActionStatusMessage<Iterable<Turn>>> getTurnsByInstanceId(@PathVariable String instanceId) {
+//        try{
+//            List<Turn> turns = turnService.getTurnsByInstanceId(instanceId);
+//            return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved info successfully", turns));
+//        }catch(Exception e){
+//            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Retrieving info failed", null));
+//        }
+//
+//    }
+
+    @PostMapping(value = "/getTurnsByInstanceName")
+    public ResponseEntity<ActionStatusMessage<Iterable<Turn>>> getTurnsByInstanceName(@PathVariable String instanceId) {
         try{
-            List<Turn> turns = turnService.getTurnsByInstanceId(instanceId);
+            List<Turn> turns = turnService.getTurnsByInstanceName(instanceId);
             return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved info successfully", turns));
+        }catch(Exception e){
+            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Retrieving info failed", null));
+        }
+
+    }
+
+    @PostMapping(value = "/getTurnByInstanceName")
+    public ResponseEntity<ActionStatusMessage<Turn>> getATurnByInstanceName(@PathVariable String instanceId) {
+        try{
+            List<Turn> turns = turnService.getTurnsByInstanceName(instanceId);
+            Turn turn = turns.getFirst();
+            return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Retrieved info successfully", turn));
         }catch(Exception e){
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Retrieving info failed", null));
         }
