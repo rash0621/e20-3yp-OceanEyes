@@ -41,7 +41,6 @@ public class UserController {
             return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Users fetched successfully", usersList));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "User fetching failed", null));
-    
         }
     }
 
@@ -60,7 +59,9 @@ public class UserController {
         try {
             boolean loginSuccess = userService.loginUser(loginUser);
             if (loginSuccess) {
-                String token = jwtUtil.generateToken(loginUser.getId());
+                System.out.println("Login user: "+ loginUser); // User{_id='null', userEmail='kasundiehewawasam@gmail.com'}
+                System.out.println("Get ID in login function: "+ loginUser.getId()); //null
+                String token = jwtUtil.generateToken(loginUser.getId()); //nul
                 return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Successfully logged in", token));
             }
             return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid Credentials", null));
@@ -79,72 +80,20 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<ActionStatusMessage<User>> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
+        System.out.println(token);  //valid token was printed
+        System.out.println(jwtUtil.validateToken(token));   // true was printed
 
         if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
         }
         try {
-            String userId = jwtUtil.extractUserId(token);
-
+            String userId = jwtUtil.extractUserId(token); // Implement extractUserId in JwtUtil
+            System.out.println(userId);
             User user = userService.getUserById(userId);
             return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User info fetched", user));
         } catch (Exception e) {
             e.printStackTrace(); // for debuggin
             return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
-        }
-    }
-
-    // @PutMapping("/edit-profile")
-    // public ResponseEntity<ActionStatusMessage<User>> editProfile(
-    //         @RequestHeader("Authorization") String authHeader,
-    //         @RequestBody User updatedUser) {
-    //     String token = authHeader.replace("Bearer ", "");
-    //     if (!jwtUtil.validateToken(token)) {
-    //         return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
-    //     }
-    //     try {
-    //         String userId = jwtUtil.extractUserId(token);
-    //         User user = userService.getUserById(userId);
-
-
-    //         // Only update allowed fields
-    //         user.setFirstName(updatedUser.getFirstName());
-    //         user.setLastName(updatedUser.getLastName());
-    //         user.setUsername(updatedUser.getUsername());
-    //         user.setProfilePictureUrl(updatedUser.getProfilePictureUrl());
-
-    //         userService.saveOrUpdate(user);
-    //         return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Profile updated", user));
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Profile update failed", null));
-    //     }
-    // }
-
-    @PutMapping("/edit-profile")
-    public ResponseEntity<ActionStatusMessage<User>> editProfile(
-        @RequestHeader("Authorization") String authHeader,
-        @RequestBody User updatedUser
-    ) {
-        String token = authHeader.replace("Bearer ", "");
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
-        }
-        try {
-
-            System.out.println("Editing user profile with token: " + token);
-            System.out.println("Updated user data: " + updatedUser);
-            String userId = jwtUtil.extractUserId(token);
-            
-            System.out.println("Extracted user ID: " + userId);
-            boolean success = userService.editUser(userId, updatedUser);
-            if (success) {
-                User user = userService.getUserById(userId);
-                return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Profile updated", user));
-            } else {
-                return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Profile update failed", null));
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Profile update failed", null));
         }
     }
 }

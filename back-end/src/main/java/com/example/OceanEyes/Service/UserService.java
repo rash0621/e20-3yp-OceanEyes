@@ -1,5 +1,6 @@
 package com.example.OceanEyes.Service;
 
+
 import com.example.OceanEyes.Entity.Device;
 import com.example.OceanEyes.Entity.User;
 import com.example.OceanEyes.Repo.UserRepo;
@@ -16,6 +17,7 @@ public class UserService {
     private UserRepo userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
 
     /** encode the password later when editing too **/
     public void saveOrUpdate(User user) {
@@ -43,7 +45,7 @@ public class UserService {
 
             // Check if the password matches
             if (passwordEncoder.matches(loginUser.getUserPassword(), dbUser.getUserPassword())) {
-                loginUser.setId(dbUser.getId()); // Now set the ID of the logged-in user
+                loginUser.setId(dbUser.getId());  // Now set the ID of the logged-in user
                 return true;
             } else {
                 throw new RuntimeException("Invalid password");
@@ -63,49 +65,28 @@ public class UserService {
             user.setUserPassword(encodePassword);
             userRepository.save(user);
             return true;
-        } catch (Exception e) {
+        }catch(Exception e){
             return false;
         }
     }
 
-    // public boolean editUser(User user) {
-    // boolean userExists =
-    // userRepository.findByUserEmail(user.getUserEmail()).isPresent();
-    // if (userExists) {
-    // try {
-
-    // User dbUser = userRepository.findByUserEmail(user.getUserEmail()).get();
-    // String encodePassword = passwordEncoder.encode(user.getUserPassword());
-    // dbUser.setUserPassword(encodePassword);
-    // dbUser.setUserEmail(user.getUserEmail());
-    // userRepository.save(user);
-    // return true;
-    // }catch(Exception e){
-    // return false;
-    // }
-    // }
-    // else{
-    // throw new IllegalStateException("User doesn't exist");
-    // }
-
-    // }
-
-    public boolean editUser(String userId, User updatedUser) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
+    public boolean editUser(User user) {
+        boolean userExists = userRepository.findByUserEmail(user.getUserEmail()).isPresent();
+        if (userExists) {
             try {
-                User dbUser = userOptional.get();
-                dbUser.setUsername(updatedUser.getUsername());
-                dbUser.setFirstName(updatedUser.getFirstName());
-                dbUser.setLastName(updatedUser.getLastName());
-                // dbUser.setProfilePictureUrl(updatedUser.getProfilePictureUrl());
-                userRepository.save(dbUser);
+                User dbUser = userRepository.findByUserEmail(user.getUserEmail()).get();
+                String encodePassword = passwordEncoder.encode(user.getUserPassword());
+                dbUser.setUserPassword(encodePassword);
+                dbUser.setUserEmail(user.getUserEmail());
+                userRepository.save(user);
                 return true;
-            } catch (Exception e) {
+            }catch(Exception e){
                 return false;
             }
-        } else {
+        }
+        else{
             throw new IllegalStateException("User doesn't exist");
         }
+
     }
 }
