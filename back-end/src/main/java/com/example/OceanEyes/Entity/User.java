@@ -15,6 +15,9 @@ public class User {
     private String id;
     private String userEmail;;
     private String userPassword;
+    private String firstName;
+    private String lastName;
+    private String username;
     @DBRef
     private List<Device> loggedInDevices = new ArrayList<>();
 
@@ -30,6 +33,9 @@ public class User {
         this.id = id;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+    }
+
+    public User() {
     }
 
     public String getId() {
@@ -48,9 +54,13 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public List<Device> getLoggedInDevices() {return loggedInDevices;}
+    public List<Device> getLoggedInDevices() {
+        return loggedInDevices;
+    }
 
-    public void setLoggedInDevices(Device loggedInDevice) {this.loggedInDevices.add(loggedInDevice);}
+    public void setLoggedInDevice(Device loggedInDevice) {
+        this.loggedInDevices.add(loggedInDevice);
+    }
 
     @Override
     public String toString() {
@@ -59,5 +69,28 @@ public class User {
                 ", userEmail='" + userEmail + '\'' +
                 '}';
     }
-}
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}
