@@ -106,7 +106,7 @@ const DeviceTable: React.FC<DeviceTableProps> = ({ devices, selectedDeviceId, on
                 {device.id}
               </TableCell>
               <TableCell sx={{ fontFamily: 'Poppins', fontWeight: 500, color: '#1e293b' }}>
-                {device.name}
+                {device.deviceName}
               </TableCell>
               <TableCell sx={{ fontFamily: 'Poppins', color: '#546e7a' }}>
                 {device.lastLocation}

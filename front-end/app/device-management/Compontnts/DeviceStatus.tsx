@@ -6,13 +6,15 @@ import {
   Play, 
   Pause, 
   Battery, 
+  RefreshCw,
   MapPin, 
   Wifi, 
   Signal,
   Activity,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Settings
 } from 'lucide-react';
 
 interface DeviceStatusProps {
@@ -24,27 +26,55 @@ interface DeviceStatusProps {
 type DeviceState = 'starting' | 'active' | 'waiting' | 'stopped' | 'error';
 
 const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery }) => {
-  const [deviceRunning, setDeviceRunning] = useState(false);
-  const [deviceState, setDeviceState] = useState<DeviceState>('starting');
+  const [deviceRunning, setDeviceRunning] = useState(true);
+  const [deviceState, setDeviceState] = useState<DeviceState>('active'); // Default to active (original behavior)
   const [isLoading, setIsLoading] = useState(false);
   const [uptime, setUptime] = useState(0);
   const [deviceStopped, setDeviceStopped] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-
-  // Simulate device startup sequence
+  // Check device status on component mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDeviceState('active');
-    }, 3000);
+    const checkDeviceStatus = async () => {
+      try {
+        // Check if there's a stored state in memory
+        const storedState = getStoredDeviceState();
+        if (storedState) {
+          // If we have a stored state, use it
+          setDeviceState(storedState);
+          setDeviceRunning(storedState === 'active');
+        } else {
+          // If no stored state, assume device is active (original behavior)
+          // This handles the first time the component loads
+          setDeviceState('active');
+          setDeviceRunning(true);
+          storeDeviceState('active');
+        }
+      } catch (error) {
+        console.error('Error checking device status:', error);
+        setDeviceState('error');
+      }
+    };
 
-    return () => clearTimeout(timer);
+    checkDeviceStatus();
   }, []);
 
-  // Uptime counter
+  // Store device state in memory (you could also use sessionStorage if needed)
+  const storeDeviceState = (state: DeviceState) => {
+    // Since we can't use localStorage in artifacts, we'll use a simple in-memory storage
+    (window as any).deviceState = state;
+  };
+
+  const getStoredDeviceState = (): DeviceState | null => {
+    return (window as any).deviceState || null;
+  };
+
+  // Uptime counter - only run when device is active
   useEffect(() => {
     if (deviceState === 'active') {
       const interval = setInterval(() => {
         setUptime(prev => prev + 1);
+        setLastUpdate(new Date());
       }, 1000);
 
       return () => clearInterval(interval);
@@ -52,44 +82,73 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
   }, [deviceState]);
 
   const stopOceanEye = async () => {
-       const topic = "raspi/TestDevice1/stop";
-        const message = JSON.stringify({
-        instanceId: "OCE123",
-  });
-      try {
-        // Set device to not running immediately
-        setDeviceRunning(false);
-        const res = await fetch(`${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`, {
-          method: "POST"
-       //   headers: {
-       //     "Content-Type": "application/json",
-       //   },
-       //   body: JSON.stringify(data),
-        });
-        const result = await res.text();
-        console.log(result);
-        alert("Device stop command sent");
-      } catch (error) {
-        console.error("Error sending stop signal", error);
-        alert("Failed to send stop signal");
-        setDeviceRunning(true); // Revert if failed
-      }
-    };
+    const topic = "raspi/TestDevice1/stop";
+    const message = JSON.stringify({
+      instanceId: "OCE123",
+    });
+    
+    try {
+      setIsLoading(true);
+      setDeviceState('waiting');
+      setDeviceRunning(false);
+      
+      const res = await fetch(`${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`, {
+        method: "POST"
+      });
+      
+      setDeviceState('stopped');
+      storeDeviceState('stopped'); // Store the state
+      const result = await res.text();
+      console.log(result);
+      alert("Device stop command sent");
+    } catch (error) {
+      console.error("Error sending stop signal", error);
+      alert("Failed to send stop signal");
+      setDeviceRunning(true);
+      setDeviceState('error');
+      storeDeviceState('error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-
-  const startDevice = async (): Promise<void> => {
+  const startOceanEye = async () => {
+    const topic = "raspi/TestDevice1/start";
+    const now = new Date(Date.now());
+    const startDateTime = now.toISOString().slice(0, 19);
+    const message = JSON.stringify({
+      instanceId: "OCE123",
+      startDateTime: startDateTime,
+      end_time: "",
+      timeBetweenTurns: 30,
+    });
+    
     try {
       setIsLoading(true);
       setDeviceState('starting');
+      setDeviceRunning(true);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const res = await fetch(`${domainName}mqtt/publish?topic=${encodeURIComponent(topic)}&message=${encodeURIComponent(message)}`, {
+        method: "POST"
+      });
       
-      setDeviceState('active');
-      setUptime(0);
+      const result = await res.text();
+      
+      // Simulate startup time and then set to active
+      setTimeout(() => {
+        setDeviceState('active');
+        storeDeviceState('active'); // Store the state
+        setUptime(0);
+      }, 3000); // 3 second startup simulation
+      
+      console.log(result);
+      alert("Device start command sent");
     } catch (error) {
-      console.error("Error starting device", error);
+      console.error("Error sending start signal", error);
+      alert("Failed to send start signal");
       setDeviceState('error');
+      setDeviceRunning(false);
+      storeDeviceState('error');
     } finally {
       setIsLoading(false);
     }
@@ -227,11 +286,12 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
 
   return (
     <div style={{
-      maxWidth: '768px',
+      maxWidth: '500px',
+      width: '100%',
       margin: '0 auto',
-      padding: '24px',
+      padding: window.innerWidth < 768 ? '30px' : '25px',
       backgroundColor: 'white',
-      borderRadius: '12px',
+      borderRadius: window.innerWidth < 768 ? '8px' : '12px',
       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
@@ -253,7 +313,7 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
         borderRadius: '8px',
         border: `2px solid ${statusConfig.borderColor}`,
         backgroundColor: statusConfig.bgColor,
-        padding: '24px',
+        padding: window.innerWidth < 768 ? '30px' : '20px',
         marginBottom: '24px'
       }}>
         <div style={{
@@ -262,7 +322,7 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
           justifyContent: 'space-between',
           marginBottom: '16px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: window.innerWidth < 768 ? '8px' : '12px' }}>
             {deviceState === 'starting' ? (
               <PulsingIcon>{statusConfig.icon}</PulsingIcon>
             ) : (
@@ -300,15 +360,9 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-            <Battery size={16} style={{ color: getBatteryColor() }} />
-            <span style={{ color: '#6b7280' }}>Battery:</span>
-            <span style={{ fontWeight: '500', color: getBatteryColor() }}>{battery}%</span>
-          </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-            <Signal size={16} style={{ color: '#16a34a' }} />
+            <Signal size={16} style={{ color: '#f1a61bff' }} />
             <span style={{ color: '#6b7280' }}>Signal:</span>
-            <span style={{ fontWeight: '500', color: '#16a34a' }}>Strong</span>
+            <span style={{ fontWeight: '500', color: '#f1a61bff' }}>Mild</span>
           </div>
         </div>
 
@@ -341,168 +395,193 @@ const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery
       {/* Action Buttons */}
       <div style={{
         display: 'flex',
-        flexDirection: window.innerWidth < 640 ? 'column' : 'row',
-        gap: '12px'
+        flexDirection: 'column',
+        gap: '16px',
+        alignItems: 'center'
       }}>
-        {deviceState === 'active' ? (
-          <button
-            onClick={stopOceanEye}
-            disabled={isLoading}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '12px 24px',
-              border: '2px solid #fca5a5',
-              color: '#b91c1c',
-              backgroundColor: 'transparent',
-              fontWeight: '500',
-              borderRadius: '8px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'all 0.2s',
-              fontSize: '14px'
-            }}
-            onMouseEnter={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.backgroundColor = '#fef2f2';
-                e.currentTarget.style.borderColor = '#f87171';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.borderColor = '#fca5a5';
-              }
-            }}
-          >
-            {isLoading ? (
-              <>
-                <Spinner color="#b91c1c" />
-                Stopping...
-              </>
-            ) : (
-              <>
-                <Square size={20} style={{ marginRight: '8px' }} />
-                Stop Device
-              </>
-            )}
-          </button>
-        ) : deviceState === 'stopped' ? (
-          <button
-            onClick={startDevice}
-            disabled={isLoading}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '12px 24px',
-              border: '2px solid #86efac',
-              color: '#15803d',
-              backgroundColor: 'transparent',
-              fontWeight: '500',
-              borderRadius: '8px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'all 0.2s',
-              fontSize: '14px'
-            }}
-            onMouseEnter={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.backgroundColor = '#f0fdf4';
-                e.currentTarget.style.borderColor = '#4ade80';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isLoading) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.borderColor = '#86efac';
-              }
-            }}
-          >
-            {isLoading ? (
-              <>
-                <Spinner color="#15803d" />
-                Starting...
-              </>
-            ) : (
-              <>
-                <Play size={20} style={{ marginRight: '8px' }} />
-                Start Device
-              </>
-            )}
-          </button>
-        ) : (
-          <button
-            disabled={true}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '12px 24px',
-              border: '2px solid #d1d5db',
-              color: '#6b7280',
-              backgroundColor: 'transparent',
-              fontWeight: '500',
-              borderRadius: '8px',
-              cursor: 'not-allowed',
-              opacity: 0.5,
-              fontSize: '14px'
-            }}
-          >
-            <Activity size={20} style={{ marginRight: '8px' }} />
-            {deviceState === 'starting' ? 'Starting...' : 'Processing...'}
-          </button>
-        )}
-      </div>
-
-      {/* Footer Info */}
-      <div style={{
-        marginTop: '24px',
-        paddingTop: '16px',
-        borderTop: '1px solid #e5e7eb'
-      }}>
-        <p style={{
-          fontSize: '12px',
-          color: '#6b7280',
-          textAlign: 'center',
-          margin: 0
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          width: '100%',
+          maxWidth: '500px'
         }}>
-          Device ID: OCE123 • Last Updated: {new Date().toLocaleTimeString()}
-        </p>
-      </div>
-      <button
+          {deviceState === 'active' ? (
+            <button
+              onClick={stopOceanEye}
+              disabled={isLoading}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                color: 'white',
+                border: 'none',
+                fontWeight: '600',
+                borderRadius: '12px',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                opacity: isLoading ? 0.7 : 1,
+                transition: 'all 0.3s ease',
+                fontSize: '16px',
+                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(239, 68, 68, 0.5)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.4)';
+                }
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner color="white" />
+                  Stopping Device...
+                </>
+              ) : (
+                <>
+                  <Square size={20} style={{ marginRight: '8px' }} />
+                  Stop Device
+                </>
+              )}
+            </button>
+          ) : deviceState === 'stopped' ? (
+            <button
+              onClick={startOceanEye}
+              disabled={isLoading}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                color: 'white',
+                border: 'none',
+                fontWeight: '600',
+                borderRadius: '12px',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                opacity: isLoading ? 0.7 : 1,
+                transition: 'all 0.3s ease',
+                fontSize: '16px',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.5)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.4)';
+                }
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner color="white" />
+                  Starting Device...
+                </>
+              ) : (
+                <>
+                  <Play size={20} style={{ marginRight: '8px' }} />
+                  Start Device
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              disabled={true}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #9ca3af, #6b7280)',
+                color: 'white',
+                border: 'none',
+                fontWeight: '600',
+                borderRadius: '12px',
+                cursor: 'not-allowed',
+                opacity: 0.6,
+                fontSize: '16px'
+              }}
+            >
+              <Activity size={20} style={{ marginRight: '8px' }} />
+              {deviceState === 'starting' ? 'Starting...' : 'Processing...'}
+            </button>
+          )}
+        </div>
+
+        <button
           onClick={onCancel}
           style={{
-            flex: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '12px 24px',
-            border: '2px solid #d1d5db',
-            color: '#374151',
-            backgroundColor: 'transparent',
+            background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
+            color: '#475569',
+            border: '2px solid #cbd5e1',
             fontWeight: '500',
-            borderRadius: '8px',
+            borderRadius: '12px',
             cursor: 'pointer',
-            transition: 'all 0.2s',
-            fontSize: '14px'
+            transition: 'all 0.3s ease',
+            fontSize: '14px',
+            minWidth: '200px'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#f9fafb';
-            e.currentTarget.style.borderColor = '#9ca3af';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.borderColor = '#94a3b8';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(148, 163, 184, 0.3)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.borderColor = '#d1d5db';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.borderColor = '#cbd5e1';
+            e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          <X size={20} style={{ marginRight: '8px' }} />
+          <RefreshCw size={16} style={{ marginRight: '8px' }} />
           Choose Another Device
         </button>
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        marginTop: '32px',
+        paddingTop: '24px',
+        borderTop: '1px solid #e5e7eb',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          marginBottom: '8px'
+        }}>
+          <Settings size={16} style={{ color: '#6b7280' }} />
+          <span style={{ fontSize: '14px', color: '#6b7280', fontWeight: '500' }}>
+            Device ID: OCE123
+          </span>
+        </div>
+        <p style={{
+          fontSize: '12px',
+          color: '#9ca3af',
+          margin: 0
+        }}>
+          Last Updated: {lastUpdate.toLocaleTimeString()} • System Status: Normal
+        </p>
+      </div>
     </div>
   );
 };
