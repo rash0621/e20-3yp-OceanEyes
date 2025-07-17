@@ -8,27 +8,29 @@ import { Dialog, DialogContent } from "@mui/material";
 import { domainName } from "../components/DomainName";
 
 interface Customer {
-  name:string;
   id: string;
   email: string;
   phone: string;
+  firstName: string;
+  lastName: string;
+  username: string;
   organization: string;
   address?: string;
   isRegistered: boolean;
   numberOfDevicePurchased: number;
 }
-
 const initialCustomer: Customer = {
-  name:"",
   id: "",
   email: "",
   phone: "",
+  firstName: "",
+  lastName: "",
+  username: "",
   organization: "",
   address: "",
   isRegistered: false,
   numberOfDevicePurchased: 1,
 };
-
 function AdminInventoryCustomers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [showDialog, setShowDialog] = useState(false);
@@ -111,22 +113,27 @@ function AdminInventoryCustomers() {
           <table className={style.table}>
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Customer ID</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
                 <th>Organization</th>
                 <th>Address</th>
                 <th>Registered</th>
                 <th>Devices Purchased</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer.id}>
-                  <td>{customer.name}</td>
                   <td>{customer.email}</td>
                   <td>{customer.phone}</td>
+                  <td>{customer.firstName}</td>
+                  <td>{customer.lastName}</td>
+                  <td>{customer.username}</td>                  
                   <td>{customer.organization}</td>
                   <td>{customer.address}</td>
                   <td>{customer.isRegistered ? "Yes" : "No"}</td>                
@@ -167,16 +174,14 @@ function AdminInventoryCustomers() {
                   </p>
                 </div>
                 <div className={style.inputbox}>
-                  <label>Name</label>
-                  <input
-                    type="test"
-                    className={style.field}
-                    name="name"
-                    value={customerForm.name}
-                    onChange={onInputChange}
-                    required
-                  />
-                </div>
+                    <label>Customer ID</label>
+                    <input
+                      type="text"
+                      className={style.field}
+                      value={customerForm.id}
+                      readOnly
+                    />
+                  </div>                
                 <div className={style.inputbox}>
                   <label>Email</label>
                   <input
@@ -195,6 +200,39 @@ function AdminInventoryCustomers() {
                     className={style.field}
                     name="phone"
                     value={customerForm.phone}
+                    onChange={onInputChange}
+                    required
+                  />
+                </div>
+                <div className={style.inputbox}>
+                  <label>First Name</label>
+                  <input
+                    type="test"
+                    className={style.field}
+                    name="name"
+                    value={customerForm.firstName}
+                    onChange={onInputChange}
+                    required
+                  />
+                </div>
+                <div className={style.inputbox}>
+                  <label>Last Name</label>
+                  <input
+                    type="test"
+                    className={style.field}
+                    name="name"
+                    value={customerForm.lastName}
+                    onChange={onInputChange}
+                    required
+                  />
+                </div>
+                <div className={style.inputbox}>
+                  <label>username</label>
+                  <input
+                    type="test"
+                    className={style.field}
+                    name="name"
+                    value={customerForm.username}
                     onChange={onInputChange}
                     required
                   />

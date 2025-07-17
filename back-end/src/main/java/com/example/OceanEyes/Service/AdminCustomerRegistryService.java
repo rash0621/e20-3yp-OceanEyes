@@ -50,11 +50,16 @@ public class AdminCustomerRegistryService {
     }
 
     public String generateCustomerId() {
-        int randomNum = 10000 + (int)(Math.random() * 90000);
-        return "CUST-" + randomNum;
+        String customerId;
+        do {
+            int randomNum = 10000 + (int)(Math.random() * 90000);
+            customerId = "CUST-" + randomNum;
+        } while (registryRepo.findById(customerId).isPresent());
+
+        return customerId;
     }
 
-    public boolean verifyCustomer(String email, String phone, String customerID) {
-        return registryRepo.findByEmailAndPhoneAndId(email, phone, customerID).isPresent();
+    public boolean verifyCustomer(String email, String phone, String id) {
+        return registryRepo.findByEmailAndPhoneAndId(email, phone, id).isPresent();
     }
 }
