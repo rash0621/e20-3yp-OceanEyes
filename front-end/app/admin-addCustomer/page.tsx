@@ -5,7 +5,9 @@ import { isValidPhoneNumber } from "libphonenumber-js";
 import { domainName } from "../components/DomainName";
 
 interface CustomerForm {
-  name: string;
+  firstName: string;
+  lastName: string;
+  username: string;
   email: string;
   phone: string;
   organization: string;
@@ -14,7 +16,9 @@ interface CustomerForm {
 }
 
 const initialForm: CustomerForm = {
-  name: "",
+  firstName: "",
+  lastName: "",
+  username: "",
   email: "",
   phone: "",
   organization: "",
@@ -34,7 +38,10 @@ export default function AddCustomer() {
 
   const validate = (): boolean => {
     const newErrors: Partial<CustomerForm> = {};
-     if (!form.name) newErrors.name = "Name is required.";
+      if (!form.firstName) newErrors.firstName = "First name is required.";
+      if (!form.lastName) newErrors.lastName = "Last name is required.";
+      if (!form.username) newErrors.username = "Username is required.";
+
 
     if (!form.email) newErrors.email = "Email is required.";
     else if (!emailRegex.test(form.email)) newErrors.email = "Invalid email format.";
@@ -54,8 +61,14 @@ export default function AddCustomer() {
 
 const validateField = (name: string, value: string): string | undefined => {
   switch (name) {
-    case "name":
-      if (!value) return "Name is required.";
+    case "firstName":
+      if (!value) return "First name is required.";
+      break;
+    case "lastName":
+      if (!value) return "Last name is required.";
+      break;
+    case "username":
+      if (!value) return "Username is required.";
       break;
     case "email":
       if (!value) return "Email is required.";
@@ -171,19 +184,49 @@ const handleGenerateId = async () => {
       <div className={styles.addCustomerForm}>
         <form onSubmit={handleSave}>
           <div className={styles.inputbox}>
-            <label htmlFor="name">Name *</label>
-            <input
-              className={styles.field}
-              type="text"
-              name="name"
-              id="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              placeholder="Mr. John Doe"
-            />
-            {errors.name && <div style={{ color: "red" , fontSize: "0.8em"}}>{errors.name}</div>}
-          </div>
+          <label htmlFor="firstName">First Name *</label>
+          <input
+            className={styles.field}
+            type="text"
+            name="firstName"
+            id="firstName"
+            value={form.firstName || ""}
+            onChange={handleChange}
+            required
+            placeholder="John"
+          />
+          {errors.firstName && <div style={{ color: "red", fontSize: "0.8em" }}>{errors.firstName}</div>}
+        </div>
+
+        <div className={styles.inputbox}>
+          <label htmlFor="lastName">Last Name *</label>
+          <input
+            className={styles.field}
+            type="text"
+            name="lastName"
+            id="lastName"
+            value={form.lastName || ""}
+            onChange={handleChange}
+            required
+            placeholder="Doe"
+          />
+          {errors.lastName && <div style={{ color: "red", fontSize: "0.8em" }}>{errors.lastName}</div>}
+        </div>
+
+        <div className={styles.inputbox}>
+          <label htmlFor="username">Username *</label>
+          <input
+            className={styles.field}
+            type="text"
+            name="username"
+            id="username"
+            value={form.username || ""}
+            onChange={handleChange}
+            required
+            placeholder="johndoe123"
+          />
+          {errors.username && <div style={{ color: "red", fontSize: "0.8em" }}>{errors.username}</div>}
+        </div>
           <div className={styles.inputbox}>
             <label htmlFor="email">Email *</label>
             <input

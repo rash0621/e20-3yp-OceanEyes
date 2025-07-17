@@ -2,39 +2,41 @@ package com.example.OceanEyes.Entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.sql.Timestamp;
 
 @Document(collection = "admin_customer_registry")
 public class AdminCustomerRegistry {
 
     @Id
     private String id;
-
-    private String name;
     private String email;
     private String phone;
+    private String firstName;
+    private String lastName;
+    private String username;
     private String organization;
     private String address;
     private Boolean isRegistered;
     private int numberOfDevicePurchased;
-    private String custormerID;
 
     public AdminCustomerRegistry() {
     }
 
-    public AdminCustomerRegistry(String id, String name, String email, String phone, String organization,
-            String address,
-            boolean isRegistered, int numberOfDevicePurchased, String custormerID) {
+    public AdminCustomerRegistry(String id, String email, String phone, String firstName, String lastName,
+                                 String username, String organization, String address, Boolean isRegistered,
+                                 int numberOfDevicePurchased) {
         this.id = id;
-        this.name = name;
         this.email = email;
         this.phone = phone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
         this.organization = organization;
         this.address = address;
         this.isRegistered = isRegistered;
         this.numberOfDevicePurchased = numberOfDevicePurchased;
-        this.custormerID = custormerID;
     }
+
+    // Getters and Setters
 
     public String getId() {
         return id;
@@ -42,14 +44,6 @@ public class AdminCustomerRegistry {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
@@ -68,6 +62,30 @@ public class AdminCustomerRegistry {
         this.phone = phone;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getOrganization() {
         return organization;
     }
@@ -84,14 +102,13 @@ public class AdminCustomerRegistry {
         this.address = address;
     }
 
-    public boolean isRegistered() {
+    public Boolean getIsRegistered() {
         return isRegistered;
     }
 
-    public void setIsRegistered(boolean registered) {
-        isRegistered = registered;
+    public void setIsRegistered(Boolean isRegistered) {
+        this.isRegistered = isRegistered;
     }
-
 
     public int getNumberOfDevicePurchased() {
         return numberOfDevicePurchased;
@@ -101,10 +118,4 @@ public class AdminCustomerRegistry {
         this.numberOfDevicePurchased = numberOfDevicePurchased;
     }
 
-    public String getCustormerID() {
-        return custormerID;
-    }
-    public void setCustormerID(String custormerID) {
-        this.custormerID = custormerID;
-    }
 }
