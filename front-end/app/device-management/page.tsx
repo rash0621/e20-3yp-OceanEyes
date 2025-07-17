@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect} from "react";
@@ -23,6 +22,7 @@ const DeviceManagementPage: React.FC = () => {
   const [toggleOption, setToggleOption] = useState(false); // false: Start Now, true: Schedule
   const [timeBetweenCaptures, setTimeBetweenCaptures] = useState(5);
   const [duration, setDuration] = useState(10);
+  const [isReady, setIsReady] = useState(false);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -32,6 +32,45 @@ const DeviceManagementPage: React.FC = () => {
     setFilteredDevices(filtered);
   };
 
+   // Load persisted state on mount
+  useEffect(() => {
+    const savedStep = localStorage.getItem("activeStep");
+    const savedDeviceId = localStorage.getItem("selectedDeviceId");
+    const savedStartTime = localStorage.getItem("startTime");
+    const savedEndTime = localStorage.getItem("endTime");
+
+    if (savedStep !== null) setActiveStep(parseInt(savedStep));
+    if (savedDeviceId !== null) setSelectedDeviceId(savedDeviceId);
+    if (savedStartTime !== null) setStartTime(savedStartTime);
+    if (savedEndTime !== null) setEndTime(savedEndTime);
+
+    setIsReady(true);
+  }, []);
+
+  // Save state changes
+  useEffect(() => {
+    if (isReady) {
+      localStorage.setItem("activeStep", String(activeStep));
+    }
+  }, [activeStep, isReady]);
+
+  useEffect(() => {
+    if (selectedDeviceId && isReady) {
+      localStorage.setItem("selectedDeviceId", selectedDeviceId);
+    }
+  }, [selectedDeviceId, isReady]);
+
+  useEffect(() => {
+    if (startTime && isReady) {
+      localStorage.setItem("startTime", startTime);
+    }
+  }, [startTime, isReady]);
+
+  useEffect(() => {
+    if (endTime && isReady) {
+      localStorage.setItem("endTime", endTime);
+    }
+  }, [endTime, isReady]);
 
   useEffect(() => {
     fetch(`${domainName}device/getAll`) 
@@ -65,6 +104,14 @@ const DeviceManagementPage: React.FC = () => {
     setActiveStep(0);
     setSelectedDeviceId(null);
     setCountdown(null);
+    setStartTime("");
+    setEndTime("");
+
+    // Clear persisted state
+    localStorage.removeItem("activeStep");
+    localStorage.removeItem("selectedDeviceId");
+    localStorage.removeItem("startTime");
+    localStorage.removeItem("endTime");
   };
 
   const handleStartDevice = () => {
@@ -72,6 +119,17 @@ const DeviceManagementPage: React.FC = () => {
     setDeviceStatus({ location: "Lat 6.9271, Lng 79.8612", battery: "76%" });
     setActiveStep(2);
   };
+
+  // Don't render anything until state is loaded
+  if (!isReady) {
+    return (
+      <RequireAuth>
+        <Box className={styles.container}>
+          <div>Loading...</div>
+        </Box>
+      </RequireAuth>
+    );
+  }
 
   return (
     <RequireAuth>
@@ -215,15 +273,24 @@ const DeviceManagementPage: React.FC = () => {
       
       {activeStep === 1 && selectedDeviceId && (
   <CaptureSettings
-    onStart={(start, end, interval) => {
-      console.log("Starting device with settings 2S:", start, end, interval);
-      // Update state or trigger backend call
-      // setDeviceStatus({ location: "Lat 6.9271, Lng 79.8612", battery: "76%" });
-      setActiveStep(2);
-    }}
-    onCancel={handleCancel}
-    onNext={handleNext}
-  />
+  onStart={(start, end, interval) => {
+    const startISO = start instanceof Date ? start.toISOString() : start;
+    const endISO = end instanceof Date ? end.toISOString() : end;
+
+    // Update state
+    setStartTime(startISO);
+    setEndTime(endISO);
+    setActiveStep(2);
+
+    // Persist state
+    localStorage.setItem("startTime", startISO);
+    localStorage.setItem("endTime", endISO);
+    localStorage.setItem("activeStep", "2");
+  }}
+  onCancel={handleCancel}
+  onNext={handleNext}
+/>
+
 )}
 
         {activeStep === 1 && (
@@ -249,4 +316,3 @@ const DeviceManagementPage: React.FC = () => {
 };
 
 export default DeviceManagementPage;
-

@@ -64,25 +64,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
         setDeviceRunning(false); // Revert if failed
       }
     };
-  
 
-  // const stopOceanEye = async (): Promise<void> => {
-  //   const topic = "raspi/TestDevice1/stop";
-  //   const message = JSON.stringify({
-  //     instanceId: "OCE123",
-  //   });
-
-  //   try {
-  //     setDeviceRunning(false);
-  //     // Simulate API call - replace with actual fetch in real implementation
-  //     console.log('Stopping device with message:', message);
-  //     alert("Device stop command sent successfully!");
-  //   } catch (error) {
-  //     console.error("Error sending stop signal", error);
-  //     alert("Failed to send stop signal");
-  //     setDeviceRunning(true);
-  //   }
-  // };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
