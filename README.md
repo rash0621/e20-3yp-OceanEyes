@@ -12,7 +12,7 @@ The world is facing a serious marine pollution problem, with large amounts of ga
 ## Features
 - **Pollution Detection** : The system enables the detection of plastic waste, polythene, and debris in the water, and it pinpoints the locations of these materials, delivering this information to the relevant authorities.
 - **Sea State Monitoring** : The system is designed to detect and assess the sea state by utilizing an accelerometer, which gauges the conditions of the sea and determines whether it is calm or rough.
-- **Autonomous Navigation** : Operates independently using GPS and ultrasonic sensors to identify and avoid obstacles, enabling navigation through a given area without human intervention.
+- **Autonomous Functionality** : Sensor triggered activation for pollution detection and identification without human intervention.
 - **Data Accessibility** : Offers visual representations of locations of areas with pollutants via an intuitive software platform accessible to governments, researchers, and the public for better decision-making.
 - **Environmental Impact** : Promotes awareness and accountability by sharing data with stakeholders and aids in developing targeted solutions to combat pollution.
 
