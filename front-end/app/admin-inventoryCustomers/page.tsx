@@ -129,6 +129,7 @@ function AdminInventoryCustomers() {
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer.id}>
+                  <td>{customer.id}</td>
                   <td>{customer.email}</td>
                   <td>{customer.phone}</td>
                   <td>{customer.firstName}</td>
