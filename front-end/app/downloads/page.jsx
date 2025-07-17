@@ -535,7 +535,7 @@ export default function DownloadsPage() {
                         {instanceImages[instanceId][turn.id].map((img, i) => (
                           <div key={i} style={{ textAlign: "center" }}>
                             <img
-                              src={`${domainName}${img}`}
+                              src={`${domainName}${img.imageUrl}`}
                               alt={`Turn ${idx + 1} Image ${i + 1}`}
                               style={{
                                 width: "120px",
