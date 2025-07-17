@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -156,6 +156,43 @@ public class UserController {
     //         return ResponseEntity.status(500).body(new ActionStatusMessage<>("FAIL", "Profile update failed", null));
     //     }
     // }
+    @GetMapping("/me/email")
+    public ResponseEntity<ActionStatusMessage<String>> getUserEmail(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
+        }
+
+        try {
+            String userId = jwtUtil.extractUserId(token);
+            User user = userService.getUserById(userId);
+            return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "User email fetched", user.getUserEmail()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token or user not found", null));
+        }
+    }
+    @GetMapping("/me/devices")
+    public ResponseEntity<ActionStatusMessage<List<Device>>> getUserRegisteredDevices(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token", null));
+        }
+
+        try {
+            String userId = jwtUtil.extractUserId(token);
+            User user = userService.getUserById(userId);
+            List<Device> deviceList = user.getLoggedInDevices();
+
+            return ResponseEntity.ok(new ActionStatusMessage<>("SUCCESS", "Logged-in devices fetched", deviceList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(401).body(new ActionStatusMessage<>("FAIL", "Invalid token or user not found", null));
+        }
+    }
+
 
     @PutMapping("/edit-profile")
     public ResponseEntity<ActionStatusMessage<User>> editProfile(

@@ -53,4 +53,8 @@ public class AdminCustomerRegistryService {
         int randomNum = 10000 + (int)(Math.random() * 90000);
         return "CUST-" + randomNum;
     }
+
+    public boolean verifyCustomer(String email, String phone, String customerID) {
+        return registryRepo.findByEmailAndPhoneAndId(email, phone, customerID).isPresent();
+    }
 }

@@ -72,12 +72,32 @@ const DeviceManagementPage: React.FC = () => {
     }
   }, [endTime, isReady]);
 
-  useEffect(() => {
-    fetch(`${domainName}device/getAll`) 
-      .then(res => res.json())
-      .then(data => setDevices(data))
-      .catch(err => console.error(err));
-  }, []);
+useEffect(() => {
+  const token = localStorage.getItem("jwtToken");
+  if (!token) {
+    console.error("No JWT token found");
+    return;
+  }
+
+  fetch(`${domainName}user/me/devices`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+     .then(res => res.json())
+      .then(data => {
+      console.log("Fetched devices:", data);
+      if (data.status === "SUCCESS") {
+        console.log("Raw devices from backend:", data.data);
+        setDevices(data.data);
+        setFilteredDevices(data.data); 
+      }else {
+        console.warn("Device fetch failed or no data:", json.message);
+      }
+    })
+    .catch(err => console.error("Fetch error:", err));
+}, []);
+
 
   useEffect(() => {
     if (countdown === null || countdown <= 0) return;
