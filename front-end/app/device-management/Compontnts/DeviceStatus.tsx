@@ -27,7 +27,7 @@ type DeviceState = 'starting' | 'active' | 'waiting' | 'stopped' | 'error';
 
 const DeviceStatus: React.FC<DeviceStatusProps> = ({ onCancel, location, battery }) => {
   const [deviceRunning, setDeviceRunning] = useState(true);
-  const [deviceState, setDeviceState] = useState<DeviceState>('active'); // Default to active (original behavior)
+  const [deviceState, setDeviceState] = useState<DeviceState>('active');
   const [isLoading, setIsLoading] = useState(false);
   const [uptime, setUptime] = useState(0);
   const [deviceStopped, setDeviceStopped] = useState(false);

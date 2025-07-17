@@ -22,7 +22,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
   const [selectedMode, setSelectedMode] = useState<'immediate' | 'scheduled' | null>(null);
   const [isScheduled, setIsScheduled] = useState(false);
   const [interval, setInterval] = useState(5);
-  const [duration, setDuration] = useState(30);
+  const [duration, setDuration] = useState(0.5);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -248,7 +248,7 @@ const CaptureSettings: React.FC<CaptureSettingsProps> = ({ onStart, onCancel, on
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: '#374151' }}>
-                  Time Between Captures (minutes)
+                  Time Between Captures (seconds)
                 </label>
                 <div className="relative">
                   <input

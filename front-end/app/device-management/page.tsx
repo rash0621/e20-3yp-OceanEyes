@@ -44,6 +44,8 @@ const DeviceManagementPage: React.FC = () => {
     if (savedStartTime !== null) setStartTime(savedStartTime);
     if (savedEndTime !== null) setEndTime(savedEndTime);
 
+    
+
     setIsReady(true);
   }, []);
 
@@ -121,6 +123,21 @@ useEffect(() => {
   };
 
   const handleCancel = () => {
+    setActiveStep(0);
+    setSelectedDeviceId(null);
+    setCountdown(null);
+    setStartTime("");
+    setEndTime("");
+
+    // Clear persisted state
+    localStorage.removeItem("activeStep");
+    localStorage.removeItem("selectedDeviceId");
+    localStorage.removeItem("startTime");
+    localStorage.removeItem("endTime");
+  };
+
+  const handleonCancelDeviceStatus = () => {
+    window.location.reload();
     setActiveStep(0);
     setSelectedDeviceId(null);
     setCountdown(null);
@@ -325,7 +342,7 @@ useEffect(() => {
             <DeviceStatus 
               location="Lat 6.9271, Lon 79.8612" 
               battery={76} 
-              onCancel={handleCancel}
+              onCancel={handleonCancelDeviceStatus}
             />
     
           </Box>
