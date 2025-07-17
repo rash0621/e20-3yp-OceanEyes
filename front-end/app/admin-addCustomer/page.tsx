@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./AdminAddCustomer.module.css";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { domainName } from "../components/DomainName";
+import RequireAuth from "../components/RequireAuth";
 
 interface CustomerForm {
   firstName: string;
@@ -174,6 +175,7 @@ const handleGenerateId = async () => {
   };
 
   return (
+    <RequireAuth>
     <div>
       <div className={styles.AddCustomerTitle}>
         <h5>Add a New Customer</h5>
@@ -351,6 +353,7 @@ const handleGenerateId = async () => {
   </form>
 </div>
 </div>
+</RequireAuth>
   );
 }
     

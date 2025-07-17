@@ -130,6 +130,7 @@ const Navbar = () => {
                 item.name !== 'View Map' &&
                 item.name !== 'Device Management' &&
                 item.name !== 'Downloads' &&
+                item.name !== 'Statistics' &&
                 item.name !== 'Profile'
             );
             const adminWithoutProfile = adminNavigation.filter(item => item.name !== 'Profile');

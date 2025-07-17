@@ -43,7 +43,6 @@ const Signin = () => {
 
                 // Optional: trigger other parts of the app to re-render if needed
                 window.dispatchEvent(new Event("storage"));
-                alert(data.message);
                 closeModal();
             } else {
                 alert(data.message|| "Login failed");
