@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -76,4 +77,24 @@ public class AdminCustomerRegistryController {
         return ResponseEntity.ok().body(java.util.Collections.singletonMap("customerId", customerId));
     }
 
+    @PostMapping("/verify-customer")
+    public ResponseEntity<?> verifyCustomer(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String phone = request.get("phone");
+        String customerID = request.get("customerID");
+
+        if (email == null || phone == null || customerID == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing required fields"));
+        }
+
+        boolean isVerified = registryService.verifyCustomer(email, phone, customerID);
+
+        if (isVerified) {
+            return ResponseEntity.ok(Map.of("message", "Customer verified"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Customer verification failed. Check all fields."));
+        }
+
+
+    }
 }

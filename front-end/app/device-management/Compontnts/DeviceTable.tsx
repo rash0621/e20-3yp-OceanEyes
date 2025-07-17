@@ -1,5 +1,3 @@
-// app/device-management/components/DeviceTable.tsx
-
 import React from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
@@ -12,7 +10,6 @@ interface DeviceTableProps {
   selectedDeviceId: string | null;
   onSelect: (deviceId: string) => void;
 }
-
 
 const DeviceTable: React.FC<DeviceTableProps> = ({ devices, selectedDeviceId, onSelect }) => {
   return (
@@ -109,7 +106,7 @@ const DeviceTable: React.FC<DeviceTableProps> = ({ devices, selectedDeviceId, on
                 {device.id}
               </TableCell>
               <TableCell sx={{ fontFamily: 'Poppins', fontWeight: 500, color: '#1e293b' }}>
-                {device.name}
+                {device.deviceName}
               </TableCell>
               <TableCell sx={{ fontFamily: 'Poppins', color: '#546e7a' }}>
                 {device.lastLocation}

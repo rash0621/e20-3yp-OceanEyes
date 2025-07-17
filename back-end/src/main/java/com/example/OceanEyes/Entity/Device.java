@@ -11,11 +11,13 @@ public class Device {
     private String id;
     private String deviceName;
     private String devicePassword;
+    private String deviceLocation;
 
-    public Device(String id, String deviceName, String devicePassword) {
+    public Device(String id, String deviceName, String devicePassword , String deviceLocation) {
         this.id = id;
         this.deviceName = deviceName;
         this.devicePassword = devicePassword;
+        this.deviceLocation = deviceLocation;
     }
 
     public Device() {
@@ -43,6 +45,12 @@ public class Device {
 
     public void setDevicePassword(String devicePassword) {
         this.devicePassword = devicePassword;
+    }
+    public String getDeviceLocation() {
+        return deviceLocation;
+    }
+    public void setDeviceLocation(String deviceLocation) {
+        this.deviceLocation = deviceLocation;
     }
 
 }
