@@ -13,6 +13,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import RequireAuth from "../components/RequireAuth";
 
 const OceanEyesStats = () => {
   const [selectedYear, setSelectedYear] = useState(2025);
@@ -84,6 +85,7 @@ const OceanEyesStats = () => {
   const currentYearData = statsData[selectedYear] || emptyYearData;
 
   return (
+    <RequireAuth>
     <div className="p-4 max-w-6xl mx-auto">
       <img
         src="/assets/nav/graph.jpg"
@@ -237,6 +239,7 @@ const OceanEyesStats = () => {
         })()}
       </div> */}
     </div>
+    </RequireAuth>
   );
 };
 
