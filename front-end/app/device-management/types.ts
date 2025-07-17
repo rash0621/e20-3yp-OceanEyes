@@ -2,6 +2,6 @@
 
 export interface Device {
   id: string;
-  name: string;
-  lastLocation: string;
+  deviceName: string;
+  deviceLocation: string;
 }

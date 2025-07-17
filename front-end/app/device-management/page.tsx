@@ -92,7 +92,7 @@ useEffect(() => {
         setDevices(data.data);
         setFilteredDevices(data.data); 
       }else {
-        console.warn("Device fetch failed or no data:", json.message);
+        console.warn("Device fetch failed or no data:", data.message);
       }
     })
     .catch(err => console.error("Fetch error:", err));
