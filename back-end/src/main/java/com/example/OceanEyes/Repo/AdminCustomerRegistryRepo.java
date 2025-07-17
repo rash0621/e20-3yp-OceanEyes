@@ -9,4 +9,5 @@ public interface AdminCustomerRegistryRepo extends MongoRepository<AdminCustomer
     Optional<AdminCustomerRegistry> findByEmail(String email);
 
     Optional<AdminCustomerRegistry> findByPhone(String phone);
+    Optional<AdminCustomerRegistry> findByEmailAndPhoneAndId(String email, String phone, String id);
 }
