@@ -29,8 +29,8 @@ const Signin = () => {
 
     return (
         <>
-            <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:pr-0">
-                <div className='hidden lg:block'>
+            <div className="absolute inset-y-0 right-2 flex items-center sm:static sm:inset-auto sm:pr-0">
+                <div>
                     <button suppressHydrationWarning type="button" className='text-lg text-blue font-medium' onClick={openModal}>
                         Log Out
                     </button>
