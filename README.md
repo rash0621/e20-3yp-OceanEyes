@@ -17,10 +17,24 @@ The world is facing a serious marine pollution problem, with large amounts of ga
 - **Environmental Impact** : Promotes awareness and accountability by sharing data with stakeholders and aids in developing targeted solutions to combat pollution.
 
 ## Solution Architecture
-<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/solarchi.JPG" width="512" height="288"/>
+<img src ="https://github.com/rash0621/e20-3yp-OceanEyes/blob/e5a67b15b10a79d996e6bed1845ec4d0dfd57c56/docs/images/Solution_Architecture.png" width="512" height="288"/>
 
 ## Data and Control Flow
-<img src ="https://github.com/wethmiranasinghe/e20-3yp-OceanEyes/blob/main/docs/images/Data_Control_Flow.jpg" width="512" height="288"/>
+<img src ="https://github.com/rash0621/e20-3yp-OceanEyes/blob/a88913eed87fb4052ed805616fb23f6af447f5cc/docs/images/Data_Control_Flow.png" width="512" height="288"/>
+
+## Technology Stack
+- **ReactJs** : Implemented the frontend with javascript
+- **Springboot** : Implemented the backend with java
+- **Python** : Implemented the image processing model logic
+- **AWS** : Remote hosting server
+- **PM2** : Background application runner in AWS server
+- **YOLOV5** : Image processing model that was trained and converted to a lighter weight .onnox model
+- **Dataset** : https://universe.roboflow.com/abdelaadimkhriss/ocean-plastics-waste-detection-float-plastics/dataset/13
+
+
+## The Final Product
+<img src ="https://github.com/rash0621/e20-3yp-OceanEyes/blob/8506f86c2f10d33f5cdce216d6c3d32d2406f015/docs/images/OceanEyes.png" width="512" height="288"/>
+
 
 ## Team
 -  E/20/316, Wethmi Ranasinghe, [e20316@eng.pdn.ac.lk](mailto:e20316@eng.pdn.ac.lk)
