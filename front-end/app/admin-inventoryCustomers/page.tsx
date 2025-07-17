@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Dialog, DialogContent } from "@mui/material";
 import { domainName } from "../components/DomainName";
+import RequireAuth from "../components/RequireAuth";
 
 interface Customer {
   id: string;
@@ -100,8 +101,9 @@ function AdminInventoryCustomers() {
     setSelectedCustomer(null);
   };
 
-  return (
+  return (    
     <>
+    <RequireAuth>
       <div className={style.container}>
       <div className={style.inventoryCustomerTitle}>
         <h5>Customer Inventory</h5>
@@ -296,7 +298,8 @@ function AdminInventoryCustomers() {
             </div>
           </DialogContent>
         </Dialog>
-      )}
+      )}      
+    </RequireAuth>
     </>
   );
 }
